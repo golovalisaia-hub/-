@@ -21,7 +21,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
   await page.locator('#qaList a').first().click();
   await page.waitForURL(/subject=qa.*lesson=1.*flow=1/);
   await page.locator('body.guided-lesson #flowTitle').waitFor();
-  await page.locator('link[href*="lesson-flow.css"]').waitFor();
+  assert.equal(await page.locator('link[href*="lesson-flow.css"]').count(),1,'Guided lesson styles must be attached');
   assert.match(await page.locator('#flowTitle').innerText(),/QA|Урок 01/i);
   assert.equal(await page.locator('.subject-tabs').isVisible(),false,'QA and English cannot mix in one lesson');
   assert.equal(await page.locator('#theory').isVisible(),true);
