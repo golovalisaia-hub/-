@@ -5,7 +5,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  for(const width of [1440,390,320]){
+  for(const width of [1440,834,390,320]){
    const page=await browser.newPage({viewport:{width,height:820}}),errors=[];
    page.on('pageerror',e=>errors.push(e.message));
    await page.route('**/@supabase/supabase-js@*/dist/umd/supabase.min.js',r=>r.fulfill({status:200,contentType:'text/javascript',body:GUEST}));

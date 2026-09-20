@@ -8,7 +8,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
  fs.mkdirSync('screenshots',{recursive:true});
  const browser=await chromium.launch({headless:true});
  try{
-  for(const config of [{name:'desktop',width:1440,height:900},{name:'phone',width:390,height:844},{name:'small-phone',width:320,height:720}]){
+  for(const config of [{name:'desktop',width:1440,height:900},{name:'tablet',width:834,height:1194},{name:'phone',width:390,height:844},{name:'small-phone',width:320,height:720}]){
    const page=await browser.newPage({viewport:{width:config.width,height:config.height},deviceScaleFactor:1});
    await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
    await page.route('**/@supabase/supabase-js@*/dist/umd/supabase.min.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));

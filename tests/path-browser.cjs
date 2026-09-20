@@ -34,7 +34,7 @@ const OWNER=`(()=>{
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  for(const width of [1440,390,320]){
+  for(const width of [1440,834,390,320]){
    const page=await browser.newPage({viewport:{width,height:820}}),errors=[];
    page.on('pageerror',err=>errors.push(err.message));
    await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'application/javascript',body:GUEST}));

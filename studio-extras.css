@@ -30,10 +30,10 @@ button,select,input,textarea{min-height:44px}textarea{min-height:125px}
 .companion-faq summary{cursor:pointer;padding:15px 17px;color:#d6eabf;font-weight:650;line-height:1.45}
 .faq-content{border-top:1px solid #32465e;padding:5px 17px 12px}.faq-content p{font-size:13px;line-height:1.6}
 :focus-visible{outline:3px solid #b8f08e;outline-offset:3px}.primary:focus-visible{outline-color:#edfdeb}
-@media(min-width:1100px){.rail{position:sticky;top:76px;align-self:start;min-height:calc(100vh - 76px);max-height:calc(100vh - 76px);overflow:auto}.content{padding:35px clamp(30px,4vw,55px) 95px}.lesson-body{padding:31px}}
-@media(max-width:900px){.rail{position:static;min-height:auto;max-height:none}.rail-head{display:none}.rail{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center}.nav-action{grid-column:1/-1}.rail select{min-width:0}.rail-progress{grid-column:1/-1}.rail-bottom{grid-column:1/-1}}
+@media(min-width:1025px){.rail{position:sticky;top:76px;align-self:start;min-height:calc(100vh - 76px);max-height:calc(100vh - 76px);overflow:auto}.content{padding:35px clamp(30px,4vw,55px) 95px}.lesson-body{padding:31px}}
+@media(max-width:1024px){.rail{position:static;min-height:auto;max-height:none}.rail-head{display:none}.rail{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center}.nav-action{grid-column:1/-1}.rail select{min-width:0}.rail-progress{grid-column:1/-1}.rail-bottom{grid-column:1/-1}}
 @media(max-width:600px){.topbar{gap:8px}.logo{font-size:17px;letter-spacing:.09em}.logo-mark{width:33px;height:33px;margin-right:3px;border-radius:10px}.topbar .quiet{font-size:12px}.rail{gap:8px}.rail label{margin:0}.rail select{min-height:50px}.content{padding:18px 12px 85px}.welcome{flex-wrap:wrap}.welcome h1{font-size:29px}.welcome-actions{flex-direction:row;width:100%}.welcome-actions .quiet{flex:1;min-height:44px}.lesson-head h2{font-size:22px}.tabs{position:sticky;top:66px;z-index:3;background:#101d30;padding:8px 0;margin:16px -3px;border-radius:10px}.tabs button{min-height:50px;font-size:12px}.companion{padding:16px;border-radius:13px}.vocab-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vocab-card summary{min-height:64px}.lesson-actions{flex-direction:column}.lesson-actions button{width:100%;min-height:49px}.example-insert{width:100%;min-height:49px}.session-actions button{min-height:46px}.finish button{min-height:49px}}
-@media(max-width:360px){.vocab-grid{grid-template-columns:1fr}.tabs button{font-size:11px;letter-spacing:-.02em}.logo{font-size:15px}}
+@media(max-width:375px){.vocab-grid{grid-template-columns:1fr}.tabs button{font-size:11px;letter-spacing:-.02em}.logo{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.tabs button,.primary,.nav-action{transition:none!important}}
 
 /* Collapsible programme rail: below the theme's sidebar breakpoint the lesson starts on the first
@@ -54,12 +54,12 @@ button,select,input,textarea{min-height:44px}textarea{min-height:125px}
 .python-result{display:flex;flex-direction:column;gap:8px;min-width:0}
 .python-split .output{margin:0}
 .output-label{font-size:13px;font-weight:700;color:var(--a-muted,#bfd2e0);margin:12px 0 8px;display:block}
-@media(min-width:1400px){
+@media(min-width:1281px){
   .python-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
   .python-result{position:sticky;top:96px}
   .python-split .output{max-height:none;min-height:345px}
 }
-@media(max-width:1100px){
+@media(max-width:1024px){
   .rail-toggle{display:flex;min-height:50px}
   /* The theme lays the rail out horizontally here, so the three destinations belong in one row. */
   .rail-bottom{flex-direction:row;align-items:center}
@@ -68,7 +68,7 @@ button,select,input,textarea{min-height:44px}textarea{min-height:125px}
   .rail-extra{grid-column:1/-1;gap:10px}
   .rail.rail-collapsed .rail-extra{display:none}
 }
-@media(max-width:740px){.console-head{flex-direction:column;align-items:flex-start;gap:5px}.output-label{margin-top:14px}
+@media(max-width:600px){.console-head{flex-direction:column;align-items:flex-start;gap:5px}.output-label{margin-top:14px}
   /* «Закончить и сохранить» gets its own row instead of wrapping onto three lines. */
   .session-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.session-actions #timerSave{grid-column:1/-1}}
 @media(prefers-reduced-motion:reduce){.rail-toggle-icon{transition:none!important}}

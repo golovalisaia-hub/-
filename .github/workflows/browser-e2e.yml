@@ -36,6 +36,7 @@ on:
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
       - 'tests/visual-audit.cjs'
+      - 'tests/responsive-audit.cjs'
       - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
@@ -56,7 +57,7 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install headless Chromium
         run: npx playwright install --with-deps --only-shell chromium
-      - name: Test dashboard, lessons, library, cloud mocks, Python and screenshots
+      - name: Test dashboard, lessons, library, cloud mocks, Python, tablet layout and screenshots
         run: |
           node tests/server.cjs > /tmp/academy-http.log 2>&1 &
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
@@ -69,6 +70,7 @@ jobs:
           node tests/foundation-browser.cjs
           node tests/cloud-e2e.cjs
           node tests/real-guest.cjs
+          node tests/responsive-audit.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection
         if: always()

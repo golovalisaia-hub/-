@@ -24,6 +24,7 @@ jobs:
           node --check path.js
           node --check home.js
           node --check path-entry.js
+          node --check library.js
       - name: Validate legacy curriculum, content and UI wiring
         run: node tests/smoke.cjs
       - name: Validate learning feedback and revision quizzes

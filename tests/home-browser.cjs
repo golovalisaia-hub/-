@@ -21,7 +21,7 @@ async function stub(page,source){await page.route('**/vendor/supabase.js',route=
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  for(const width of [1440,390,320]){
+  for(const width of [1440,834,390,320]){
    const page=await browser.newPage({viewport:{width,height:820}}),errors=[];
    page.on('pageerror',error=>errors.push(error.message));await stub(page,GUEST);
    await page.goto(ROOT,{waitUntil:'domcontentloaded'});

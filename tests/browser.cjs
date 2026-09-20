@@ -5,7 +5,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
 (async()=>{
   const browser=await chromium.launch({headless:true});
   try{
-    for(const config of [{name:'desktop',width:1440,height:900},{name:'mobile',width:390,height:844},{name:'small-mobile',width:320,height:720}]){
+    for(const config of [{name:'desktop',width:1440,height:900},{name:'tablet',width:834,height:1194},{name:'mobile',width:390,height:844},{name:'small-mobile',width:320,height:720}]){
       const page=await browser.newPage({viewport:{width:config.width,height:config.height},deviceScaleFactor:1});
       await page.route('**/@supabase/supabase-js@*/dist/umd/supabase.min.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
       await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
@@ -22,12 +22,12 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       assert.equal(await links.nth(2).getAttribute('href'),'https://golovalisaia-hub.github.io/sever-planner/');
       const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
       assert.ok(horizontal<=2,`${config.name}: horizontal overflow ${horizontal}px`);
-      const compact=config.width<=1100;
+      const compact=config.width<=1024;
       assert.equal(await page.locator('#railExtra').isHidden(),compact,`${config.name}: progress block starts collapsed only below the sidebar breakpoint`);
       assert.equal(await page.locator('#resume').isVisible(),true,`${config.name}: resume button stays reachable`);
       assert.equal(await page.locator('#lessonSelect').isVisible(),true,`${config.name}: lesson picker stays reachable`);
       assert.equal(await links.first().isVisible(),true,`${config.name}: collapsing the rail must never hide the navigation`);
-      if(config.width<=740){
+      if(config.width<=600){
         const nav=await links.first().evaluate(el=>getComputedStyle(el.closest('.rail-bottom')).position);
         assert.equal(nav,'fixed',`${config.name}: mobile lesson navigation stays visible`);
       }

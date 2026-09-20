@@ -7,7 +7,8 @@ const ORIGIN='https://golovalisaia-hub.github.io/-/';
  try{
   for(const preset of [
    {name:'iPhone 13',device:devices['iPhone 13']},
-   {name:'small iPhone',device:{...devices['iPhone 13'],viewport:{width:320,height:690},screen:{width:320,height:690}}}
+   {name:'small iPhone',device:{...devices['iPhone 13'],viewport:{width:320,height:690},screen:{width:320,height:690}}},
+   {name:'iPad Air portrait',device:{...devices['iPad (gen 7)'],viewport:{width:834,height:1194},screen:{width:834,height:1194}}}
   ]){
    const context=await browser.newContext({...preset.device});
    const page=await context.newPage();const errors=[];

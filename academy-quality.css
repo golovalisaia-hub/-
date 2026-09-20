@@ -15,5 +15,5 @@
 .mentor-message{padding:14px;border-left:3px solid #b8f08e;border-radius:9px;background:#192d3d;color:#e2eff0;white-space:pre-line}
 .library-link{display:flex;align-items:center;min-height:49px;background:linear-gradient(115deg,#214437,#1c3540);border:1px solid #5c8a70;color:#d7fac2!important;padding:12px 14px;border-radius:12px;font-size:13px;font-weight:800;text-decoration:none!important;transition:background .17s}
 .library-link:hover{background:linear-gradient(115deg,#315544,#245167)}
-@media(max-width:650px){.quality-panel{padding:15px;border-radius:14px}.quiz-choices{grid-template-columns:1fr}.quiz-choices button{width:100%;text-align:left;padding:14px 16px;min-height:51px}.mentor-actions{flex-direction:column}.mentor-actions button{width:100%}.library-link{width:100%;justify-content:center}}
+@media(max-width:600px){.quality-panel{padding:15px;border-radius:14px}.quiz-choices{grid-template-columns:1fr}.quiz-choices button{width:100%;text-align:left;padding:14px 16px;min-height:51px}.mentor-actions{flex-direction:column}.mentor-actions button{width:100%}.library-link{width:100%;justify-content:center}}
 @media(prefers-reduced-motion:reduce){.quiz-choices button,.library-link{transition:none!important}}
