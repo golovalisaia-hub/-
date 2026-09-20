@@ -61,6 +61,9 @@ button,select,input,textarea{min-height:44px}textarea{min-height:125px}
 }
 @media(max-width:1100px){
   .rail-toggle{display:flex;min-height:50px}
+  /* The theme lays the rail out horizontally here, so the three destinations belong in one row. */
+  .rail-bottom{flex-direction:row;align-items:center}
+  .rail-bottom a{flex:1;justify-content:center;text-align:center}
   .rail>label[for=lessonSelect]{display:none}
   .rail-extra{grid-column:1/-1;gap:10px}
   .rail.rail-collapsed .rail-extra{display:none}

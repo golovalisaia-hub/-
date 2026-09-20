@@ -61,7 +61,7 @@ function setupRail(){
   const collapse=state=>{rail.classList.toggle('rail-collapsed',state);toggle.setAttribute('aria-expanded',String(!state));};
   const sync=()=>collapse(compact.matches);
   sync();
-  compact.addEventListener('change',sync);
+  if(compact.addEventListener)compact.addEventListener('change',sync);else if(compact.addListener)compact.addListener(sync);
   toggle.addEventListener('click',()=>collapse(!rail.classList.contains('rail-collapsed')));
   const label=document.getElementById('railToggleText'),progress=document.getElementById('progressText');
   if(label&&progress){
