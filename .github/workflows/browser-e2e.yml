@@ -37,6 +37,7 @@ on:
       - 'tests/browser.cjs'
       - 'tests/home-browser.cjs'
       - 'tests/ai-browser.cjs'
+      - 'tests/ai-rubric.mjs'
       - 'tests/path-browser.cjs'
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
@@ -54,6 +55,7 @@ on:
       - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
       - '.github/workflows/browser-e2e.yml'
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
@@ -80,6 +82,7 @@ jobs:
           node --check skills.js
           node --check skills-controls.js
           node --check ai.js
+          node --experimental-strip-types tests/ai-rubric.mjs
           node tests/home-browser.cjs
           node tests/ai-browser.cjs
           node tests/path-browser.cjs
