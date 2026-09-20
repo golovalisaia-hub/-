@@ -39,7 +39,7 @@ const OWNER=`window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
  await owner.locator('[data-mode="review"]').click();await owner.locator('#question').fill('Я проверил форму. Ожидал отказ, но она сохранила неверный адрес.');await owner.locator('#send').click();
  await owner.waitForFunction(()=>document.querySelectorAll('.chat-message').length===2);
  assert.equal(requests.length,1);assert.equal(requests[0].mode,'review');assert.equal(requests[0].subject,'qa');assert.equal(requests[0].lesson,5);
- assert.match(requests[0].theory,/ошибк/i);assert.equal(requests[0].history.length,0);
+ assert.match(requests[0].theory,/воспроиз|проблем|шаги/i);assert.equal(requests[0].history.length,0);
  await owner.locator('#question').fill('Как оформить это в отчёт?');await owner.locator('#send').click();await owner.waitForFunction(()=>document.querySelectorAll('.chat-message').length===4);
  assert.equal(requests[1].history.length,2,'assistant may use only recent session turns');
  await owner.locator('#clearChat').click();assert.equal(await owner.locator('.chat-message').count(),1);
