@@ -35,6 +35,11 @@ on:
       - 'mentor.html'
       - 'mentor.css'
       - 'mentor.js'
+      - 'skills.html'
+      - 'skills.css'
+      - 'skills.js'
+      - 'skills-controls.js'
+      - 'SOURCE-ALIGNMENT.md'
       - 'vendor/supabase.js'
       - 'tests/browser.cjs'
       - 'tests/home-browser.cjs'
@@ -47,6 +52,7 @@ on:
       - 'tests/assessment.cjs'
       - 'tests/sandbox-browser.cjs'
       - 'tests/mentor-browser.cjs'
+      - 'tests/skills-browser.cjs'
       - 'path-assessment.js'
       - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
@@ -68,13 +74,15 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install headless Chromium
         run: npx playwright install --with-deps --only-shell chromium
-      - name: Test dashboard, lessons, library, tutor, QA sandbox, cloud mocks, Python, tablet layout and screenshots
+      - name: Test dashboard, lessons, library, tutor, workshop, QA sandbox, cloud mocks, Python, mobile layout and screenshots
         run: |
           node tests/server.cjs > /tmp/academy-http.log 2>&1 &
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
             if curl -fsS http://127.0.0.1:4173/path.html >/dev/null; then break; fi
             sleep 1
           done
+          node --check skills.js
+          node --check skills-controls.js
           node tests/home-browser.cjs
           node tests/path-browser.cjs
           node tests/browser.cjs
@@ -86,6 +94,7 @@ jobs:
           node tests/assessment.cjs
           node tests/sandbox-browser.cjs
           node tests/mentor-browser.cjs
+          node tests/skills-browser.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection
         if: always()
