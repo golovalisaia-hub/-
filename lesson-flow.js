@@ -1,89 +1,76 @@
-/* Focused reading -> comprehension -> practice -> assessment. Navigation only;
-   path.js remains sole authority for answers, cloud writes, grades and SEVER. */
+/* A single subject and a single stage at a time. The existing path.js alone
+   owns grading, cloud persistence and SEVER integration. This script writes none. */
 (()=>{'use strict';
-const params=new URLSearchParams(location.search);
-if(params.get('flow')!=='1')return;
-const subject=params.get('subject');
-if(!['qa','english'].includes(subject))return;
-const $=id=>document.getElementById(id);
-const lessons=window.AcademyPathLessons;
-const names=['Изучи тему','Проверь понимание','Сделай практику','Сдай зачёт'];
-const descriptions=['Прочитай объяснение и разберись с примером. Затем ответь на два вопроса.','Ответь на оба вопроса. Если ошибся, вернись к объяснению — попытки не штрафуются.','Выполни задание сам, сравни с критериями и сохрани практику в облако.','Пройди отдельную проверку. Она не заменяет практику и не ставится автоматически.'];
-let stage=0,lastKey='',renderQueued=false;
-const create=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text)node.textContent=text;return node;};
-const lessonNumber=()=>Number($('lessonSelect')?.value)||1;
-const quizDone=()=>Boolean($('stageViewed')?.classList.contains('done'))||($('questions')?.querySelectorAll('.choice-note').length===2);
-const practiced=()=>Boolean($('stagePractised')?.classList.contains('done'));
-const certified=()=>Boolean($('stagePassed')?.classList.contains('done'));
-const allowed=target=>target<2||(target===2?quizDone():practiced());
+const params=new URLSearchParams(location.search),subject=params.get('subject');
+if(params.get('flow')!=='1'||!['qa','english'].includes(subject))return;
+const $=id=>document.getElementById(id),lessons=window.AcademyPathLessons;
+const names=['Объяснение','Проверка','Практика','Зачёт'];
+const descriptions=['Прочитай объяснение и разберись с примером. Затем проверь понимание.','Ответь на оба вопроса. Ошибки можно исправить без штрафов.','Выполни самостоятельную работу, сравни с критериями и сохрани в облако.','Пройди отдельную проверку. Зачёт не ставится за чтение или черновик.'];
+let stage=0,lastKey='',pending=false;
+const create=(tag,className,text)=>{const n=document.createElement(tag);if(className)n.className=className;if(text)n.textContent=text;return n;};
+const number=()=>Number($('lessonSelect')?.value)||1;
+const quizDone=()=>$('stageViewed')?.classList.contains('done')||$('questions')?.querySelectorAll('.choice-note').length===2;
+const practiced=()=>$('stagePractised')?.classList.contains('done');
+const certified=()=>$('stagePassed')?.classList.contains('done');
+const unlocked=n=>n<2||(n===2?quizDone():practiced());
 function render(){
  const body=document.querySelector('.lesson-body');if(!body)return;
- const number=lessonNumber(),key=`${subject}:${number}`;
- if(key!==lastKey){stage=0;lastKey=key;}
- const lesson=lessons?.[subject]?.[number-1];
+ const n=number(),key=`${subject}:${n}`;if(key!==lastKey){lastKey=key;stage=0;}
+ const item=lessons?.[subject]?.[n-1];
  $('flowCourse').textContent=subject==='qa'?'◈ QA · Тестирование':'◎ English · Английский';
  $('flowBack').href=`courses.html?subject=${subject}`;
- $('flowTitle').textContent=`Урок ${String(number).padStart(2,'0')} · ${lesson?.title||'Тема'}`;
+ $('flowTitle').textContent=`Урок ${String(n).padStart(2,'0')} · ${item?.title||'Тема'}`;
  $('flowLead').textContent=descriptions[stage];
- if(lesson){$('lessonTitle').textContent=lesson.title;
-  for(const option of $('lessonSelect').options){const n=Number(option.value),title=lessons[subject]?.[n-1]?.title||'Урок';option.textContent=`${String(n).padStart(2,'0')} · ${title}${option.value===String(number)?'':''}`;}
- }
+ if(item){$('lessonTitle').textContent=item.title;
+  for(const option of $('lessonSelect').options){const i=Number(option.value);option.textContent=`${String(i).padStart(2,'0')} · ${lessons[subject]?.[i-1]?.title||'Урок'}`;}}
  const theory=body.querySelector(':scope > .step:not(.practice-step)');
  const practice=body.querySelector(':scope > .practice-step:not(#aiTutorCallout):not(#mentorCallout):not(#sandboxCallout)');
- const show=[
+ const shown=[
   [theory,body.querySelector(':scope > .example-details'),$('aiTutorCallout')],
   [body.querySelector(':scope > .quiz')],
   [practice,$('sandboxCallout'),body.querySelector(':scope > .response'),$('stageTrack')],
   [body.querySelector(':scope > .exam'),$('mentorCallout'),$('stageTrack')]
  ][stage];
- for(const node of body.children){
-  if(['subjectLabel','topic'].includes(node.id))continue;
-  node.hidden=!show.includes(node)||node.id==='sandboxCallout'&&subject!=='qa'||node.id==='mentorCallout'&&subject!=='qa';
+ for(const el of body.children){
+  if(el.id==='subjectLabel'||el.id==='topic')continue;
+  el.hidden=!shown.includes(el)||(el.id==='sandboxCallout'||el.id==='mentorCallout')&&subject!=='qa';
  }
- const done=[true,quizDone(),practiced(),certified()];
- for(const [index,button] of [...$('flowSteps').children].entries()){
-  button.disabled=!allowed(index);button.setAttribute('aria-current',index===stage?'step':'false');
-  button.dataset.done=String(index>0&&done[index]);
+ const marks=[false,Boolean(quizDone()),Boolean(practiced()),Boolean(certified())];
+ for(const [i,button] of [...$('flowSteps').children].entries()){
+  button.disabled=!unlocked(i);button.setAttribute('aria-current',i===stage?'step':'false');button.dataset.done=String(i>0&&marks[i]);
  }
  $('flowPrev').disabled=stage===0;
  $('flowNext').textContent=stage===3?'Следующий урок →':`Дальше · ${names[stage+1]} →`;
- $('flowNext').disabled=stage===3?(number===14||!certified()):!allowed(stage+1);
- const notice=$('flowInfo');
- notice.textContent=stage===0?'Твоя работа не засчитывается за одно чтение. Сначала проверь понимание.':
- stage===1&&!quizDone()?'Для перехода к практике нужны два верных ответа. Можно возвращаться к теории.':
- stage===2&&!practiced()?'Запись практики подтвердит облако. Если ты гость, войди в аккаунт перед сохранением.':
- stage===3&&!certified()?'Зачёт нужно пройти самостоятельно. Следующий урок также можно выбрать в списке сверху.':
- stage===3?'Зачёт подтверждён. Можешь перейти к следующей теме.':'Продолжай в своём темпе.';
- notice.hidden=false;
+ $('flowNext').disabled=stage===3?(n===14||!certified()):!unlocked(stage+1);
+ $('flowInfo').textContent=stage===0?'Чтение не засчитывается автоматически: после объяснения ответь на два вопроса.':
+ stage===1&&!quizDone()?'Для перехода к практике нужны два верных ответа. Ты можешь вернуться к теории.':
+ stage===2&&!practiced()?'Чтобы открыть зачёт, войди в Academy и дождись подтверждения сохранения практики облаком.':
+ stage===3&&!certified()?'Сдай зачёт самостоятельно. Другие темы можно открыть через список уроков сверху.':
+ stage===3?'Зачёт сохранён. Можно переходить к следующей теме.':'Продолжай в удобном темпе.';
 }
-function queue(){if(renderQueued)return;renderQueued=true;queueMicrotask(()=>{renderQueued=false;render();});}
-function go(next){
- if(next<0||next>3)return;
- if(!allowed(next)){const note=$('flowInfo');note.textContent=next===2?'Сначала ответь правильно на два вопроса выше.':'Сначала зафиксируй практику в облаке. Без подтверждения зачёт не откроется.';note.hidden=false;return;}
- stage=next;render();document.querySelector('.lesson-card')?.scrollIntoView({block:'start',behavior:'instant'});
+function queue(){if(pending)return;pending=true;queueMicrotask(()=>{pending=false;render();});}
+function go(target){
+ if(target<0||target>3)return;
+ if(!unlocked(target)){$('flowInfo').textContent=target===2?'Сначала правильно ответь на оба вопроса.':'Сначала сохрани практику и дождись подтверждения облака.';return;}
+ stage=target;render();document.querySelector('.lesson-card')?.scrollIntoView({block:'start',behavior:'instant'});
 }
 function init(){
- const card=document.querySelector('.lesson-card'),body=document.querySelector('.lesson-body');
- if(!card||!body||!lessons?.[subject])return;
+ const card=document.querySelector('.lesson-card'),body=document.querySelector('.lesson-body');if(!card||!body||!lessons?.[subject])return;
  document.body.classList.add('guided-lesson');
- const style=document.createElement('link');style.rel='stylesheet';style.href='lesson-flow.css?v=1';document.head.append(style);
- const intro=create('section','flow-heading');intro.id='flowHeading';
- const back=create('a','flow-back','← Все предметы и уроки');back.id='flowBack';back.href=`courses.html?subject=${subject}`;
+ const css=document.createElement('link');css.rel='stylesheet';css.href='lesson-flow.css?v=1';document.head.append(css);
+ const head=create('section','flow-heading'),back=create('a','flow-back','← Все предметы и уроки');back.id='flowBack';
  const course=create('span','flow-course');course.id='flowCourse';
- const title=create('h2');title.id='flowTitle';
- const lead=create('p');lead.id='flowLead';intro.append(back,course,title,lead);
- card.prepend(intro);
+ const title=create('h2');title.id='flowTitle';const lead=create('p');lead.id='flowLead';head.append(back,course,title,lead);card.prepend(head);
  const nav=create('nav','flow-steps');nav.id='flowSteps';nav.setAttribute('aria-label','Этапы занятия');
- names.forEach((name,index)=>{const button=create('button','',`${index+1}. ${name}`);button.type='button';button.addEventListener('click',()=>go(index));nav.append(button);});
- const toolbar=card.querySelector('.lesson-toolbar');toolbar?.after(nav);
+ names.forEach((text,i)=>{const button=create('button','',`${i+1}. ${text}`);button.type='button';button.addEventListener('click',()=>go(i));nav.append(button);});
+ card.querySelector('.lesson-toolbar')?.after(nav);
  const controls=create('div','flow-controls'),prev=create('button','flow-secondary','← Назад'),next=create('button','flow-primary');
  prev.id='flowPrev';next.id='flowNext';prev.type=next.type='button';prev.addEventListener('click',()=>go(stage-1));
- next.addEventListener('click',()=>{if(stage===3){if(lessonNumber()>=14||!certified())return;$('next').click();stage=0;queue();document.querySelector('.lesson-card')?.scrollIntoView({block:'start',behavior:'instant'});}else go(stage+1);});
- controls.append(prev,next);const note=create('p','flow-info');note.id='flowInfo';card.append(controls,note);
- // Observe only authoritative cloud/quiz state; never write it from the tour.
+ next.addEventListener('click',()=>{if(stage!==3){go(stage+1);return;}if(number()>=14||!certified())return;$('next').click();stage=0;queue();document.querySelector('.lesson-card')?.scrollIntoView({block:'start',behavior:'instant'});});
+ controls.append(prev,next);const info=create('p','flow-info');info.id='flowInfo';card.append(controls,info);
  for(const id of ['topic','quizStatus','stageViewed','stagePractised','stagePassed']){
   const node=$(id);if(!node)continue;
-  new MutationObserver(queue).observe(node,{childList:true,characterData:true,subtree:id==='quizStatus',attributes:id.startsWith('stage'),attributeFilter:['class']});
+  const isStage=id.startsWith('stage');new MutationObserver(queue).observe(node,isStage?{attributes:true,attributeFilter:['class']}:{childList:true,characterData:true,subtree:true});
  }
  for(const id of ['previous','next','lessonSelect'])$(id)?.addEventListener(id==='lessonSelect'?'change':'click',queue);
  render();
