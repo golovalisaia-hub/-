@@ -12,8 +12,10 @@ jobs:
       - name: Verify JavaScript parses
         run: |
           node --check curriculum.js
+          node --check lesson-guide.js
+          node --check studio-extras.js
           node --check app.js
           node --check studio.js
           node --check python-worker.mjs
-      - name: Validate learning program and UI wiring
+      - name: Validate curriculum, lesson content and UI wiring
         run: node tests/smoke.cjs
