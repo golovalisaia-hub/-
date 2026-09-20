@@ -8,6 +8,7 @@ on:
       - 'studio-extras.css'
       - 'studio.js'
       - 'studio-extras.js'
+      - 'academy-design.css'
       - 'academy-quality.*'
       - 'learning-checks.js'
       - 'curriculum.js'
