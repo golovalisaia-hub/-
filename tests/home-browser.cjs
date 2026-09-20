@@ -53,13 +53,14 @@ async function stub(page,source){await page.route('**/vendor/supabase.js',route=
   await owner.locator('.module-card').nth(1).getByRole('button',{name:'Уроки'}).click();
   assert.equal(await owner.locator('#weekTwoLessons a').count(),7);
   await owner.locator('#weekTwoLessons a').nth(2).click();
-  await owner.waitForURL('**/path.html?lesson=10&subject=qa');
-  await owner.locator('#lessonNumber').waitFor();
+  await owner.waitForURL('**/path.html?lesson=10&subject=qa&flow=1');
+  await owner.locator('body.guided-lesson #flowTitle').waitFor();
   await owner.waitForFunction(()=>document.querySelector('#lessonNumber').textContent==='10',undefined,{timeout:10000});
   assert.equal(await owner.locator('#lessonSelect').inputValue(),'10');
   assert.equal(await owner.locator('#qaTab').getAttribute('aria-pressed'),'true');
+  assert.equal(await owner.locator('.subject-tabs').isVisible(),false,'QA lesson must not mix English on the same screen');
   assert.deepEqual(errors,[],`Owner navigation errors: ${errors.join('; ')}`);
-  console.log('PASS: confirmed cloud progress, existing draft, click module lesson 10 and correct QA deep link');
+  console.log('PASS: cloud progress and draft, dashboard lesson 10 opens guided QA without mixing subjects');
   await owner.close();
   const direct=await browser.newPage({viewport:{width:320,height:720}});await stub(direct,GUEST);
   await direct.goto(ROOT+'path.html?lesson=11&subject=english',{waitUntil:'domcontentloaded'});
