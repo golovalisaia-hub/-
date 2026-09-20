@@ -13,7 +13,12 @@ on:
       - 'curriculum.js'
       - 'lesson-guide.js'
       - 'python-worker.mjs'
+      - 'library.html'
+      - 'library.css'
+      - 'library.js'
       - 'tests/browser.cjs'
+      - 'tests/cloud-e2e.cjs'
+      - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
       - '.github/workflows/browser-e2e.yml'
   workflow_dispatch:
@@ -32,7 +37,7 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install headless Chromium
         run: npx playwright install --with-deps --only-shell chromium
-      - name: Test desktop, mobile and real Python runtime
+      - name: Test desktop, mobile, owner-only sync and Python execution
         run: |
           node tests/server.cjs > /tmp/academy-http.log 2>&1 &
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
@@ -40,3 +45,4 @@ jobs:
             sleep 1
           done
           node tests/browser.cjs
+          node tests/cloud-e2e.cjs
