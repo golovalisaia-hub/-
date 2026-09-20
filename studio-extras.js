@@ -4,6 +4,15 @@ function init(){
   const guide=window.AcademyGuide,topic=document.getElementById('topic'),select=document.getElementById('lessonSelect');
   if(!guide||!topic||!select)return;
   const $=id=>document.getElementById(id),insertBefore=$('answerLabel');if(!insertBefore)return;
+  const nav=document.querySelector('.rail-bottom');
+  if(nav&&!nav.querySelector('a[href="library.html"]')){
+    const links=nav.querySelectorAll('a');
+    if(links[0]){links[0].textContent='◈ Уроки';links[0].setAttribute('aria-current','page');}
+    if(links[1])links[1].textContent='↗ Календарь';
+    const book=document.createElement('a');book.href='library.html';book.textContent='▤ Книги';
+    book.setAttribute('aria-label','Открыть книги и конспекты Academy');
+    nav.insertBefore(book,links[1]||null);
+  }
   const panel=document.createElement('section');panel.id='academyCompanion';panel.className='companion';panel.setAttribute('aria-label','Дополнительные объяснения и повторение');insertBefore.parentElement.insertBefore(panel,insertBefore);
   const faq=document.createElement('details');faq.className='companion-faq';
   faq.innerHTML='<summary>Не понял задание? Подсказки для самостоятельной работы</summary><div class="faq-content"><p><strong>QA:</strong> выпиши шаги и ожидаемый результат. Если требования неизвестны, сформулируй вопрос, а не придумывай баг.</p><p><strong>Python:</strong> изучи последнюю строку ошибки, проверь отступы, типы и ввод. Меняй одну строку за раз и снова запускай.</p><p><strong>English:</strong> произнеси слово, вспомни перевод, затем раскрой карточку и проверь себя. Возвращайся к старым словам.</p><p>Проверка здесь учебная: Python-консоль подтверждает только запуск без ошибки, а не правильность решения. Это не живой ИИ-чат.</p></div>';
@@ -42,7 +51,8 @@ function init(){
   new MutationObserver(render).observe(topic,{childList:true,characterData:true,subtree:true});render();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-/* Dynamically load versioned, same-origin enhancements without editing the planner or the 84-day course. */
+/* Versioned same-origin enhancements are loaded in order. Brand theme comes last so it wins the cascade. */
 const css=document.createElement('link');css.rel='stylesheet';css.href='academy-quality.css?v=1';document.head.append(css);
+const design=document.createElement('link');design.rel='stylesheet';design.href='academy-design.css?v=1';document.head.append(design);
 for(const name of ['learning-checks.js?v=1','academy-quality.js?v=1']){const script=document.createElement('script');script.src=name;script.async=false;document.head.append(script);}
 })();
