@@ -1,4 +1,4 @@
-/* Public, guest-only browser check. Never logs in or modifies user data. */
+/* Real Chromium guest-only checks; never authenticates or modifies real user data. */
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{user:null},error:null})}})};';
@@ -28,21 +28,39 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       await page.locator('#tabQa').click();
       assert.match(await page.locator('#qualityPanel').innerText(),/ожидаемый результат/);
       assert.deepEqual(errors,[],`${config.name}: page errors ${errors.join('; ')}`);
-      console.log(`PASS: ${config.name}: lesson navigation, revision quiz and layout`);
+      console.log(`PASS: ${config.name}: lessons, revision quiz, feedback, layout`);
+      await page.goto('http://127.0.0.1:4173/library.html',{waitUntil:'domcontentloaded'});
+      await page.locator('#cloudStatus').waitFor();
+      await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('Войди в Academy'),undefined,{timeout:10000});
+      assert.equal(await page.locator('#save').isDisabled(),true,`${config.name}: guest must not edit cloud books`);
+      assert.ok(await page.locator('#book').count(),`${config.name}: library form present`);
+      const libraryOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
+      assert.ok(libraryOverflow<=2,`${config.name}: library overflow ${libraryOverflow}px`);
+      assert.deepEqual(errors,[],`${config.name}: library errors ${errors.join('; ')}`);
+      console.log(`PASS: ${config.name}: private reading journal remains closed for guest`);
       await page.close();
     }
     const page=await browser.newPage();
+    const diagnostic=[];
+    page.on('pageerror',error=>diagnostic.push('PAGE '+error.message));
+    page.on('console',message=>{if(message.type()==='error')diagnostic.push('CONSOLE '+message.text());});
+    page.on('requestfailed',request=>diagnostic.push('REQUEST '+request.url()+' '+request.failure()?.errorText));
+    page.on('worker',worker=>diagnostic.push('WORKER '+worker.url()));
     await page.route('**/@supabase/supabase-js@*/dist/umd/supabase.min.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
     await page.goto('http://127.0.0.1:4173/studio.html',{waitUntil:'domcontentloaded'});
     await page.locator('#tabPython').click();
     await page.locator('#code').fill('print(1 + 2)');
     await page.locator('#answer').fill('Я складываю два числа и ожидаю, что программа выведет число три.');
     await page.locator('#run').click();
-    await page.waitForFunction(()=>document.querySelector('#output').textContent.includes('Python загружен.')||document.querySelector('#output').textContent.includes('Не удалось загрузить Python'),undefined,{timeout:90000});
-    assert.match(await page.locator('#output').textContent(),/Python загружен/,'Python worker needs to load.');
+    try{
+      await page.waitForFunction(()=>/Python загружен|Не удалось загрузить|Ошибка Python-консоли|Не получилось|error/i.test(document.querySelector('#output').textContent),undefined,{timeout:35000});
+    }catch(error){const output=await page.locator('#output').textContent();throw Error(`Python init timeout; UI output: ${output}; diagnostics: ${diagnostic.join(' | ')}`);}
+    const output=await page.locator('#output').textContent();
+    assert.match(output,/Python загружен/,`Worker was not ready: ${output}; diagnostics: ${diagnostic.join(' | ')}`);
     await page.locator('#run').click();
-    await page.waitForFunction(()=>document.querySelector('#output').textContent.trim()==='3',undefined,{timeout:25000});
-    console.log('PASS: actual Pyodide runs print(1 + 2) in a worker.');
+    try{await page.waitForFunction(()=>document.querySelector('#output').textContent.trim()==='3',undefined,{timeout:18000});}
+    catch(error){throw Error(`Python run failed: ${await page.locator('#output').textContent()}; diagnostics: ${diagnostic.join(' | ')}`);}
+    console.log('PASS: real Pyodide executes print(1 + 2) in a worker.');
     await page.close();
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});
