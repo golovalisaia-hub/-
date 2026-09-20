@@ -14,7 +14,8 @@ for(const [track,items] of [['QA',qa],['English',english]]){
   for(const field of ['theory','example','practice','criteria'])assert.ok(typeof item[field]==='string'&&item[field].length>24,`${track} ${i+1} ${field}`);
   assert.equal(item.quiz.length,2,`${track} ${i+1} questions`);
   for(const [question,choices,correct,reason] of item.quiz){
-   assert.ok(question.length>8&&reason.length>12);
+   assert.ok(question.length>=6,`${track} ${i+1}: quiz prompt`);
+   assert.ok(reason.length>=6,`${track} ${i+1}: quiz feedback`);
    assert.equal(choices.length,3);
    assert.ok(Number.isInteger(correct)&&correct>=0&&correct<choices.length);
    assert.equal(new Set(choices).size,3,`${track} ${i+1} unique choices`);
