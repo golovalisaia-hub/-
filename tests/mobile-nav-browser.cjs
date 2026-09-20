@@ -8,7 +8,7 @@ const {chromium}=require('playwright');
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto('http://127.0.0.1:4173'+route,{waitUntil:'domcontentloaded'});
   const nav=page.locator('body > .mobile-nav,body > .mobile');assert.equal(await nav.count(),1,`${route} must have exactly one mobile navigation`);
-  const result=await page.evaluate(()=>{const el=document.querySelector('body > .mobile-nav,body > .mobile'),r=el.getBoundingClientRect(),style=getComputedStyle(el),header=document.querySelector('body>.top nav,body>.site-header .library-top-nav');return {position:style.position,top:r.top,bottom:r.bottom,overflow:document.documentElement.scrollWidth-innerWidth,links:[...el.querySelectorAll('a')].map(a=>({href:a.getAttribute('href'),height:a.getBoundingClientRect().height})),duplicateHeader:header&&getComputedStyle(header).display!=='none'};});
+  const result=await page.evaluate(()=>{const el=document.querySelector('body > .mobile-nav,body > .mobile'),r=el.getBoundingClientRect(),style=getComputedStyle(el),header=document.querySelector('body>.top nav,body>.site-header .library-top-nav');return {position:style.position,top:r.top,bottom:r.bottom,overflow:document.documentElement.scrollWidth-innerWidth,links:[...el.querySelectorAll('a')].map(a=>({href:a.getAttribute('href'),height:a.getBoundingClientRect().height})),duplicateHeader:!!header&&getComputedStyle(header).display!=='none'};});
   assert.equal(result.position,'sticky',`${route} ${width}: no fixed bottom menu`);
   assert.ok(result.top>=-2&&result.top<6,`${route} ${width}: navigation at top, not bottom`);
   assert.ok(result.bottom<100,`${route} ${width}: navigation cannot cover bottom exercise area`);
