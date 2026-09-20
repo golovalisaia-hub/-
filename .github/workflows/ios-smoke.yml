@@ -5,11 +5,12 @@ on:
     paths:
       - '.github/workflows/ios-smoke.yml'
       - 'tests/ios-smoke.cjs'
-      - 'studio.html'
-      - 'studio-extras.js'
-      - 'foundation.js'
-      - 'foundation.css'
       - 'index.html'
+      - 'path.html'
+      - 'path.css'
+      - 'path.js'
+      - 'path-lessons.js'
+      - 'vendor/supabase.js'
   workflow_dispatch:
 permissions:
   contents: read
@@ -26,5 +27,5 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install WebKit and dependencies
         run: npx playwright install --with-deps webkit
-      - name: Load published root and lesson in mobile WebKit
+      - name: Load the published QA-first path in mobile WebKit
         run: node tests/ios-smoke.cjs
