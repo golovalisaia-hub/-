@@ -14,7 +14,7 @@ const {chromium}=require('playwright');
    await page.goto('http://127.0.0.1:4173/sandbox.html',{waitUntil:'domcontentloaded'});
    await page.locator('#reportHeading').waitFor();
    // The first version had CSS inline under style-src self: Chromium silently blocked its design.
-   assert.match(await page.locator('link[rel="stylesheet"]').getAttribute('href'),/^sandbox\.css\?v=1$/);
+   assert.equal(await page.locator('link[rel="stylesheet"][href="sandbox.css?v=1"]').count(),1);
    const styling=await page.evaluate(()=>({
     panel:getComputedStyle(document.querySelector('.panel')).backgroundColor,
     radius:getComputedStyle(document.querySelector('.panel')).borderRadius,
