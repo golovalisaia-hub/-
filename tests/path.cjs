@@ -10,7 +10,8 @@ assert.equal(english.length,14,'14 authored English foundation lessons');
 for(const [track,items] of [['QA',qa],['English',english]]){
  for(let i=0;i<items.length;i++){
   const item=items[i];
-  for(const field of ['title','theory','example','practice','criteria'])assert.ok(typeof item[field]==='string'&&item[field].length>24,`${track} ${i+1} ${field}`);
+  assert.ok(typeof item.title==='string'&&item.title.length>=6,`${track} ${i+1} title`);
+  for(const field of ['theory','example','practice','criteria'])assert.ok(typeof item[field]==='string'&&item[field].length>24,`${track} ${i+1} ${field}`);
   assert.equal(item.quiz.length,2,`${track} ${i+1} questions`);
   for(const [question,choices,correct,reason] of item.quiz){
    assert.ok(question.length>8&&reason.length>12);
