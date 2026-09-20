@@ -36,6 +36,7 @@ on:
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
       - 'tests/visual-audit.cjs'
+      - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
       - '.github/workflows/browser-e2e.yml'
@@ -67,6 +68,7 @@ jobs:
           node tests/browser.cjs
           node tests/foundation-browser.cjs
           node tests/cloud-e2e.cjs
+          node tests/real-guest.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection
         if: always()
