@@ -1,15 +1,16 @@
-/* Runs only student-supplied Python inside a disposable worker. No Supabase session or keys are passed here. */
-import { loadPyodide } from 'https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.mjs';
-const ready = loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v314.0.7/full/' });
-ready.then(() => self.postMessage({type:'ready'})).catch(error => self.postMessage({type:'load-error',error:String(error?.message||error)}));
-self.onmessage = async ({data}) => {
+/* Runs student-supplied Python inside a disposable module worker. No session or keys enter here. */
+/* Dynamic import is important: static imports of worker dependencies use the document's worker-src CSP. */
+const ready=import('https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.mjs')
+  .then(({loadPyodide})=>loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v314.0.7/full/'}));
+ready.then(()=>self.postMessage({type:'ready'})).catch(error=>self.postMessage({type:'load-error',error:String(error?.message||error)}));
+self.onmessage=async ({data})=>{
   const {id,code,stdin=''}=data||{};
-  if (!Number.isInteger(id) || typeof code!=='string' || code.length>12000 || typeof stdin!=='string' || stdin.length>3000) return;
-  try {
-    const py = await ready;
+  if(!Number.isInteger(id)||typeof code!=='string'||code.length>12000||typeof stdin!=='string'||stdin.length>3000)return;
+  try{
+    const py=await ready;
     py.globals.set('_academy_code',code);
     py.globals.set('_academy_stdin',stdin);
-    const output = await py.runPythonAsync(`
+    const output=await py.runPythonAsync(`
 import sys, io, contextlib, traceback
 _ac_out = io.StringIO()
 _ac_old_in = sys.stdin
@@ -28,7 +29,7 @@ finally:
 `);
     const result=output.toJs();output.destroy();
     self.postMessage({type:'result',id,ok:Boolean(result[0]),output:String(result[1]||'')});
-  } catch(error) {
+  }catch(error){
     self.postMessage({type:'result',id,ok:false,output:String(error?.message||error).slice(0,12000)});
   }
 };
