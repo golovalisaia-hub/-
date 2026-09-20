@@ -27,6 +27,7 @@ on:
       - 'python-worker.mjs'
       - 'library.html'
       - 'library.css'
+      - 'library-nav.css'
       - 'library.js'
       - 'vendor/supabase.js'
       - 'tests/browser.cjs'
