@@ -60,6 +60,11 @@ async function load(){
  owner=false;rows.clear();render();
  if(!db){status('Модуль облака недоступен. Уроки можно открыть без входа; прогресс пока не загрузится.','bad');return;}
  try{
+  /* Session presence is only a guest check; getUser() and profile verify access. */
+  if(typeof db.auth.getSession==='function'){
+   const session=await db.auth.getSession();if(session.error)throw session.error;
+   if(!session.data?.session){status('Гостевой просмотр. Войди, чтобы увидеть свой настоящий прогресс.');return;}
+  }
   const auth=await db.auth.getUser();if(auth.error)throw auth.error;
   if(!auth.data?.user){status('Гостевой просмотр. Войди, чтобы увидеть свой настоящий прогресс.');return;}
   const profile=await db.from('profiles').select('role').eq('id',auth.data.user.id).single();
