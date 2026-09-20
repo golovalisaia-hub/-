@@ -4,7 +4,6 @@ on:
     branches: [main]
     paths:
       - 'index.html'
-      - 'home.css'
       - 'home.js'
       - 'mobile-clean.css'
       - 'archive-mobile.css'
@@ -13,27 +12,20 @@ on:
       - 'ai.js'
       - 'supabase/functions/academy-tutor/**'
       - 'path.html'
-      - 'path.css'
-      - 'path-redesign.css'
       - 'path-entry.js'
       - 'path-lessons.js'
       - 'path.js'
       - 'studio.html'
-      - 'studio.css'
-      - 'studio-extras.css'
+      - 'academy-ui.css'
       - 'studio.js'
       - 'studio-extras.js'
-      - 'academy-design.css'
       - 'academy-quality.*'
       - 'learning-checks.js'
       - 'curriculum.js'
       - 'lesson-guide.js'
       - 'foundation.js'
-      - 'foundation.css'
       - 'python-worker.mjs'
       - 'library.html'
-      - 'library.css'
-      - 'library-nav.css'
       - 'library.js'
       - 'sandbox.html'
       - 'sandbox.css'
@@ -61,6 +53,7 @@ on:
       - 'tests/mentor-browser.cjs'
       - 'tests/skills-browser.cjs'
       - 'tests/mobile-nav-browser.cjs'
+      - 'tests/interactive.cjs'
       - 'path-assessment.js'
       - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
@@ -106,6 +99,7 @@ jobs:
           node tests/mentor-browser.cjs
           node tests/skills-browser.cjs
           node tests/mobile-nav-browser.cjs
+          node tests/interactive.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection
         if: always()

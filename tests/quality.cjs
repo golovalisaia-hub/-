@@ -24,7 +24,10 @@ for(let n=1;n<=84;n++){
 const extras=fs.readFileSync('studio-extras.js','utf8');
 assert.match(extras,/learning-checks\.js/);
 assert.match(extras,/academy-quality\.js/);
-assert.match(extras,/academy-quality\.css/);
+/* Оформление живёт в одном academy-ui.css, который страница подключает напрямую;
+   скрипт больше не вставляет отдельные таблицы стилей. */
+assert.doesNotMatch(extras,/\.css'/,'studio-extras.js injects behaviour only, not stylesheets');
+assert.match(fs.readFileSync('studio.html','utf8'),/academy-ui\.css/,'the archive uses the single stylesheet');
 const quality=fs.readFileSync('academy-quality.js','utf8');
 assert.match(quality,/stopImmediatePropagation/,'Invalid completion blocked before core handler.');
 assert.match(quality,/beforeunload/,'Pending timer warns on navigation.');

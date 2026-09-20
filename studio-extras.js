@@ -70,9 +70,6 @@ function setupRail(){
 }
 function boot(){setupRail();init();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-/* Versioned same-origin enhancements loaded in order. The archive fix follows the design sheet. */
-const css=document.createElement('link');css.rel='stylesheet';css.href='academy-quality.css?v=1';document.head.append(css);
-const design=document.createElement('link');design.rel='stylesheet';design.href='academy-design.css?v=1';document.head.append(design);
-const archive=document.createElement('link');archive.rel='stylesheet';archive.href='archive-mobile.css?v=1';document.head.append(archive);
+/* Оформление целиком в academy-ui.css, который страница подключает напрямую: здесь только поведение. */
 for(const name of ['learning-checks.js?v=1','academy-quality.js?v=1']){const script=document.createElement('script');script.src=name;script.async=false;document.head.append(script);}
 })();

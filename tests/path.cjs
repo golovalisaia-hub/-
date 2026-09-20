@@ -27,7 +27,7 @@ const html=read('path.html'),js=read('path.js'),root=read('index.html');
 assert.match(root,/id="mapTitle"/,'The homepage is now a course map dashboard');
 assert.match(root,/href="path\.html"/,'Dashboard links to real QA-first lessons');
 assert.match(root,/home\.js/,'Dashboard loads actual owner progress');
-for(const asset of ['path.css','path-redesign.css','path-entry.js','path-lessons.js','path.js','vendor/supabase.js'])assert.ok(html.includes(asset),`Missing path asset ${asset}`);
+for(const asset of ['academy-ui.css','path-entry.js','path-lessons.js','path-assessment.js','path.js','vendor/supabase.js'])assert.ok(html.includes(asset),`Missing path asset ${asset}`);
 for(const id of ['qaTab','englishTab','lessonSelect','answer','save','complete','reviewed','criteriaBox','progressFill','cloudStatus','loginDialog'])assert.ok(html.includes(`id="${id}"`),`Missing UI #${id}`);
 assert.doesNotMatch(html,/id="pythonTab"/,'Python is not an obligatory foundation tab');
 assert.match(js,/academy_path_progress/,'Separate path progress');

@@ -44,7 +44,7 @@ async function stub(page,source){await page.route('**/vendor/supabase.js',route=
   owner.on('pageerror',error=>errors.push(error.message));await stub(owner,OWNER);await owner.goto(ROOT,{waitUntil:'domcontentloaded'});
   await owner.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('Облачный прогресс загружен'));
   assert.equal(await owner.locator('#percent').textContent(),'7%');
-  assert.equal(await owner.locator('#weekOneCount').textContent(),'1 / 7');
+  assert.equal(await owner.locator('#weekOneCount').textContent(),'1 / 7 уроков');
   assert.equal(await owner.locator('#currentHeading').textContent(),'Урок 02 / 14');
   assert.equal(await owner.locator('#currentQa').textContent(),'Черновик');
   assert.equal(await owner.locator('#qaProgress').textContent(),'1 / 14');

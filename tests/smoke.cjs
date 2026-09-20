@@ -32,7 +32,8 @@ for(let index=0;index<84;index++){
 }
 const html=read('studio.html'),script=read('studio.js'),root=read('index.html'),worker=read('python-worker.mjs'),extras=read('studio-extras.js');
 assert.match(root,/href="path\.html"/, 'The homepage must open the new QA-first path.');
-for(const file of ['curriculum.js','lesson-guide.js','studio.js','studio-extras.js','studio.css','studio-extras.css'])assert.ok(html.includes(`"${file}"`),`Legacy studio must load ${file}`);
+for(const file of ['curriculum.js','lesson-guide.js','studio.js','studio-extras.js'])assert.ok(html.includes(`"${file}"`),`Legacy studio must load ${file}`);
+assert.match(html,/academy-ui\.css/,'every page uses the single Academy stylesheet');
 assert.match(html,/worker-src 'self'/);
 assert.match(worker,/loadPyodide/);
 assert.match(extras,/MutationObserver/);
