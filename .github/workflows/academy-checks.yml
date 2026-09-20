@@ -22,9 +22,11 @@ jobs:
           node --check foundation.js
           node --check path-lessons.js
           node --check path.js
+          node --check home.js
+          node --check path-entry.js
       - name: Validate legacy curriculum, content and UI wiring
         run: node tests/smoke.cjs
       - name: Validate learning feedback and revision quizzes
         run: node tests/quality.cjs
-      - name: Validate QA-first curriculum and cloud isolation
+      - name: Validate QA-first curriculum, dashboard and cloud isolation
         run: node tests/path.cjs
