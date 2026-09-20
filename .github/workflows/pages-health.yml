@@ -1,0 +1,42 @@
+name: Academy public site health
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pages-health.yml'
+      - 'index.html'
+      - 'studio.html'
+      - 'foundation.js'
+      - 'foundation.css'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-url:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Check Pages DNS, root, lesson and required mobile assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOST=golovalisaia-hub.github.io
+          BASE="https://$HOST/-/"
+          echo "DNS for $HOST:"
+          getent ahostsv4 "$HOST" | head -n 3 || true
+          fail=0
+          for path in '' studio.html studio.css studio-extras.css curriculum.js lesson-guide.js studio.js studio-extras.js library.html python-worker.mjs; do
+            url="$BASE$path"
+            # A short retry protects against momentary deployment propagation.
+            status=$(curl -sSL --retry 2 --retry-delay 2 --connect-timeout 8 --max-time 20 -o /tmp/academy-health-body -w '%{http_code}' "$url") || status=000
+            printf '%-23s HTTP %s\n' "${path:-/}" "$status"
+            if [ "$status" != 200 ]; then fail=1; fi
+            if [ "$status" = 200 ] && [ "$path" = studio.html ]; then
+              if ! grep -q 'Academy' /tmp/academy-health-body; then echo 'Unexpected Studio HTML'; fail=1; fi
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo 'FAIL: Public Pages link or one or more essential assets unavailable. Check repository Settings > Pages source/deployment and domain.'
+            exit 1
+          fi
+          echo 'PASS: Public Academy URL and lesson assets return HTTP 200 from GitHub-hosted runner.'
