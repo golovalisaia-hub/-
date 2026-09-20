@@ -1,0 +1,18 @@
+/* Knowledge checks and guided help match the existing Academy design. */
+.quality-panel{margin:20px 0 22px;padding:20px;border:1px solid #365369;border-radius:18px;background:linear-gradient(145deg,#172e3a,#10263b);box-shadow:0 15px 36px #030c1630}
+.quality-panel>.eyebrow{color:#b8f08e;letter-spacing:.15em}
+.quality-panel>h4{margin:8px 0 12px;font-size:18px;letter-spacing:-.025em}
+.quality-panel p{line-height:1.65}
+.quality-panel .quality-small{color:#aec5d2;font-size:13px;margin:10px 0}
+.quality-panel .quiz-success{padding:14px 16px;color:#c4f5bc;background:#183e36;border:1px solid #427855;border-radius:12px;font-weight:700}
+.review-quiz{margin:14px 0}.review-quiz h4{font-size:21px;margin:10px 0 14px}
+.quiz-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.quiz-choices button{min-height:54px;min-width:0;padding:12px 10px;line-height:1.4;overflow-wrap:anywhere;border:1px solid #547089;background:#1a3444;color:#f0f7fc;border-radius:12px;font-weight:700;transition:background .17s,transform .17s}
+.quiz-choices button:hover{background:#28504c}.quiz-choices button:active{transform:scale(.985)}.quiz-choices button.incorrect{border-color:#ba636a;background:#432734}
+.mentor-help{border:1px solid #3b5369;border-radius:14px;background:#0e2031;margin-top:18px;overflow:hidden}
+.mentor-help>summary{cursor:pointer;display:flex;align-items:center;gap:8px;padding:15px 17px;min-height:50px;color:#d9f1d1;font-weight:750}
+.mentor-help[open]>summary{border-bottom:1px solid #334a60}
+.mentor-inner{padding:15px}.mentor-actions{display:flex;flex-wrap:wrap;gap:8px}.mentor-actions button{min-height:44px;flex:1 1 140px;font-size:13px;border-color:#527084}
+.mentor-message{padding:14px;border-left:3px solid #b8f08e;border-radius:9px;background:#192d3d;color:#e2eff0;white-space:pre-line}
+@media(max-width:650px){.quality-panel{padding:15px;border-radius:14px}.quiz-choices{grid-template-columns:1fr}.quiz-choices button{width:100%;text-align:left;padding:14px 16px;min-height:51px}.mentor-actions{flex-direction:column}.mentor-actions button{width:100%}}
+@media(prefers-reduced-motion:reduce){.quiz-choices button{transition:none!important}}
