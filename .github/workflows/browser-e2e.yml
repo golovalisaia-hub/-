@@ -37,6 +37,7 @@ on:
       - 'tests/cloud-e2e.cjs'
       - 'tests/visual-audit.cjs'
       - 'tests/responsive-audit.cjs'
+      - 'tests/cross-device.cjs'
       - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
@@ -71,6 +72,7 @@ jobs:
           node tests/cloud-e2e.cjs
           node tests/real-guest.cjs
           node tests/responsive-audit.cjs
+          node tests/cross-device.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection
         if: always()
