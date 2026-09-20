@@ -17,7 +17,8 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       assert.equal(await page.locator('#topic').count(),1);
       assert.equal(await page.locator('#academyCompanion').count(),1);
       const links=page.locator('.rail-bottom a');
-      assert.equal(await links.count(),3,`${config.name}: expected lessons, books, calendar links`);
+      assert.equal(await links.count(),3,`${config.name}: expected new-course, books, calendar links`);
+      assert.equal(await links.first().getAttribute('href'),'path.html',`${config.name}: archived course must link to current lessons`);
       assert.equal(await links.nth(1).getAttribute('href'),'library.html');
       assert.equal(await links.nth(2).getAttribute('href'),'https://golovalisaia-hub.github.io/sever-planner/');
       const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
@@ -29,7 +30,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       assert.equal(await links.first().isVisible(),true,`${config.name}: collapsing the rail must never hide the navigation`);
       if(config.width<=600){
         const nav=await links.first().evaluate(el=>getComputedStyle(el.closest('.rail-bottom')).position);
-        assert.equal(nav,'fixed',`${config.name}: mobile lesson navigation stays visible`);
+        assert.equal(nav,'static',`${config.name}: archived navigation stays in the page instead of covering exercises`);
       }
       if(compact){
         await page.locator('#railToggle').click();
@@ -58,7 +59,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       await page.locator('#tabQa').click();
       assert.match(await page.locator('#qualityPanel').innerText(),/ожидаемый результат/);
       assert.deepEqual(errors,[],`${config.name}: page errors ${errors.join('; ')}`);
-      console.log(`PASS: ${config.name}: branded lessons, three destinations, revision quiz and layout`);
+      console.log(`PASS: ${config.name}: archived lessons, non-overlay nav, revision quiz and layout`);
       await page.goto('http://127.0.0.1:4173/library.html',{waitUntil:'domcontentloaded'});
       await page.locator('#cloudStatus').waitFor();
       await page.waitForFunction(()=>getComputedStyle(document.documentElement).getPropertyValue('--a-accent').trim()==='#b8f08e',undefined,{timeout:15000});
