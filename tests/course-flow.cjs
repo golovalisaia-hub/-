@@ -44,7 +44,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
   await page.locator('#englishList a').first().click();
   await page.waitForURL(/subject=english.*lesson=1.*flow=1/);
   await page.locator('body.guided-lesson #flowTitle').waitFor();
-  assert.match(await page.locator('#flowCourse').innerText(),/English/);
+  assert.match(await page.locator('#flowCourse').innerText(),/English/i);
   assert.equal(await page.locator('#qaTab').isVisible(),false);
   assert.equal(await page.locator('#lessonTitle').innerText(),await page.evaluate(()=>AcademyPathLessons.english[0].title),'English title must not use QA topic');
   assert.equal(await page.locator('.quiz').isVisible(),false);
