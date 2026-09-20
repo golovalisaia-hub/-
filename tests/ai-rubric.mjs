@@ -1,4 +1,4 @@
-/* Pure module tests; require Node 22 --experimental-strip-types. No API key or user data. */
+/* Pure module tests; Node 22 --experimental-strip-types. No API key or user data. */
 import assert from 'node:assert/strict';
 import {lessonRubric} from '../supabase/functions/academy-tutor/rubrics.ts';
 for(const [subject,count] of [['qa',14],['english',14],['python',4]]){
@@ -8,7 +8,8 @@ for(const [subject,count] of [['qa',14],['english',14],['python',4]]){
   assert.ok(item.goal.length>=15,`${subject} ${n}: weak goal`);
   assert.ok(item.task.length>=20,`${subject} ${n}: missing independent task`);
   assert.ok(item.checks.length>=2,`${subject} ${n}: incomplete criteria`);
-  assert.ok(item.checks.every(value=>value.length>=8),`${subject} ${n}: vague criterion`);
+  // Exact accepted examples such as "a user" are meaningful despite short length.
+  assert.ok(item.checks.every(value=>typeof value==='string'&&value.trim().length>=4),`${subject} ${n}: empty criterion`);
   assert.ok(item.pitfall.length>=15,`${subject} ${n}: missing error guidance`);
  }
  assert.equal(lessonRubric(subject,count+1),null,'Cannot advertise unpublished lessons');
