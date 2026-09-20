@@ -41,6 +41,10 @@ on:
       - 'mentor.html'
       - 'mentor.css'
       - 'mentor.js'
+      - 'qa-transfer.html'
+      - 'qa-transfer.css'
+      - 'qa-transfer.js'
+      - 'qa-transfer-core.js'
       - 'skills.html'
       - 'skills.css'
       - 'skills.js'
@@ -59,12 +63,19 @@ on:
       - 'tests/assessment.cjs'
       - 'tests/sandbox-browser.cjs'
       - 'tests/mentor-browser.cjs'
+      - 'tests/qa-transfer-browser.cjs'
       - 'tests/skills-browser.cjs'
       - 'tests/mobile-nav-browser.cjs'
       - 'path-assessment.js'
       - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
+      - '.github/workflows/browser-e2e.yml'
+  pull_request:
+    paths:
+      - 'qa-transfer*'
+      - 'tests/qa-transfer-browser.cjs'
+      - 'path-entry.js'
       - '.github/workflows/browser-e2e.yml'
   workflow_dispatch:
 permissions:
@@ -92,6 +103,7 @@ jobs:
           node --check skills.js
           node --check skills-controls.js
           node --check ai.js
+          node --check qa-transfer-browser.cjs 2>/dev/null || node --check tests/qa-transfer-browser.cjs
           node tests/home-browser.cjs
           node tests/ai-browser.cjs
           node tests/path-browser.cjs
@@ -104,6 +116,7 @@ jobs:
           node tests/assessment.cjs
           node tests/sandbox-browser.cjs
           node tests/mentor-browser.cjs
+          node tests/qa-transfer-browser.cjs
           node tests/skills-browser.cjs
           node tests/mobile-nav-browser.cjs
           node tests/visual-audit.cjs
