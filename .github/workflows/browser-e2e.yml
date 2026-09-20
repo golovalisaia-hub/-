@@ -29,6 +29,8 @@ on:
       - 'library.css'
       - 'library-nav.css'
       - 'library.js'
+      - 'sandbox.html'
+      - 'sandbox.js'
       - 'vendor/supabase.js'
       - 'tests/browser.cjs'
       - 'tests/home-browser.cjs'
@@ -39,6 +41,7 @@ on:
       - 'tests/responsive-audit.cjs'
       - 'tests/cross-device.cjs'
       - 'tests/assessment.cjs'
+      - 'tests/sandbox-browser.cjs'
       - 'path-assessment.js'
       - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
@@ -60,7 +63,7 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install headless Chromium
         run: npx playwright install --with-deps --only-shell chromium
-      - name: Test dashboard, lessons, library, cloud mocks, Python, tablet layout and screenshots
+      - name: Test dashboard, lessons, library, QA sandbox, cloud mocks, Python, tablet layout and screenshots
         run: |
           node tests/server.cjs > /tmp/academy-http.log 2>&1 &
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
@@ -76,6 +79,7 @@ jobs:
           node tests/responsive-audit.cjs
           node tests/cross-device.cjs
           node tests/assessment.cjs
+          node tests/sandbox-browser.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection
         if: always()
