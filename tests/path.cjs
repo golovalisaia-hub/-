@@ -24,12 +24,14 @@ for(const [track,items] of [['QA',qa],['English',english]]){
  }
 }
 const html=read('path.html'),js=read('path.js'),root=read('index.html');
-assert.match(root,/url=path\.html/,'QA-first is the homepage');
-for(const asset of ['path.css','path-lessons.js','path.js','vendor/supabase.js'])assert.ok(html.includes(asset),`Missing path asset ${asset}`);
+assert.match(root,/id="mapTitle"/,'The homepage is now a course map dashboard');
+assert.match(root,/href="path\.html"/,'Dashboard links to real QA-first lessons');
+assert.match(root,/home\.js/,'Dashboard loads actual owner progress');
+for(const asset of ['path.css','path-redesign.css','path-entry.js','path-lessons.js','path.js','vendor/supabase.js'])assert.ok(html.includes(asset),`Missing path asset ${asset}`);
 for(const id of ['qaTab','englishTab','lessonSelect','answer','save','complete','reviewed','criteriaBox','progressFill','cloudStatus','loginDialog'])assert.ok(html.includes(`id="${id}"`),`Missing UI #${id}`);
 assert.doesNotMatch(html,/id="pythonTab"/,'Python is not an obligatory foundation tab');
 assert.match(js,/academy_path_progress/,'Separate path progress');
 assert.match(js,/\.upsert\(/,'Cloud upsert');
 assert.doesNotMatch(js,/\.from\(['"]tasks['"]\)/,'Never mutate planner tasks from the new path');
 assert.match(js,/academy-path-draft-v1/,'Local draft fallback');
-console.log('PASS: QA-first route, 14 QA + 14 English lessons, valid quizzes, isolated learning records and no SEVER task writes.');
+console.log('PASS: focused dashboard, 14 QA + 14 English lessons, valid quizzes, isolated learning records and no SEVER task writes.');
