@@ -11,11 +11,20 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       const errors=[];page.on('pageerror',error=>errors.push(error.message));
       await page.goto('http://127.0.0.1:4173/studio.html',{waitUntil:'domcontentloaded'});
       await page.locator('#qualityPanel').waitFor({timeout:20000});
+      await page.waitForFunction(()=>getComputedStyle(document.documentElement).getPropertyValue('--a-accent').trim()==='#b8f08e',undefined,{timeout:15000});
       assert.equal(await page.locator('#heading').textContent(),'Урок 01 / 84');
       assert.equal(await page.locator('#topic').count(),1);
       assert.equal(await page.locator('#academyCompanion').count(),1);
+      const links=page.locator('.rail-bottom a');
+      assert.equal(await links.count(),3,`${config.name}: expected lessons, books, calendar links`);
+      assert.equal(await links.nth(1).getAttribute('href'),'library.html');
+      assert.equal(await links.nth(2).getAttribute('href'),'https://golovalisaia-hub.github.io/sever-planner/');
       const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
       assert.ok(horizontal<=2,`${config.name}: horizontal overflow ${horizontal}px`);
+      if(config.width<=740){
+        const nav=await links.first().evaluate(el=>getComputedStyle(el.closest('.rail-bottom')).position);
+        assert.equal(nav,'fixed',`${config.name}: mobile lesson navigation stays visible`);
+      }
       await page.locator('#tabEnglish').click();
       await page.locator('.quiz-choices button').first().waitFor();
       for(let index=0;index<4;index++){
@@ -28,16 +37,17 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       await page.locator('#tabQa').click();
       assert.match(await page.locator('#qualityPanel').innerText(),/ожидаемый результат/);
       assert.deepEqual(errors,[],`${config.name}: page errors ${errors.join('; ')}`);
-      console.log(`PASS: ${config.name}: lessons, revision quiz, feedback, layout`);
+      console.log(`PASS: ${config.name}: branded lessons, three destinations, revision quiz and layout`);
       await page.goto('http://127.0.0.1:4173/library.html',{waitUntil:'domcontentloaded'});
       await page.locator('#cloudStatus').waitFor();
+      await page.waitForFunction(()=>getComputedStyle(document.documentElement).getPropertyValue('--a-accent').trim()==='#b8f08e',undefined,{timeout:15000});
       await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('Войди в Academy'),undefined,{timeout:10000});
       assert.equal(await page.locator('#save').isDisabled(),true,`${config.name}: guest must not edit cloud books`);
       assert.ok(await page.locator('#book').count(),`${config.name}: library form present`);
       const libraryOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
       assert.ok(libraryOverflow<=2,`${config.name}: library overflow ${libraryOverflow}px`);
       assert.deepEqual(errors,[],`${config.name}: library errors ${errors.join('; ')}`);
-      console.log(`PASS: ${config.name}: private reading journal remains closed for guest`);
+      console.log(`PASS: ${config.name}: branded book diary and guest privacy`);
       await page.close();
     }
     const page=await browser.newPage();
