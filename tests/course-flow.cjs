@@ -10,7 +10,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
   await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.goto(ROOT+'/',{waitUntil:'domcontentloaded'});
-  await page.locator('.nav-links a[href="path.html"]').click();
+  await page.locator('.nav-links a').nth(1).click();
   await page.waitForURL(/courses\.html/);
   await page.locator('#qaList a').first().waitFor();
   assert.equal(await page.locator('#qaList a').count(),14,'QA lessons count');
