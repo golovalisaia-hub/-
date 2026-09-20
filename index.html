@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220"><meta name="description" content="SEVER Academy — отдельный учебный сайт по QA, Python и английскому">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; connect-src 'self' https://vdhazibkfpgclcwyvvbi.supabase.co wss://vdhazibkfpgclcwyvvbi.supabase.co; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests">
+<title>SEVER Academy · Учись каждый день</title><link rel="stylesheet" href="styles.css"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js" defer></script><script src="curriculum.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar" aria-label="Навигация">
+  <a class="brand" href="./" aria-label="SEVER Academy — главная"><span class="brand-mark">S<span>.</span></span><span>SEVER <small>ACADEMY</small></span></a>
+  <p class="side-label">ОБУЧЕНИЕ</p>
+  <button class="nav active" id="goToday" type="button"><span aria-hidden="true">◉</span> Сегодня</button>
+  <button class="nav" id="goProgram" type="button"><span aria-hidden="true">▦</span> Программа</button>
+  <button class="nav" id="goProgress" type="button"><span aria-hidden="true">↗</span> Прогресс</button>
+  <div class="side-bottom"><p class="side-label">СВЯЗЬ С КАЛЕНДАРЁМ</p><div class="status" id="sideStatus">○ Вход не выполнен</div><a href="https://golovalisaia-hub.github.io/sever-planner/" target="_blank" rel="noopener noreferrer" class="sever-link">Открыть SEVER ↗</a></div>
+</aside>
+<main class="main">
+<header class="top"><div><div class="eyebrow">ЛИЧНАЯ УЧЕБНАЯ ПЛАТФОРМА</div><div class="top-title">Твой путь в IT</div></div><button id="accountButton" class="account" type="button">Войти в аккаунт</button></header>
+<section class="hero"><div><span class="hero-label">QA · PYTHON · ENGLISH</span><h1>Небольшие шаги.<br><em>Реальные навыки.</em></h1><p>12 недель практики. Уроки здесь, галочка в SEVER — только после завершения трёх блоков.</p><div class="hero-actions"><button class="primary" id="startToday">Начать сегодняшний урок →</button><button class="secondary" id="showCalendar">Смотреть программу</button></div></div><div class="hero-ring" aria-label="Прогресс курса"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="49"/><circle id="ringArc" class="progress-arc" cx="60" cy="60" r="49"/></svg><div><strong id="heroPercent">0%</strong><small>пройдено</small></div></div></section>
+<div class="metrics"><div class="metric"><span>УЧЕБНЫХ ДНЕЙ</span><strong>84</strong><small>12 недель</small></div><div class="metric"><span>ЗАВЕРШЕНО</span><strong id="doneCount">0</strong><small>занятий в SEVER</small></div><div class="metric"><span>СЕГОДНЯ</span><strong id="todayCount">01 / 84</strong><small id="todayDateLabel">20 сентября</small></div></div>
+<section id="lessonSection" class="section"><div class="section-heading"><div><span class="eyebrow">ТВОЁ ЗАНЯТИЕ</span><h2 id="dayHeading">День 1</h2><p id="daySubheading">Выбери урок и приступай</p></div><div class="day-switch"><button id="prevDay" type="button" aria-label="Предыдущий день">←</button><button id="nextDay" type="button" aria-label="Следующий день">→</button></div></div>
+<div id="cloudNotice" class="notice" role="status">Сначала войди в тот же аккаунт, что используешь в SEVER. Программу можно просматривать без входа.</div>
+<div class="block-list" id="blockList"></div>
+<div class="lesson-panel" id="lessonPanel" aria-live="polite"></div>
+<div class="complete-panel"><div><span class="eyebrow">РЕЗУЛЬТАТ ДНЯ</span><h3 id="completionTitle">Заверши три блока</h3><p id="completionDescription">Засчитываем только действительно выполненные блоки.</p></div><button id="retrySync" class="primary" type="button" hidden>Повторить синхронизацию</button></div>
+</section>
+<section id="programSection" class="section" hidden><div class="section-heading"><div><span class="eyebrow">ПОЛНЫЙ МАРШРУТ</span><h2>84 дня обучения</h2><p>Выбирай неделю, затем нужный день. Даты подтягиваются из твоего календаря SEVER после входа.</p></div></div><div id="weekList" class="weeks"></div></section>
+<section id="progressSection" class="section" hidden><div class="section-heading"><div><span class="eyebrow">ТВОЙ ПРОГРЕСС</span><h2>Только реальные результаты</h2><p>Завершённые занятия считаются по задачам твоего аккаунта SEVER.</p></div></div><div id="progressList" class="progress-list"></div><p class="hint">Промежуточные отметки блоков пока сохраняются только в этом браузере. Итоговое завершение дня хранится в облаке SEVER.</p></section>
+<footer>SEVER Academy — отдельный учебный проект. <a href="https://golovalisaia-hub.github.io/sever-planner/" target="_blank" rel="noopener noreferrer">SEVER ↗</a> · <span id="footerSync">Без подключения</span></footer>
+</main></div>
+<dialog id="loginDialog" class="login-dialog"><form method="dialog" class="login-card" id="loginForm"><div class="dialog-head"><div><span class="eyebrow">ТВОЁ ОБЛАКО</span><h2>Войти в SEVER</h2></div><button class="close" type="button" id="closeLogin" aria-label="Закрыть">×</button></div><p>Входи с той же почтой и паролем, что в SEVER. На отдельном сайте вход выполняется самостоятельно; пароль мы не сохраняем.</p><label>Email<input id="loginEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label><label>Пароль<input id="loginPassword" type="password" autocomplete="current-password" required minlength="1" placeholder="Пароль от SEVER"></label><p id="loginError" class="error" role="alert"></p><button id="loginSubmit" class="primary full" type="submit">Войти и подключить календарь</button><button id="logoutButton" type="button" class="secondary full" hidden>Выйти из академии</button><p class="hint">Доступ только к своей учётной записи. Код сайта публичен; личный прогресс защищён авторизацией Supabase.</p></form></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body></html>
