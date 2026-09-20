@@ -19,6 +19,7 @@ jobs:
           node --check python-worker.mjs
           node --check learning-checks.js
           node --check academy-quality.js
+          node --check foundation.js
       - name: Validate curriculum, lesson content and UI wiring
         run: node tests/smoke.cjs
       - name: Validate learning feedback and revision quizzes
