@@ -21,10 +21,31 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       assert.equal(await links.nth(2).getAttribute('href'),'https://golovalisaia-hub.github.io/sever-planner/');
       const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
       assert.ok(horizontal<=2,`${config.name}: horizontal overflow ${horizontal}px`);
+      const compact=config.width<=1100;
+      assert.equal(await page.locator('#railExtra').isHidden(),compact,`${config.name}: progress block starts collapsed only below the sidebar breakpoint`);
+      assert.equal(await page.locator('#resume').isVisible(),true,`${config.name}: resume button stays reachable`);
+      assert.equal(await page.locator('#lessonSelect').isVisible(),true,`${config.name}: lesson picker stays reachable`);
+      assert.equal(await links.first().isVisible(),true,`${config.name}: collapsing the rail must never hide the navigation`);
       if(config.width<=740){
         const nav=await links.first().evaluate(el=>getComputedStyle(el.closest('.rail-bottom')).position);
         assert.equal(nav,'fixed',`${config.name}: mobile lesson navigation stays visible`);
       }
+      if(compact){
+        await page.locator('#railToggle').click();
+        await page.locator('#railExtra').waitFor({state:'visible',timeout:5000});
+        assert.equal(await page.locator('#railToggle').getAttribute('aria-expanded'),'true',`${config.name}: toggle reports the open state`);
+        await page.locator('#railToggle').click();
+        await page.locator('#railExtra').waitFor({state:'hidden',timeout:5000});
+      }else{
+        assert.ok(await page.locator('#railToggle').isHidden(),`${config.name}: the desktop rail needs no toggle`);
+        if(config.width>=1400){
+          const code=await page.locator('#tabPython').click().then(()=>page.locator('#code').boundingBox());
+          const out=await page.locator('#output').boundingBox();
+          assert.ok(out.x>code.x+code.width-5,`${config.name}: console output sits beside the editor, not below it`);
+          await page.locator('#tabQa').click();
+        }
+      }
+      
       await page.locator('#tabEnglish').click();
       await page.locator('.quiz-choices button').first().waitFor();
       for(let index=0;index<4;index++){
@@ -72,5 +93,12 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
     catch(error){throw Error(`Python run failed: ${await page.locator('#output').textContent()}; diagnostics: ${diagnostic.join(' | ')}`);}
     console.log('PASS: real Pyodide executes print(1 + 2) in a worker.');
     await page.close();
+    const offline=await browser.newPage();
+    await offline.route('**/cdn.jsdelivr.net/**',route=>route.abort());
+    await offline.goto('http://127.0.0.1:4173/studio.html',{waitUntil:'domcontentloaded'});
+    await offline.waitForFunction(()=>Boolean(window.supabase?.createClient),undefined,{timeout:20000});
+    assert.doesNotMatch(await offline.locator('#cloudStatus').textContent(),/Модуль облачного входа не загрузился/,'The vendored copy must replace the blocked CDN module.');
+    console.log('PASS: vendored Supabase copy loads when the CDN is unreachable.');
+    await offline.close();
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

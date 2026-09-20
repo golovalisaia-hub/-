@@ -16,6 +16,7 @@ const blockKey=(n,b)=>`${n}:${b}`;
 const localKey=(n,b)=>`academy-studio-draft-v1:${user?.id||'preview'}:${n}:${b}`;
 const safe=s=>String(s??'');
 const pad=n=>String(n).padStart(2,'0');
+const shortTopic=text=>{const first=safe(text).split(/[,.:;(]/)[0].trim()||safe(text).trim();return first.length>26?`${first.slice(0,25).trimEnd()}…`:first;};
 const taskPrefix=n=>`IT · День ${pad(n)}/84:`;
 const formatDay=date=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
 function moscowDay(date){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);const f=t=>parts.find(v=>v.type===t)?.value;return `${f('year')}-${f('month')}-${f('day')}`;}
@@ -70,6 +71,10 @@ function renderTimer(){
   $('timerSave').disabled=!timer.id;
   const today=sessions.filter(s=>moscowDay(new Date(s.ended_at))===moscowDay(new Date())).reduce((sum,s)=>sum+s.duration_seconds,0);
   $('todayMinutes').textContent=today?`${Math.round(today/60)} мин`:'0 минут';
+  const weekStart=Date.now()-6*86400000;
+  const week=sessions.filter(s=>new Date(s.ended_at).getTime()>=weekStart).reduce((sum,s)=>sum+s.duration_seconds,0);
+  $('weekMinutes').textContent=week>=3600?`${Math.floor(week/3600)} ч ${Math.round(week%3600/60)} мин`:`${Math.round(week/60)} мин`;
+  $('sessionCount').textContent=String(sessions.length);
 }
 function clearTimer(){timer={id:null,lesson:0,startedAt:null,startedMs:0,elapsedMs:0};renderTimer();}
 function startTimer(){if(!authorized){status('Для записи времени войди в свой аккаунт.','bad');$('loginDialog').showModal();return;}if(timer.startedMs)return;if(!timer.id){timer.id=crypto.randomUUID();timer.lesson=selected;timer.startedAt=now();timer.elapsedMs=0;}timer.startedMs=Date.now();renderTimer();}
@@ -257,7 +262,15 @@ function runPython(){
   clearTimeout(runTimeout);runTimeout=setTimeout(()=>{runEvidence.delete(blockKey(runLesson,'python'));stopWorker('Программа выполнялась слишком долго и остановлена. Проверь циклы и попробуй снова.');},9000);
 }
 function install(){
-  $('lessonSelect').innerHTML='';days.forEach((day,i)=>{const item=document.createElement('option');item.value=String(i+1);item.textContent=`${pad(i+1)} · ${day.qa} / ${day.python}`;$('lessonSelect').appendChild(item);});
+  $('lessonSelect').innerHTML='';
+  let group=null;
+  days.forEach((day,i)=>{
+    if(!group||Number(group.dataset.week)!==day.week){group=document.createElement('optgroup');group.dataset.week=String(day.week);group.label=`Неделя ${day.week+1}: ${safe(weeks[day.week]?.name)}`;$('lessonSelect').appendChild(group);}
+    const item=document.createElement('option');item.value=String(i+1);
+    item.textContent=`${pad(i+1)} · ${shortTopic(day.qa)}`;
+    item.title=`${pad(i+1)} · ${day.qa} / ${day.python}`;
+    group.appendChild(item);
+  });
   $('lessonSelect').addEventListener('change',event=>selection(Number(event.target.value)));
   $('resume').addEventListener('click',()=>selection(recommended()));
   $('previous').addEventListener('click',()=>selection(selected-1));$('next').addEventListener('click',()=>selection(selected+1));
@@ -279,10 +292,22 @@ function install(){
   setInterval(renderTimer,1000);
   window.addEventListener('online',()=>{if(db)loadCloud();});
 }
+function loadLocalSupabase(){
+  return new Promise(resolve=>{
+    const script=document.createElement('script');
+    script.src='vendor/supabase.js';
+    script.onload=()=>resolve(Boolean(window.supabase?.createClient));
+    script.onerror=()=>resolve(false);
+    document.head.append(script);
+  });
+}
 async function init(){
   if(days.length!==TOTAL||weeks.length!==12){status('Программа повреждена или загружена не полностью.','bad');return;}
   install();render();
-  if(!window.supabase?.createClient){status('Модуль облачного входа не загрузился. Уроки можно читать, но сохранение недоступно.','bad');return;}
+  if(!window.supabase?.createClient){
+    status('Загружаем запасную копию модуля входа…');
+    if(!await loadLocalSupabase()){status('Модуль облачного входа не загрузился. Уроки можно читать, но сохранение недоступно.','bad');return;}
+  }
   db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'sever-academy-auth-v1'}});
   $('logout').hidden=false;
   await loadCloud();

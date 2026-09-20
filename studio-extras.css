@@ -35,3 +35,37 @@ button,select,input,textarea{min-height:44px}textarea{min-height:125px}
 @media(max-width:600px){.topbar{gap:8px}.logo{font-size:17px;letter-spacing:.09em}.logo-mark{width:33px;height:33px;margin-right:3px;border-radius:10px}.topbar .quiet{font-size:12px}.rail{gap:8px}.rail label{margin:0}.rail select{min-height:50px}.content{padding:18px 12px 85px}.welcome{flex-wrap:wrap}.welcome h1{font-size:29px}.welcome-actions{flex-direction:row;width:100%}.welcome-actions .quiet{flex:1;min-height:44px}.lesson-head h2{font-size:22px}.tabs{position:sticky;top:66px;z-index:3;background:#101d30;padding:8px 0;margin:16px -3px;border-radius:10px}.tabs button{min-height:50px;font-size:12px}.companion{padding:16px;border-radius:13px}.vocab-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vocab-card summary{min-height:64px}.lesson-actions{flex-direction:column}.lesson-actions button{width:100%;min-height:49px}.example-insert{width:100%;min-height:49px}.session-actions button{min-height:46px}.finish button{min-height:49px}}
 @media(max-width:360px){.vocab-grid{grid-template-columns:1fr}.tabs button{font-size:11px;letter-spacing:-.02em}.logo{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.tabs button,.primary,.nav-action{transition:none!important}}
+
+/* Collapsible programme rail: below the theme's sidebar breakpoint the lesson starts on the first
+   screen. Only the progress card folds away — resume, picker and navigation stay in place. */
+.rail-extra{display:flex;flex-direction:column;gap:19px;flex:1}
+.nav-action{line-height:1.3;text-wrap:balance}
+.rail-toggle{display:none;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;color:var(--a-text,#dbe8f4);background:var(--a-surface,#15223a);border:1px solid var(--a-line,#2b415c);border-radius:13px;padding:11px 14px;font-size:13px;font-weight:700}
+.rail-toggle:hover{background:var(--a-surface-2,#1d2d49)}
+.rail-toggle-icon{color:var(--a-accent,#b8f08e);font-size:12px;transition:transform .18s}
+.rail:not(.rail-collapsed) .rail-toggle-icon{transform:rotate(180deg)}
+/* Study-time card: the same saved sessions, summarised so the card is not half empty. */
+.stat-extra{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid var(--a-line,#23354d)}
+.stat-extra>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.stat-extra .eyebrow{overflow-wrap:anywhere}
+.stat-extra b{font-size:17px;color:var(--a-text,#dceafa);font-variant-numeric:tabular-nums}
+/* Python console: code and output side by side where the screen allows it. */
+.python-split{display:grid;gap:14px}
+.python-result{display:flex;flex-direction:column;gap:8px;min-width:0}
+.python-split .output{margin:0}
+.output-label{font-size:13px;font-weight:700;color:var(--a-muted,#bfd2e0);margin:12px 0 8px;display:block}
+@media(min-width:1400px){
+  .python-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+  .python-result{position:sticky;top:96px}
+  .python-split .output{max-height:none;min-height:345px}
+}
+@media(max-width:1100px){
+  .rail-toggle{display:flex;min-height:50px}
+  .rail>label[for=lessonSelect]{display:none}
+  .rail-extra{grid-column:1/-1;gap:10px}
+  .rail.rail-collapsed .rail-extra{display:none}
+}
+@media(max-width:740px){.console-head{flex-direction:column;align-items:flex-start;gap:5px}.output-label{margin-top:14px}
+  /* «Закончить и сохранить» gets its own row instead of wrapping onto three lines. */
+  .session-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.session-actions #timerSave{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.rail-toggle-icon{transition:none!important}}

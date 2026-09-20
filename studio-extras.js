@@ -50,7 +50,28 @@ function init(){
   }
   new MutationObserver(render).observe(topic,{childList:true,characterData:true,subtree:true});render();
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+/* Below the theme's sidebar breakpoint the progress block is collapsed so the lesson starts on the
+   first screen. Resume, lesson picker and the Уроки/Книги/Календарь navigation always stay visible. */
+/* On a phone the progress block is collapsed so the lesson itself starts on the first screen.
+   The resume button and the lesson picker stay visible; only the passive part folds away. */
+function setupRail(){
+  const rail=document.querySelector('.rail'),toggle=document.getElementById('railToggle');
+  if(!rail||!toggle)return;
+  const compact=window.matchMedia('(max-width:1100px)');
+  const collapse=state=>{rail.classList.toggle('rail-collapsed',state);toggle.setAttribute('aria-expanded',String(!state));};
+  const sync=()=>collapse(compact.matches);
+  sync();
+  compact.addEventListener('change',sync);
+  toggle.addEventListener('click',()=>collapse(!rail.classList.contains('rail-collapsed')));
+  const label=document.getElementById('railToggleText'),progress=document.getElementById('progressText');
+  if(label&&progress){
+    const paint=()=>{const parts=progress.textContent.match(/(\d+)\D+(\d+)/);label.textContent=parts?`Прогресс · ${parts[1]} / ${parts[2]}`:'Прогресс';};
+    new MutationObserver(paint).observe(progress,{childList:true,characterData:true,subtree:true});
+    paint();
+  }
+}
+function boot(){setupRail();init();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 /* Versioned same-origin enhancements are loaded in order. Brand theme comes last so it wins the cascade. */
 const css=document.createElement('link');css.rel='stylesheet';css.href='academy-quality.css?v=1';document.head.append(css);
 const design=document.createElement('link');design.rel='stylesheet';design.href='academy-design.css?v=1';document.head.append(design);

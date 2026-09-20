@@ -17,6 +17,7 @@ on:
       - 'library.html'
       - 'library.css'
       - 'library.js'
+      - 'vendor/supabase.js'
       - 'tests/browser.cjs'
       - 'tests/cloud-e2e.cjs'
       - 'tests/mock-cloud.js'
