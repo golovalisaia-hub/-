@@ -30,6 +30,7 @@ on:
       - 'library-nav.css'
       - 'library.js'
       - 'sandbox.html'
+      - 'sandbox.css'
       - 'sandbox.js'
       - 'vendor/supabase.js'
       - 'tests/browser.cjs'
