@@ -103,7 +103,7 @@ jobs:
           node --check skills.js
           node --check skills-controls.js
           node --check ai.js
-          node --check qa-transfer-browser.cjs 2>/dev/null || node --check tests/qa-transfer-browser.cjs
+          node --check tests/qa-transfer-browser.cjs
           node tests/home-browser.cjs
           node tests/ai-browser.cjs
           node tests/path-browser.cjs
