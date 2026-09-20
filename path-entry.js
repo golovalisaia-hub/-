@@ -17,11 +17,17 @@ function apply(){
  if(!initial){selectRequested();initial=true;}
  if(!afterCloud&&status.includes('Вход подтверждён')){selectRequested();afterCloud=true;}
 }
+function syncTools(){
+ const picker=$('lessonSelect'),n=Number(picker?.value),qa=$('qaTab')?.getAttribute('aria-pressed')==='true';
+ if($('sandboxCallout'))$('sandboxCallout').hidden=!qa;
+ if($('mentorCallout'))$('mentorCallout').hidden=!qa;
+ if($('mentorLink')&&Number.isInteger(n)&&n>=1&&n<=14)$('mentorLink').href=`mentor.html?lesson=${n}`;
+}
 function reflect(){
  const picker=$('lessonSelect'),n=Number(picker?.value);if(!Number.isInteger(n)||n<1||n>14)return;
  const subject=$('englishTab')?.getAttribute('aria-pressed')==='true'?'english':'qa';
  const target=new URL(location.href);target.searchParams.set('lesson',String(n));target.searchParams.set('subject',subject);
- history.replaceState(null,'',target.pathname+target.search+target.hash);
+ history.replaceState(null,'',target.pathname+target.search+target.hash);syncTools();
 }
 function addPracticalLab(){
  const anchor=document.querySelector('.quiz');if(!anchor||$('sandboxCallout'))return;
@@ -32,10 +38,23 @@ function addPracticalLab(){
  const link=document.createElement('a');link.id='sandboxLink';link.href='sandbox.html';link.className='primary';link.textContent='Открыть QA-лабораторию ↗';
  body.append(heading,description,link);section.append(marker,body);anchor.after(section);
 }
+function addMentor(){
+ const first=document.querySelector('.lesson-body > .step');if(!first||$('mentorCallout'))return;
+ const section=document.createElement('section');section.id='mentorCallout';section.className='step practice-step';
+ const marker=document.createElement('span');marker.className='step-number';marker.textContent='↻';
+ const body=document.createElement('div'),heading=document.createElement('h5'),description=document.createElement('p');
+ heading.textContent='Тренер: повтори то, что не закрепилось';
+ description.textContent='Новые проверяемые задачи, подсказки после твоей попытки и возвращение к ошибкам в другие дни. История пока только на этом устройстве; это не ИИ и не экзамен.';
+ const link=document.createElement('a');link.id='mentorLink';link.href='mentor.html?lesson=1';link.className='primary';link.textContent='Открыть повторение по этой теме ↗';
+ body.append(heading,description,link);section.append(marker,body);first.before(section);
+ const nav=document.querySelector('.sidebar .navigation');if(nav&&!nav.querySelector('a[href="mentor.html"]')){
+   const navLink=document.createElement('a');navLink.href='mentor.html';navLink.textContent='↻ Тренер повторения QA';nav.append(navLink);
+ }
+}
 function init(){
  const picker=$('lessonSelect'),status=$('cloudStatus');if(!picker||!status)return;
  const observer=new MutationObserver(apply);observer.observe(status,{childList:true,characterData:true,subtree:true});
- addPracticalLab();apply();
+ addPracticalLab();addMentor();apply();syncTools();
  picker.addEventListener('change',reflect);
  for(const id of ['previous','next','continue','qaTab','englishTab'])$(id)?.addEventListener('click',()=>queueMicrotask(reflect));
 }
