@@ -6,9 +6,9 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
 const OWNER=`(()=>{
  const user={id:'overview-test-owner'};
  const rows=[
-  {track:'qa_foundation',lesson_number:1,status:'practiced',answer:'Пример для QA',quiz_score:2},
-  {track:'english_foundation',lesson_number:1,status:'practiced',answer:'Example English',quiz_score:2},
-  {track:'qa_foundation',lesson_number:2,status:'draft',answer:'Незавершённый черновик',quiz_score:0}
+  {user_id:user.id,track:'qa_foundation',lesson_number:1,status:'practiced',answer:'Пример для QA',quiz_score:2},
+  {user_id:user.id,track:'english_foundation',lesson_number:1,status:'practiced',answer:'Example English',quiz_score:2},
+  {user_id:user.id,track:'qa_foundation',lesson_number:2,status:'draft',answer:'Незавершённый черновик',quiz_score:0}
  ];
  const from=table=>{
   let filters=[];
@@ -55,7 +55,7 @@ async function stub(page,source){await page.route('**/vendor/supabase.js',route=
   await owner.locator('#weekTwoLessons a').nth(2).click();
   await owner.waitForURL('**/path.html?lesson=10&subject=qa');
   await owner.locator('#lessonNumber').waitFor();
-  await owner.waitForFunction(()=>document.querySelector('#lessonNumber').textContent==='10',{timeout:10000});
+  await owner.waitForFunction(()=>document.querySelector('#lessonNumber').textContent==='10',undefined,{timeout:10000});
   assert.equal(await owner.locator('#lessonSelect').inputValue(),'10');
   assert.equal(await owner.locator('#qaTab').getAttribute('aria-pressed'),'true');
   assert.deepEqual(errors,[],`Owner navigation errors: ${errors.join('; ')}`);
