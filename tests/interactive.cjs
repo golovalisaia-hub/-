@@ -4,9 +4,11 @@ const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const BASE='http://127.0.0.1:4173';
 const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{user:null},error:null}),getSession:async()=>({data:{session:null},error:null}),signOut:async()=>({error:null})}})};';
-const PAGES=['/','/path.html','/library.html','/studio.html'];
+const PAGES=['/','/path.html','/library.html','/studio.html','/skills.html','/sandbox.html','/mentor.html','/ai.html'];
 /* Навигация, которая на границе списка или на текущем уроке законно ничего не меняет. */
 const IDEMPOTENT=new Set(['resume','continue','previous','next']);
+/* Кнопки, эффект которых не в DOM: произношение через синтез речи (в headless звука нет). */
+const SPEECH=/произнести|прослушать|озвучить/i;
 (async()=>{
   const browser=await chromium.launch({headless:true});
   const problems=[],suspects=[];
@@ -53,6 +55,14 @@ const IDEMPOTENT=new Set(['resume','continue','previous','next']);
           visible:node.getBoundingClientRect().width>0&&node.getBoundingClientRect().height>0
         })).catch(()=>null);
         if(!now||now.disabled||!now.visible||now.pressed==='true')continue;
+        if(SPEECH.test(info.text))continue;
+        /* Отправка формы с незаполненными обязательными полями: браузер сам показывает
+           подсказку, DOM при этом не меняется — это ожидаемое поведение, а не мёртвая кнопка. */
+        const invalidForm=await button.evaluate(node=>{
+          const form=node.form||node.closest('form');
+          return Boolean(form&&node.type==='submit'&&!form.checkValidity());
+        }).catch(()=>false);
+        if(invalidForm)continue;
         const before=await page.evaluate(()=>({
           html:document.body.innerHTML.length,
           dialog:Boolean(document.querySelector('dialog[open]')),

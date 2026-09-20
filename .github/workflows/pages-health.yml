@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/pages-health.yml'
       - 'index.html'
+      - 'academy-ui.css'
       - 'home.js'
       - 'path.html'
       - 'path-entry.js'

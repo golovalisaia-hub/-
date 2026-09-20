@@ -14,16 +14,16 @@ const {chromium}=require('playwright');
    await page.goto('http://127.0.0.1:4173/sandbox.html',{waitUntil:'domcontentloaded'});
    await page.locator('#reportHeading').waitFor();
    // The first version had CSS inline under style-src self: Chromium silently blocked its design.
-   assert.equal(await page.locator('link[rel="stylesheet"][href="sandbox.css?v=1"]').count(),1);
+   assert.equal(await page.locator('link[rel="stylesheet"][href="academy-ui.css?v=1"]').count(),1);
    const styling=await page.evaluate(()=>({
     panel:getComputedStyle(document.querySelector('.panel')).backgroundColor,
     radius:getComputedStyle(document.querySelector('.panel')).borderRadius,
     accent:getComputedStyle(document.querySelector('.brand b')).backgroundColor,
     background:getComputedStyle(document.body).backgroundImage
    }));
-   assert.equal(styling.panel,'rgb(19, 34, 54)',`${width}px: actual CSS panel background`);
+   assert.equal(styling.panel,'rgb(255, 255, 255)',`${width}px: actual CSS panel background`);
    assert.equal(styling.accent,'rgb(184, 240, 142)',`${width}px: Academy brand accent`);
-   assert.equal(styling.radius,width<=750?'18px':'23px',`${width}px: responsive card radius`);
+   assert.equal(styling.radius,width<=600?'16px':'22px',`${width}px: responsive card radius`);
    assert.match(styling.background,/radial-gradient/,`${width}px: real stylesheet is applied`);
    assert.deepEqual(csp,[],`${width}px: no CSP styling errors`);
    assert.equal(await page.locator('#reportHeading').textContent(),'Опиши ОДНУ обнаруженную проблему');

@@ -1,7 +1,0 @@
-/* Archived 84-lesson screen: never cover Safari controls or lesson submission with a fixed footer. */
-@media(max-width:600px){
- .rail-bottom{position:static!important;inset:auto!important;grid-column:1/-1!important;width:100%;margin:8px 0 0;padding:10px 0 0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:transparent!important;border-top:1px solid #36505e!important}
- .rail-bottom a{min-height:48px!important}
- .content{padding-bottom:28px!important}
- .toast{bottom:18px!important}
-}

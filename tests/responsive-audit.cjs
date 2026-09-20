@@ -16,7 +16,7 @@ const WIDTHS=[
   {name:'phone-small',width:375,height:812},
   {name:'phone-tiny',width:320,height:720}
 ];
-const PAGES=['/','/path.html','/library.html','/studio.html'];
+const PAGES=['/','/path.html','/library.html','/studio.html','/skills.html','/sandbox.html','/mentor.html','/ai.html'];
 /* WCAG 2.5.5 target size: controls people tap must be at least 44x44 CSS px.
    Links flowing inside a paragraph are exempt (WCAG 2.5.8 inline exception). */
 const TARGETS='button,select,summary,[role=button],input:not([type=hidden]),textarea,nav a,.button,.mobile-nav a,.library-top-nav a,.lesson-top-nav a,.rail-bottom a,.quick-card a';
