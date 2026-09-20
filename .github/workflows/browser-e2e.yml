@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'home.css'
       - 'home.js'
+      - 'mobile-clean.css'
       - 'path.html'
       - 'path.css'
       - 'path-redesign.css'
@@ -53,6 +54,7 @@ on:
       - 'tests/sandbox-browser.cjs'
       - 'tests/mentor-browser.cjs'
       - 'tests/skills-browser.cjs'
+      - 'tests/mobile-nav-browser.cjs'
       - 'path-assessment.js'
       - 'tests/real-guest.cjs'
       - 'tests/mock-cloud.js'
@@ -74,7 +76,7 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install headless Chromium
         run: npx playwright install --with-deps --only-shell chromium
-      - name: Test dashboard, lessons, library, tutor, workshop, QA sandbox, cloud mocks, Python, mobile layout and screenshots
+      - name: Test learning flows and mobile navigation on real Chromium
         run: |
           node tests/server.cjs > /tmp/academy-http.log 2>&1 &
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
@@ -95,6 +97,7 @@ jobs:
           node tests/sandbox-browser.cjs
           node tests/mentor-browser.cjs
           node tests/skills-browser.cjs
+          node tests/mobile-nav-browser.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection
         if: always()
