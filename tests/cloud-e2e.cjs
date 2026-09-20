@@ -1,4 +1,4 @@
-/* Isolated browser E2E: fake Supabase and fake Python worker; never uses production credentials or user records. */
+/* Isolated browser E2E: fake Supabase and fake Python worker; no production credentials or user records. */
 const fs=require('node:fs');
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
@@ -44,7 +44,8 @@ const {chromium}=require('playwright');
     await page.locator('#notes').fill('Переменная связывает имя со значением. Я написал программу, которая выводит строку, и изменил входные данные.');
     await page.locator('#readingStatus').selectOption('done');
     await page.locator('#save').click();
-    await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('сохранена'));
+    try{await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('сохранена'),undefined,{timeout:6000});}
+    catch(err){const diagnostics=await page.evaluate(()=>({status:document.querySelector('#cloudStatus')?.textContent,error:document.querySelector('#formError')?.textContent,rows:window.__academyMock?.academy_reading,writes:window.__academyMock?.writes.filter(w=>w.table==='academy_reading')}));throw Error('Reading save check failed: '+JSON.stringify(diagnostics)+'; page errors: '+errors.join('; '));}
     assert.equal(await page.evaluate(()=>window.__academyMock.academy_reading.length),1,'Private chapter inserted');
     await page.locator('#records').getByRole('button',{name:'Открыть'}).click();
     await page.locator('#chapter').fill('Строки и переменные');
