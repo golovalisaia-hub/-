@@ -1,4 +1,4 @@
-/* QA-first learning path. Progress is independent of the legacy SEVER calendar. */
+/* QA-first learning path. Only paired, server-confirmed QA + English closes its linked SEVER calendar task. */
 (()=>{'use strict';
 const API='https://vdhazibkfpgclcwyvvbi.supabase.co';
 const KEY='sb_publishable_eRp5yJyhKF9EBTDdhi77_Q_iGaZJaUj';
@@ -25,7 +25,7 @@ function progressUI(){
  $('progressDetail').textContent=`Практика QA: ${Array.from({length:total},(_,i)=>i+1).filter(n=>practiced(n,'qa')).length}/14 · English: ${Array.from({length:total},(_,i)=>i+1).filter(n=>practiced(n,'english')).length}/14`;
  $('qaMark').textContent=practiced(lesson,'qa')?'✓':'○';$('englishMark').textContent=practiced(lesson,'english')?'✓':'○';
  $('resultTitle').textContent=pairDone(lesson)?'Обе практики зафиксированы':'Два предмета — один понятный шаг';
- $('resultText').textContent=pairDone(lesson)?'QA и английский этого урока пройдены как самостоятельные упражнения. Это не оценка профессиональных навыков и не закрывает старые тройные задачи SEVER.':'Выполни QA и English в удобном порядке. Нажимать «Завершить» ради процента не нужно: важна самостоятельная практика.';
+ $('resultText').textContent=pairDone(lesson)?'QA и английский подтверждены: связанная задача Academy в календаре SEVER закрыта автоматически. Это отметка практики, а не экзамен.':'Выполни QA и English в любом порядке. Только после сохранения обеих практик связанная задача SEVER закроется автоматически. Python не требуется.';
  $('continue').hidden=!pairDone(lesson)||lesson===total;
  for(const option of $('lessonSelect').options){const n=Number(option.value);option.textContent=`${String(n).padStart(2,'0')} · ${pairDone(n)?'✓ ':''}${program.qa[n-1].title}`;}
 }
@@ -78,12 +78,11 @@ function render(){
  const cloud=record(lesson,subject),draft=localLoad(lesson,subject);
  $('answer').value=draft!==null?draft:(cloud?.answer||'');$('reviewed').checked=false;$('criteriaBox').open=false;
  $('answer').disabled=!ready||saving;
- // Only server-confirmed evidence is retained after a reload, not a guessed quiz result.
  if(cloud?.quiz_score===2&&!passed.has(key(lesson,subject)))passed.set(key(lesson,subject),new Set([0,1]));
  $('save').disabled=!ready||saving;$('complete').disabled=!ready||saving;
  $('previous').disabled=lesson===1||saving;$('next').disabled=lesson===total||saving;
  showDraftNotice(cloud,draft);
- feedback(cloud?.status==='practiced'?'Практика уже сохранена в облаке. При редактировании и сохранении черновика отметка будет снята.':'');
+ feedback(cloud?.status==='practiced'?'Практика уже сохранена в облаке. Если сохранить новый черновик, отметка этой практики снимется; календарь обновится соответственно.':'');
  renderQuiz();progressUI();
 }
 function navigate(n,s=subject){if(saving||n<1||n>total||!SUBJECTS[s]){if(!saving)$('lessonSelect').value=String(lesson);return;}lesson=n;subject=s;render();}
@@ -101,7 +100,7 @@ async function write(desired){
    if(answer.length<(s==='qa'?40:20)){feedback('Напиши самостоятельный ответ подробнее — одной короткой фразы недостаточно.','bad');$('answer').focus();return;}
    if(!$('criteriaBox').open||!$('reviewed').checked){feedback('Раскрой критерии, сравни с ними работу и отметь самопроверку.','bad');return;}
  }
- if(desired==='draft'&&practiced(n,s)&&!window.confirm('Сохранение нового черновика снимет предыдущую отметку о практике. Продолжить?'))return;
+ if(desired==='draft'&&practiced(n,s)&&!window.confirm('Сохранение нового черновика снимет предыдущую отметку о практике и при необходимости снова откроет задачу в SEVER. Продолжить?'))return;
  if(!$('draftNotice').hidden&&record(n,s)&&!window.confirm('На этом устройстве и в облаке разные ответы. Сохранение перезапишет облачную версию. Ты сравнил их и хочешь продолжить?'))return;
  saving=true;lockSaving(true);feedback('Сохраняем в облаке…');
  const payload={user_id:user.id,track:SUBJECTS[s],lesson_number:n,answer,quiz_score:quiz,status:desired,updated_at:new Date().toISOString()};
@@ -109,9 +108,9 @@ async function write(desired){
    const result=await db.from('academy_path_progress').upsert(payload,{onConflict:'user_id,track,lesson_number'}).select('user_id,track,lesson_number,answer,quiz_score,status,updated_at').single();
    if(result.error||result.data?.user_id!==user.id||result.data?.track!==payload.track||result.data?.lesson_number!==n||result.data?.status!==desired||result.data?.answer!==answer||Number(result.data?.quiz_score)!==quiz)throw result.error||Error('Server did not confirm expected row.');
    progress.set(key(n,s),result.data);localClear(n,s);$('draftNotice').hidden=true;
-   feedback(desired==='practiced'?'✓ Практика сохранена в облаке. Это ещё не экзамен.':'✓ Черновик сохранён в облаке.','good');
-   progressUI();status('✓ Учебные ответы сохраняются в отдельном защищённом облаке Academy.','good');
- }catch(err){console.error('Academy path save error',err);localSave();feedback('Облако не подтвердило сохранение. Текст оставлен в поле и резервном черновике браузера — проверь интернет и повтори.','bad');}
+   feedback(desired==='practiced'?(pairDone(n)?'✓ Обе практики сохранены: задача Academy в SEVER закрыта автоматически.':'✓ Практика сохранена. Выполни второй предмет, чтобы задача SEVER закрылась.'):(pairDone(n)?'✓ Черновик сохранён.':'✓ Черновик сохранён; если обе практики больше не отмечены, задача SEVER снова открыта.'),'good');
+   progressUI();status('✓ Ответ подтверждён облаком Academy; календарь SEVER связан с обеими практиками.','good');
+ }catch(err){console.error('Academy path save error',err);localSave();feedback('Облако не подтвердило сохранение. Текст оставлен в поле и резервном черновике браузера — проверь интернет и повтори. Задача в SEVER не должна считаться закрытой без подтверждения.','bad');}
  finally{saving=false;lockSaving(false);}
 }
 async function loadCloud(){
@@ -121,7 +120,7 @@ async function loadCloud(){
  progress.clear();passed.clear();for(const row of result.data||[])progress.set(`${row.track}:${row.lesson_number}`,row);
  ready=true;
  const first=Array.from({length:total},(_,i)=>i+1).find(n=>!pairDone(n));lesson=first||total;subject=!practiced(lesson,'qa')?'qa':!practiced(lesson,'english')?'english':'qa';
- status('✓ Вход подтверждён. Отдельный прогресс QA + English загружен из облака.','good');
+ status('✓ Вход подтверждён. Прогресс QA + English загружен; календарь SEVER закрывает урок после обеих практик.','good');
  $('account').textContent='Аккаунт';$('logout').hidden=false;render();lockSaving(false);
 }
 async function authorize(){
