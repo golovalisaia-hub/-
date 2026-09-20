@@ -11,7 +11,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.goto(ROOT,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('.nav-links a').count(),5,'Main navigation must be present');
-  await page.locator('.nav-links a').nth(1).click();
+  await page.locator(width<=834?'.mobile-nav a':'.nav-links a').nth(1).click();
   await page.waitForURL(/courses\.html/);
   await page.locator('#qaLessons summary').click();
   await page.locator('#qaList a').first().waitFor();
