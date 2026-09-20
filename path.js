@@ -126,6 +126,12 @@ async function loadCloud(){
 async function authorize(){
  if(!db){status('Не загрузился модуль облака. Уроки можно читать, но сохранение пока недоступно.','bad');return;}
  try{
+   /* Detect the absence of a session before getUser, which otherwise throws AuthSessionMissingError.
+      Session presence never grants access: getUser and the owner profile remain mandatory. */
+   if(typeof db.auth.getSession==='function'){
+    const session=await db.auth.getSession();if(session.error)throw session.error;
+    if(!session.data?.session){user=null;ready=false;status('Гостевой просмотр: для выполнения и сохранения заданий войди в тот же аккаунт, что используешь в SEVER.');render();return;}
+   }
    const result=await db.auth.getUser();if(result.error)throw result.error;
    if(!result.data.user){user=null;ready=false;status('Гостевой просмотр: для выполнения и сохранения заданий войди в тот же аккаунт, что используешь в SEVER.');render();return;}
    const profile=await db.from('profiles').select('role').eq('id',result.data.user.id).single();
