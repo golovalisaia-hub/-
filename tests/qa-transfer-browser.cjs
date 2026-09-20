@@ -1,5 +1,6 @@
 /* Real browser flow for the independent QA transfer lab; no cloud or SEVER access. */
 const assert=require('node:assert/strict');
+const fs=require('node:fs');
 const {chromium}=require('playwright');
 (async()=>{
  const browser=await chromium.launch({headless:true});
@@ -12,6 +13,8 @@ const {chromium}=require('playwright');
    await page.goto('http://127.0.0.1:4173/qa-transfer.html',{waitUntil:'domcontentloaded'});
    await page.locator('#reportTitle').waitFor();
    assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth))<=2,`No horizontal overflow at ${width}px`);
+   fs.mkdirSync('screenshots',{recursive:true});
+   await page.screenshot({path:`screenshots/qa-transfer-start-${width}.png`,fullPage:true});
    assert.equal(await page.locator('#copy').isDisabled(),true);
    async function run(amount,member){
     await page.locator('#amount').fill(String(amount));
@@ -46,6 +49,7 @@ const {chromium}=require('playwright');
    await run(501,true);
    await run(-1,false);
    assert.match(await page.locator('#coverage').textContent(),/7 из 7/);
+   await page.screenshot({path:`screenshots/qa-transfer-complete-${width}.png`,fullPage:true});
    assert.deepEqual(errors,[],`No JavaScript errors at ${width}px`);
    assert.deepEqual(external,[],`Never access cloud or planner at ${width}px`);
    page.once('dialog',dialog=>dialog.accept());await page.locator('#restart').click();
