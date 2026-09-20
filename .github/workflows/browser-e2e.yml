@@ -8,6 +8,10 @@ on:
       - 'home.js'
       - 'mobile-clean.css'
       - 'archive-mobile.css'
+      - 'ai.html'
+      - 'ai.css'
+      - 'ai.js'
+      - 'supabase/functions/academy-tutor/**'
       - 'path.html'
       - 'path.css'
       - 'path-redesign.css'
@@ -45,6 +49,7 @@ on:
       - 'vendor/supabase.js'
       - 'tests/browser.cjs'
       - 'tests/home-browser.cjs'
+      - 'tests/ai-browser.cjs'
       - 'tests/path-browser.cjs'
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
@@ -86,7 +91,9 @@ jobs:
           done
           node --check skills.js
           node --check skills-controls.js
+          node --check ai.js
           node tests/home-browser.cjs
+          node tests/ai-browser.cjs
           node tests/path-browser.cjs
           node tests/browser.cjs
           node tests/foundation-browser.cjs
