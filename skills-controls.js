@@ -1,0 +1,2 @@
+/* UI controls must reset when navigating to a different exercise. */
+(()=>{'use strict';const $=id=>document.getElementById(id);function init(){for(const id of ['englishPick','englishNext'])$(id)?.addEventListener(id==='englishPick'?'change':'click',()=>{$('englishTransferCheck').disabled=false;});for(const id of ['pythonPick','pythonNext'])$(id)?.addEventListener(id==='pythonPick'?'change':'click',()=>{$('pythonHint').disabled=false;});}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();})();
