@@ -80,6 +80,12 @@ async function init(){
   if(!window.supabase?.createClient){status('Модуль облака не загрузился. Проверь интернет и обнови страницу.','bad');return;}
   db=window.supabase.createClient(PROJECT_URL,PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'sever-academy-auth-v1'}});
   try{
+    /* getSession is used only to detect an absent session, never to grant access.
+       A real getUser() without a session returns AuthSessionMissingError. */
+    if(typeof db.auth.getSession==='function'){
+      const session=await db.auth.getSession();if(session.error)throw session.error;
+      if(!session.data?.session){status('Войди в Academy на странице уроков, затем вернись сюда — тогда откроется твой книжный дневник.');return;}
+    }
     const result=await db.auth.getUser();if(result.error)throw result.error;
     const current=result.data.user;
     if(!current){status('Войди в Academy на странице уроков, затем вернись сюда — тогда откроется твой книжный дневник.');return;}
