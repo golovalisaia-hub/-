@@ -78,7 +78,7 @@ function render(){
  const cloud=record(lesson,subject),draft=localLoad(lesson,subject);
  $('answer').value=draft!==null?draft:(cloud?.answer||'');$('reviewed').checked=false;$('criteriaBox').open=false;
  $('answer').disabled=!ready||saving;
- // The server has the final say about completed work. Drafts with two saved quiz answers can resume after reload.
+ // Only server-confirmed evidence is retained after a reload, not a guessed quiz result.
  if(cloud?.quiz_score===2&&!passed.has(key(lesson,subject)))passed.set(key(lesson,subject),new Set([0,1]));
  $('save').disabled=!ready||saving;$('complete').disabled=!ready||saving;
  $('previous').disabled=lesson===1||saving;$('next').disabled=lesson===total||saving;
@@ -102,7 +102,6 @@ async function write(desired){
    if(!$('criteriaBox').open||!$('reviewed').checked){feedback('Раскрой критерии, сравни с ними работу и отметь самопроверку.','bad');return;}
  }
  if(desired==='draft'&&practiced(n,s)&&!window.confirm('Сохранение нового черновика снимет предыдущую отметку о практике. Продолжить?'))return;
- // A local version can differ from a newer answer saved on another device. Never overwrite it silently.
  if(!$('draftNotice').hidden&&record(n,s)&&!window.confirm('На этом устройстве и в облаке разные ответы. Сохранение перезапишет облачную версию. Ты сравнил их и хочешь продолжить?'))return;
  saving=true;lockSaving(true);feedback('Сохраняем в облаке…');
  const payload={user_id:user.id,track:SUBJECTS[s],lesson_number:n,answer,quiz_score:quiz,status:desired,updated_at:new Date().toISOString()};
@@ -123,7 +122,7 @@ async function loadCloud(){
  ready=true;
  const first=Array.from({length:total},(_,i)=>i+1).find(n=>!pairDone(n));lesson=first||total;subject=!practiced(lesson,'qa')?'qa':!practiced(lesson,'english')?'english':'qa';
  status('✓ Вход подтверждён. Отдельный прогресс QA + English загружен из облака.','good');
- $('account').textContent='Аккаунт';$('logout').hidden=false;render();
+ $('account').textContent='Аккаунт';$('logout').hidden=false;render();lockSaving(false);
 }
 async function authorize(){
  if(!db){status('Не загрузился модуль облака. Уроки можно читать, но сохранение пока недоступно.','bad');return;}
@@ -133,7 +132,7 @@ async function authorize(){
    const profile=await db.from('profiles').select('role').eq('id',result.data.user.id).single();
    if(profile.error||profile.data?.role!=='owner'){user=null;ready=false;status('Эта персональная программа открыта только владельцу. Войди в свой аккаунт.','bad');$('logout').hidden=false;render();return;}
    user=result.data.user;await loadCloud();
- }catch(err){console.error('Academy path auth/load error',err);ready=false;status('Облако сейчас не подтвердило вход или загрузку. Не отмечай практику: попробуй обновить страницу.','bad');render();}
+ }catch(err){console.error('Academy path auth/load error',err);ready=false;lockSaving(false);status('Облако сейчас не подтвердило вход или загрузку. Не отмечай практику: попробуй обновить страницу.','bad');render();}
 }
 async function login(event){
  event.preventDefault();if(!db){$('loginError').textContent='Модуль входа недоступен. Обнови страницу.';return;}
