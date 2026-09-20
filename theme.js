@@ -14,8 +14,8 @@ function mount(){
   if(!host)return;
   const button=document.createElement('button');
   button.id='themeToggle';button.type='button';button.className='theme-toggle';
-  const icon=document.createElement('span');icon.className='theme-icon';icon.setAttribute('aria-hidden','true');
-  const label=document.createElement('span');label.className='theme-label';
+  const icon=document.createElement('span');icon.className='btn-icon theme-icon';icon.setAttribute('aria-hidden','true');
+  const label=document.createElement('span');label.className='btn-label theme-label';
   button.append(icon,label);
   const paint=()=>{
     const light=root.dataset.theme==='light';

@@ -2,6 +2,10 @@
 (()=>{'use strict';
 const TOTAL=14,STORE='academy-qa-review-v1',DAY=86400000;
 const $=id=>document.getElementById(id);
+/* Подпись кнопки меняется, иконка остаётся на месте. */
+const setLabel=(node,text)=>{const span=node.querySelector('.btn-label');(span||node).textContent=text;};
+const setIcon=(node,glyph)=>{const span=node.querySelector('.btn-icon');if(span)span.textContent=glyph;};
+const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
 const lessons=window.AcademyPathLessons?.qa,bank=window.AcademyAssessment?.qa;
 let state={topics:{}},storageOk=true,card=null;
 const date=()=>new Date().toISOString().slice(0,10);
@@ -34,7 +38,7 @@ function chooseTopic(n){if(!validLesson(n))return;
  card={n,idx,selected:null,hints:0,answered:false};
  $('lessonPick').value=String(n);$('lessonLink').href=`path.html?lesson=${n}&subject=qa`;updateUrl(n);
  $('reason').value='';$('reason').disabled=false;$('check').disabled=true;$('unknown').disabled=false;$('hint').disabled=false;
- $('hint').textContent='Нужна подсказка';$('hintBox').hidden=true;$('hintBox').textContent='';$('result').hidden=true;$('result').className='result';$('result').replaceChildren();$('next').hidden=true;
+ setLabel($('hint'),'Нужна подсказка');$('hintBox').hidden=true;$('hintBox').textContent='';$('result').hidden=true;$('result').className='result';$('result').replaceChildren();$('next').hidden=true;
  $('lessonBadge').textContent=`УРОК ${String(n).padStart(2,'0')} / ${TOTAL}`;$('cardBadge').textContent=`ЗАДАЧА ${idx+1} / 3`;
  $('exerciseTitle').textContent=lessons[n-1].title;$('prompt').textContent=bank[n-1].cases[idx][0];
  const options=bank[n-1].cases[idx][1],choices=$('choices');choices.replaceChildren();
@@ -50,7 +54,7 @@ function hint(){if(!card||card.answered||card.hints>=2)return;
  card.hints++;
  const text=card.hints===1?'Подсказка 1: отдели то, что требует спецификация, от того, что ты лишь предполагаешь. Сформулируй проверяемый результат.':`Подсказка 2 · объяснение темы: ${lessons[card.n-1].theory}\n\nРазобранный пример: ${lessons[card.n-1].example}`;
  $('hintBox').textContent=text;$('hintBox').hidden=false;
- $('hint').textContent=card.hints===1?'Ещё одна подсказка':'Подсказки закончились';$('hint').disabled=card.hints===2;
+ setLabel($('hint'),card.hints===1?'Ещё одна подсказка':'Подсказки закончились');$('hint').disabled=card.hints===2;
 }
 function submit(unknown=false){if(!card||card.answered||(!unknown&&card.selected===null))return;
  const {n,idx}=card,question=bank[n-1].cases[idx],correct=!unknown&&card.selected===question[2],independent=correct&&card.hints===0;

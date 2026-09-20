@@ -7,7 +7,10 @@ function init(){
   const completedReview=new Set();let quizLesson=0,question=0;
   const nav=document.querySelector('.rail-bottom');
   if(nav&&!nav.querySelector('a[href="library.html"]')){
-    const link=document.createElement('a');link.href='library.html';link.textContent='📚 Книги и конспекты ↗';link.className='library-link';nav.prepend(link);
+    const link=document.createElement('a');link.href='library.html';link.className='library-link';
+    const glyph=document.createElement('span');glyph.className='nav-glyph';glyph.setAttribute('aria-hidden','true');glyph.textContent='▧';
+    const caption=document.createElement('span');caption.textContent='Конспекты';
+    link.append(glyph,caption);nav.prepend(link);
   }
   const panel=document.createElement('section');panel.id='qualityPanel';panel.className='quality-panel';panel.setAttribute('aria-label','Проверка знаний и учебный помощник');
   $('answerLabel').parentElement.insertBefore(panel,$('answerLabel'));
@@ -42,15 +45,20 @@ function init(){
     const inside=element('div','','mentor-inner'),reply=element('p','Выбери подсказку. Это подготовленные объяснения, а не живой ИИ.','mentor-message');
     const actions=element('div','','mentor-actions');
     const buttons=[
-      ['Объясни тему',()=>b==='english'?guide.english(n)?.grammar?.example||'Прочитай пример и карточки.':guide.guide(n,b)?.theory||'Прочитай теорию в начале блока.'],
-      ['С чего начать?',()=>b==='qa'?'Выбери требование. Запиши предусловие, конкретные шаги, ожидаемый результат, затем проверь фактическое поведение.':b==='python'?'Начни с одной команды print(). Добавляй строки постепенно, запускай код, читай последнюю строку ошибки. Для input() укажи тестовые данные в отдельном поле.':'Закрой переводы карточек, попробуй вспомнить слова и выполни четыре вопроса. Затем переведи новое слово.'],
-      ['Проверь мой ответ',()=>{
+      ['◍','Объясни тему',()=>b==='english'?guide.english(n)?.grammar?.example||'Прочитай пример и карточки.':guide.guide(n,b)?.theory||'Прочитай теорию в начале блока.'],
+      ['⚑','С чего начать?',()=>b==='qa'?'Выбери требование. Запиши предусловие, конкретные шаги, ожидаемый результат, затем проверь фактическое поведение.':b==='python'?'Начни с одной команды print(). Добавляй строки постепенно, запускай код, читай последнюю строку ошибки. Для input() укажи тестовые данные в отдельном поле.':'Закрой переводы карточек, попробуй вспомнить слова и выполни четыре вопроса. Затем переведи новое слово.'],
+      ['⚖','Проверь мой ответ',()=>{
         if(b==='qa'){const issues=checks.qaIssues($('answer').value);return issues.length?issues.join(' '):'В ответе есть действия и ожидаемый результат. Сверь его правильность с настоящим требованием: автоматической экспертной оценки нет.';}
         if(b==='python'){const issues=checks.pythonIssues($('answer').value,$('code').value);if(issues.length)return issues.join(' ');return 'Код и объяснение заполнены. Проверь вывод и условие самостоятельно: отсутствие ошибки не доказывает правильность алгоритма.';}
         return completedReview.has(n)?'Повторение завершено. Переведи новое слово, затем заверши блок.':'Сначала пройди четыре вопроса на повторение. Карточки выше помогут вспомнить перевод.';
       }]
     ];
-    for(const [title,answer] of buttons){const button=element('button',title,'quiet');button.type='button';button.addEventListener('click',()=>{reply.textContent=answer();});actions.append(button);}
+    for(const [glyph,title,answer] of buttons){
+      const button=document.createElement('button');button.type='button';button.className='quiet';
+      const icon=element('span',glyph,'btn-icon');icon.setAttribute('aria-hidden','true');
+      button.append(icon,element('span',title,'btn-label'));
+      button.addEventListener('click',()=>{reply.textContent=answer();});actions.append(button);
+    }
     inside.append(actions,reply,element('p','Более сложные вопросы можно обсудить со мной в чате ChatGPT; полноценный AI-наставник непосредственно в Academy ещё не подключён.','quality-small'));
     details.append(inside);panel.append(details);
   }

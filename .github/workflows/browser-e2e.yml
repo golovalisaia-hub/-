@@ -7,6 +7,7 @@ on:
       - 'home.js'
       - 'ai.html'
       - 'ai.js'
+      - 'ai-polish.css'
       - 'supabase/functions/academy-tutor/**'
       - 'path.html'
       - 'path-entry.js'
@@ -49,6 +50,7 @@ on:
       - 'tests/mentor-browser.cjs'
       - 'tests/skills-browser.cjs'
       - 'tests/mobile-nav-browser.cjs'
+      - 'tests/button-icons.cjs'
       - 'tests/interactive.cjs'
       - 'path-assessment.js'
       - 'tests/real-guest.cjs'
@@ -97,9 +99,10 @@ jobs:
           node tests/mentor-browser.cjs
           node tests/skills-browser.cjs
           node tests/mobile-nav-browser.cjs
+          node tests/button-icons.cjs
           node tests/interactive.cjs
           node tests/visual-audit.cjs
-      - name: Upload guest-only screenshots for visual inspection
+      - name: Upload guest and mocked tutor screenshots for visual inspection
         if: always()
         uses: actions/upload-artifact@v4
         with:

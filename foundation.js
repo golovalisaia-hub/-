@@ -42,6 +42,8 @@ function init(){
  if(!topic||!answer||!select)return;
  const panel=document.createElement('section');panel.id='foundationPanel';panel.className='foundation';panel.setAttribute('aria-label','Пошаговый урок для новичка');answer.before(panel);
  const make=(tag,text,cls)=>{const e=document.createElement(tag);e.textContent=text;if(cls)e.className=cls;return e;};
+/* Кнопка с собственной иконкой и текстовой подписью. */
+const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
  const active=()=>['qa','python','english'].find(b=>document.getElementById(`tab${b==='qa'?'Qa':b==='python'?'Python':'English'}`)?.getAttribute('aria-pressed')==='true')||'qa';
  function render(){
   const n=Number(select.value)||1,data=lessons[n-1]?.[active()];
@@ -53,7 +55,7 @@ function init(){
   if(active()==='english'){
    const word=window.AcademyGuide?.english(n)?.main?.word;
    if(word&&'speechSynthesis' in window&&typeof window.SpeechSynthesisUtterance==='function'){
-    const speak=make('button',`▶ Послушать «${word}»`,'foundation-speak');speak.type='button';speak.addEventListener('click',()=>{
+    const speak=iconButton('♪',`Послушать «${word}»`,'foundation-speak');speak.addEventListener('click',()=>{
       try{window.speechSynthesis.cancel();const phrase=new SpeechSynthesisUtterance(word);phrase.lang='en-US';phrase.rate=.8;window.speechSynthesis.speak(phrase);}catch{const note=make('p','Озвучивание недоступно в этом браузере. Продолжи с карточками и чтением.');speak.after(note);speak.disabled=true;}
     });panel.append(speak,make('p','Озвучивание зависит от голосов устройства и не оценивает твоё произношение.','foundation-note'));
    }

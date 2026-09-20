@@ -3,6 +3,10 @@
 const API='https://vdhazibkfpgclcwyvvbi.supabase.co';
 const KEY='sb_publishable_eRp5yJyhKF9EBTDdhi77_Q_iGaZJaUj';
 const $=id=>document.getElementById(id);
+/* Подпись кнопки меняется, иконка остаётся на месте. */
+const setLabel=(node,text)=>{const span=node.querySelector('.btn-label');(span||node).textContent=text;};
+const setIcon=(node,glyph)=>{const span=node.querySelector('.btn-icon');if(span)span.textContent=glyph;};
+const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
 const program=window.AcademyPathLessons;
 const SUBJECTS={qa:'qa_foundation',english:'english_foundation'};
 const total=14;
@@ -154,7 +158,7 @@ function renderExamEnglish(root,data,state,locked){
      section.append(examLine('Аудирование недоступно: устройство не умеет синтезировать речь. В зачёте будет отмечено «не проверено».',false));
      return;
    }
-   const play=document.createElement('button');play.type='button';play.className='subtle';play.textContent='▶ Прослушать фразу';play.disabled=locked;
+   const play=iconButton('♬','Прослушать фразу','subtle');play.disabled=locked;
    play.addEventListener('click',()=>speak(data.listening.phrase));
    const question=document.createElement('strong');question.textContent=data.listening.question;
    const choices=document.createElement('div');choices.className='choices';
@@ -182,7 +186,7 @@ function renderExamEnglish(root,data,state,locked){
  block(data.speaking.goal,section=>{
    const phrase=document.createElement('p');phrase.className='skill-prompt';phrase.textContent=data.speaking.phrase;section.append(phrase);
    if(speechReady()){
-     const play=document.createElement('button');play.type='button';play.className='subtle';play.textContent='▶ Образец произношения';play.disabled=locked;
+     const play=iconButton('♫','Образец произношения','subtle');play.disabled=locked;
      play.addEventListener('click',()=>speak(data.speaking.phrase));section.append(play);
    }
    const label=document.createElement('label');label.className='confirmation';
@@ -210,7 +214,7 @@ function renderExam(){
  }
  $('examHistoryBox').hidden=history.length===0;
  $('examSubmit').disabled=!ready||saving||done||!schemaReady;
- $('examSubmit').textContent=done?'Зачёт сдан':'Сдать зачёт';
+ setLabel($('examSubmit'),done?'Зачёт сдан':'Сдать зачёт');
  if(done)$('examFeedback').textContent='✓ Зачёт сдан. Переcдавать не нужно; повторить материал можно в любой момент.';
  else if(!schemaReady)$('examFeedback').textContent='Запись зачёта отключена: в облаке нет колонок certified_at, assessment и attempts. Примени миграцию academy_three_stage_assessment.';
  else if(!practiced(lesson,subject))$('examFeedback').textContent='Зачёт открывается после того, как практика зафиксирована.';
@@ -340,7 +344,7 @@ async function loadCloud(){
  ready=true;
  const first=Array.from({length:total},(_,i)=>i+1).find(n=>!pairDone(n));lesson=first||total;subject=!practiced(lesson,'qa')?'qa':!practiced(lesson,'english')?'english':'qa';
  status(schemaReady?'✓ Вход подтверждён. Прогресс QA + English загружен; календарь SEVER закрывает урок после обеих практик.':'✓ Вход подтверждён, но колонок зачёта в облаке нет: доступны только «ознакомился» и «попрактиковался». Примени миграцию academy_three_stage_assessment.',schemaReady?'good':'bad');
- $('account').textContent='Аккаунт';$('logout').hidden=false;render();lockSaving(false);
+ setLabel($('account'),'Аккаунт');setIcon($('account'),'✓');$('logout').hidden=false;render();lockSaving(false);
 }
 async function authorize(){
  if(!db){status('Не загрузился модуль облака. Уроки можно читать, но сохранение пока недоступно.','bad');return;}
@@ -369,12 +373,12 @@ async function login(event){
  }catch(err){console.error('Academy path login',err);$('loginError').textContent='Не удалось войти. Проверь почту и пароль или состояние сети.';}
  finally{$('loginSubmit').disabled=false;}
 }
-async function logout(){if(!db)return;try{const result=await db.auth.signOut();if(result.error)throw result.error;user=null;ready=false;progress.clear();passed.clear();$('logout').hidden=true;$('account').textContent='Войти';$('loginDialog').close();lesson=1;subject='qa';status('Ты вышел из Academy. Для сохранения снова войди.');render();}catch(err){console.error('Academy path logout',err);$('loginError').textContent='Не получилось завершить сессию. Попробуй ещё раз.';}}
+async function logout(){if(!db)return;try{const result=await db.auth.signOut();if(result.error)throw result.error;user=null;ready=false;progress.clear();passed.clear();$('logout').hidden=true;setLabel($('account'),'Войти');setIcon($('account'),'⇥');$('loginDialog').close();lesson=1;subject='qa';status('Ты вышел из Academy. Для сохранения снова войди.');render();}catch(err){console.error('Academy path logout',err);$('loginError').textContent='Не получилось завершить сессию. Попробуй ещё раз.';}}
 function init(){
  if(!program||program.qa.length!==total||program.english.length!==total){status('Ошибка загрузки учебной программы. Обнови страницу.','bad');return;}
  const notice=document.createElement('div');notice.id='draftNotice';notice.className='status';notice.hidden=true;
  const noticeText=document.createElement('span');noticeText.id='draftNoticeText';notice.append(noticeText);
- const useCloud=document.createElement('button');useCloud.id='useCloud';useCloud.className='subtle';useCloud.type='button';useCloud.textContent='Вернуться к облачной версии';useCloud.style.margin='9px 0 0';notice.append(document.createElement('br'),useCloud);
+ const useCloud=iconButton('☁','Вернуться к облачной версии','subtle');useCloud.id='useCloud';useCloud.style.margin='9px 0 0';notice.append(document.createElement('br'),useCloud);
  $('answer').after(notice);
  useCloud.addEventListener('click',()=>{if(saving||!record(lesson,subject))return;if(!window.confirm('Удалить только локальный несохранённый черновик и показать сохранённую облачную версию?'))return;localClear(lesson,subject);render();});
  for(let n=1;n<=total;n++){

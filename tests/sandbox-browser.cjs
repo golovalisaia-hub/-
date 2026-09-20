@@ -14,7 +14,7 @@ const {chromium}=require('playwright');
    await page.goto('http://127.0.0.1:4173/sandbox.html',{waitUntil:'domcontentloaded'});
    await page.locator('#reportHeading').waitFor();
    // The first version had CSS inline under style-src self: Chromium silently blocked its design.
-   assert.equal(await page.locator('link[rel="stylesheet"][href="academy-ui.css?v=2"]').count(),1);
+   assert.equal(await page.locator('link[rel="stylesheet"][href="academy-ui.css?v=3"]').count(),1);
    const styling=await page.evaluate(()=>{
     const token=name=>{
      const probe=document.createElement('span');probe.style.color=`var(${name})`;document.body.append(probe);

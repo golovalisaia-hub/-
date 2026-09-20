@@ -4,6 +4,7 @@ const API='https://vdhazibkfpgclcwyvvbi.supabase.co';
 const KEY='sb_publishable_eRp5yJyhKF9EBTDdhi77_Q_iGaZJaUj'; // Public key, NOT the OpenAI secret.
 const STORAGE='sever-academy-auth-v1',TRANSFER='academy-tutor-transfer-v1';
 const $=id=>document.getElementById(id);
+const setSendLabel=label=>{const button=$('send'),span=button.querySelector('.btn-label');(span||button).textContent=label;};
 const lessons=window.AcademyPathLessons;
 const PYTHON=[
  {title:'Строки: убираем пробелы',practice:'Напиши clean_title(title), возвращающую title.strip().',criteria:'Есть параметр, return, очистка краёв строки и пустой ввод.'},
@@ -76,7 +77,7 @@ async function send(event){event.preventDefault();if(!ready||busy)return;
   status('Для содержательного разбора вставь свою работу, а не только название темы.','bad');$('question').focus();return;}
  busy=true;const generation=conversation;
  for(const node of [$('subject'),$('lesson'),$('clearChat'),...document.querySelectorAll('.mode')])node.disabled=true;
- $('send').disabled=true;$('send').textContent='Проверяем…';$('chatHint').textContent='Отправлен запрос. Не закрывай страницу до ответа.';
+ $('send').disabled=true;setSendLabel('Проверяем…');$('chatHint').textContent='Отправлен запрос. Не закрывай страницу до ответа.';
  add('user',message);$('question').value='';
  try{const session=await db.auth.getSession();if(session.error||!session.data?.session?.access_token)throw Error('AUTH');
   const response=await fetch(`${API}/functions/v1/academy-tutor`,{method:'POST',headers:{Authorization:`Bearer ${session.data.session.access_token}`,apikey:KEY,'Content-Type':'application/json'},
@@ -91,7 +92,7 @@ async function send(event){event.preventDefault();if(!ready||busy)return;
   const info=error instanceof Error&&error.message==='AUTH'?'Сессия истекла. Войди снова.':error instanceof Error?error.message:'Попробуй позже.';
   add('assistant',`Ответ не получен: ${info}`);status(info,'bad');$('question').value=message;
  }finally{busy=false;for(const node of [$('subject'),$('lesson'),$('clearChat'),...document.querySelectorAll('.mode')])node.disabled=false;
-  $('send').disabled=!ready;$('send').textContent='Отправить ↗';$('chatHint').textContent=ready?'Отправляется только после нажатия. Не вводи пароли и API-ключи.':'Сначала войди в Academy и подключи API.';
+  $('send').disabled=!ready;setSendLabel('Отправить');$('chatHint').textContent=ready?'Отправляется только после нажатия. Не вводи пароли и API-ключи.':'Сначала войди в Academy и подключи API.';
  }
 }
 function init(){

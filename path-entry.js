@@ -74,7 +74,9 @@ function addAi(){
  const response=document.querySelector('.response .response-actions');
  if(response&&!$('aiReviewCurrent')){
   const button=document.createElement('button');button.id='aiReviewCurrent';button.className='subtle';button.type='button';
-  button.textContent='Разобрать мой текст с ИИ ↗';button.addEventListener('click',reviewCurrentAnswer);response.append(button);
+  const icon=document.createElement('span');icon.className='btn-icon';icon.setAttribute('aria-hidden','true');icon.textContent='✧';
+  const label=document.createElement('span');label.className='btn-label';label.textContent='Разобрать мой текст с ИИ';button.append(icon,label);
+  button.addEventListener('click',reviewCurrentAnswer);response.append(button);
   const notice=document.createElement('p');notice.id='aiReviewNotice';notice.className='minor';notice.setAttribute('role','status');
   notice.textContent='Перенос только по нажатию. Перед отправкой ИИ ты увидишь текст и сможешь его изменить. Не вставляй пароли и ключи.';
   response.after(notice);

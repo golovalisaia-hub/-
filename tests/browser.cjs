@@ -27,17 +27,19 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       assert.equal(await page.locator('#railExtra').isHidden(),compact,`${config.name}: progress block starts collapsed only below the sidebar breakpoint`);
       assert.equal(await page.locator('#resume').isVisible(),true,`${config.name}: resume button stays reachable`);
       assert.equal(await page.locator('#lessonSelect').isVisible(),true,`${config.name}: lesson picker stays reachable`);
-      /* Навигация остаётся доступной: на широком экране — в рельсе, на узком — вкладками сверху. */
+      /* Навигация остаётся доступной: на широком экране — в рельсе, на узком — нижней панелью. */
       const reachable=await links.first().isVisible()||await page.locator('body>.mobile-nav a').first().isVisible();
       assert.equal(reachable,true,`${config.name}: collapsing the rail must never hide the navigation`);
       if(config.width<=600){
-        /* Навигация телефона — липкие вкладки сверху, а не панель поверх кнопок урока. */
+        /* Навигация телефона — закреплённая панель внизу, под ней зарезервировано место. */
         const mobile=await page.locator('body>.mobile-nav').evaluate(node=>{
           const box=node.getBoundingClientRect();
-          return {position:getComputedStyle(node).position,top:Math.round(box.top),bottom:Math.round(box.bottom)};
+          return {position:getComputedStyle(node).position,bottom:Math.round(box.bottom),height:Math.round(box.height),
+                  viewport:window.innerHeight,reserved:parseFloat(getComputedStyle(document.body).paddingBottom)||0};
         });
-        assert.equal(mobile.position,'sticky',`${config.name}: no fixed bottom menu over the exercises`);
-        assert.ok(mobile.bottom<120,`${config.name}: navigation stays at the top of the page`);
+        assert.equal(mobile.position,'fixed',`${config.name}: the phone menu is pinned to the bottom of the screen`);
+        assert.ok(Math.abs(mobile.bottom-mobile.viewport)<=2,`${config.name}: navigation sits at the bottom, not at the top`);
+        assert.ok(mobile.reserved>=mobile.height,`${config.name}: the page reserves room under the bottom bar`);
       }
       if(compact){
         await page.locator('#railToggle').click();
