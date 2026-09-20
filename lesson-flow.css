@@ -1,0 +1,31 @@
+/* Guided lesson is opt-in (?flow=1). Legacy route and its cloud engine are unchanged. */
+body.guided-lesson .lesson-layout{display:block;max-width:1120px;margin:0 auto}
+body.guided-lesson .lesson-layout>.sidebar,body.guided-lesson .lesson-breadcrumb,body.guided-lesson .hero,body.guided-lesson .stage-gate,body.guided-lesson .finish,body.guided-lesson .integrity{display:none!important}
+body.guided-lesson .lesson-layout>.main{max-width:100%;width:100%;min-width:0;margin:0;padding:20px 22px 80px}
+body.guided-lesson .lesson-card{max-width:880px;margin:20px auto 0;overflow:visible}
+body.guided-lesson .subject-tabs{display:none!important}
+body.guided-lesson .lesson-body>[hidden]{display:none!important}
+body.guided-lesson .lesson-body{min-width:0}
+.flow-heading{display:grid;gap:12px;padding:22px 25px 14px;border-bottom:1px solid var(--line)}
+.flow-back{display:inline-flex;align-items:center;min-height:44px;width:fit-content;color:var(--muted);font-size:13px;font-weight:750;text-decoration:none}
+.flow-back:hover{color:var(--lime)}
+.flow-course{display:inline-flex;align-items:center;gap:9px;width:fit-content;color:var(--lime);font-size:12px;font-weight:800;letter-spacing:.055em;text-transform:uppercase}
+.flow-heading h2{font-size:clamp(23px,3.7vw,34px);letter-spacing:-.03em;line-height:1.2;margin:0}
+.flow-heading p{color:var(--muted);font-size:14px;line-height:1.6;margin:0;max-width:70ch}
+.flow-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 25px;padding:6px;border:1px solid var(--line);border-radius:14px;background:var(--card-2)}
+.flow-steps button{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:48px;padding:8px 6px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--muted);font-size:12px;font-weight:750;line-height:1.35;text-align:center;cursor:pointer}
+.flow-steps button[aria-current=step]{border-color:var(--line-strong);background:var(--card);color:var(--text);box-shadow:var(--shadow-soft)}
+.flow-steps button[data-done=true]::after{content:'✓';color:var(--ok);font-weight:800}
+.flow-steps button:disabled{opacity:.58;cursor:not-allowed}
+.flow-steps button:focus-visible,.flow-controls button:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.flow-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 25px 24px;padding-top:18px;border-top:1px solid var(--line)}
+.flow-controls button{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:11px;padding:12px 20px;font-weight:800;font-size:13px}
+.flow-controls .flow-primary{background:var(--lime);color:var(--ink);border:1px solid var(--lime)}
+.flow-controls .flow-secondary{background:var(--card-2);color:var(--text);border:1px solid var(--line-strong)}
+.flow-controls .flow-secondary:disabled{opacity:.5}
+.flow-info{margin:0 25px 20px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--card-2);color:var(--muted);font-size:13px;line-height:1.6}
+.flow-info[hidden]{display:none!important}
+body.guided-lesson .lesson-toolbar{padding-top:16px}
+body.guided-lesson .lesson-body>.step,body.guided-lesson .lesson-body>.quiz,body.guided-lesson .lesson-body>.response,body.guided-lesson .lesson-body>.exam{max-width:100%;min-width:0}
+@media(max-width:600px){body.guided-lesson .lesson-layout>.main{padding:12px 12px calc(var(--mobile-nav-h,65px) + env(safe-area-inset-bottom) + 28px)}.flow-heading{padding:19px 16px 10px}.flow-steps{grid-template-columns:repeat(2,minmax(0,1fr));margin:14px 15px;gap:5px}.flow-controls{margin:12px 15px 18px;flex-direction:column-reverse;align-items:stretch}.flow-controls button{width:100%}.flow-info{margin:0 15px 16px}.flow-steps button{min-height:46px}.flow-heading h2{font-size:25px}}
+@media(prefers-reduced-motion:reduce){.flow-steps button,.flow-controls button{transition:none!important}}
