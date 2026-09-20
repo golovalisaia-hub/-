@@ -13,11 +13,11 @@ const GUEST='window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
   assert.equal(await page.locator('.nav-links a').count(),5,'Main navigation must be present');
   await page.locator('.nav-links a').nth(1).click();
   await page.waitForURL(/courses\.html/);
+  await page.locator('#qaLessons summary').click();
   await page.locator('#qaList a').first().waitFor();
   assert.equal(await page.locator('#qaList a').count(),14,'QA lessons count');
   assert.equal(await page.locator('#englishList a').count(),14,'English lessons count');
   assert.equal(await page.locator('.course-card.py a[href="skills.html"]').count(),1,'Python remains separate practical route');
-  await page.locator('#qaLessons summary').click();
   await page.locator('#qaList a').first().click();
   await page.waitForURL(/subject=qa.*lesson=1.*flow=1/);
   await page.locator('body.guided-lesson #flowTitle').waitFor();
