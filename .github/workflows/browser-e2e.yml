@@ -1,0 +1,42 @@
+name: Academy browser E2E
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'studio.html'
+      - 'studio.css'
+      - 'studio-extras.css'
+      - 'studio.js'
+      - 'studio-extras.js'
+      - 'academy-quality.*'
+      - 'learning-checks.js'
+      - 'curriculum.js'
+      - 'lesson-guide.js'
+      - 'python-worker.mjs'
+      - 'tests/browser.cjs'
+      - 'tests/server.cjs'
+      - '.github/workflows/browser-e2e.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned browser test dependency
+        run: npm install --no-save --ignore-scripts playwright@1.63.0
+      - name: Install headless Chromium
+        run: npx playwright install --with-deps --only-shell chromium
+      - name: Test desktop, mobile and real Python runtime
+        run: |
+          node tests/server.cjs > /tmp/academy-http.log 2>&1 &
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            if curl -fsS http://127.0.0.1:4173/studio.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/browser.cjs
