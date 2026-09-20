@@ -43,4 +43,4 @@
 - Dunlosky et al., review of learning techniques: https://www.psychologicalscience.org/publications/journals/pspi/learning-techniques.html — практика воспроизведения и распределённые повторения.
 - Education Endowment Foundation, feedback guidance: https://educationendowmentfoundation.org.uk/education-evidence/guidance-reports/feedback — своевременная обратная связь, которая ведёт к улучшению действий.
 
-Взяты принципы и области знаний; оригинальные задания Academy написаны самостоятельно. Никакого переноса целых книжных глав, чужих иллюстраций и обещаний гарантированного трудоустройства.
+Взяты принципы и области знаний; оригинальные задания Academy написаны самостоятельно. Чужие книжные главы и иллюстрации не перенесены. Обучение не заменяет независимую проверку навыков.
