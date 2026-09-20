@@ -1,0 +1,50 @@
+/* Disposable browser checks: mock auth and API, never spend tokens or read real accounts. */
+const assert=require('node:assert/strict');
+const {chromium}=require('playwright');
+const ROOT='http://127.0.0.1:4173/';
+const GUEST=`window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:null},error:null})}})};`;
+const OWNER=`window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{access_token:'test-only-token'}},error:null}),getUser:async()=>({data:{user:{id:'test-only-owner'}},error:null})}})};`;
+(async()=>{const browser=await chromium.launch({headless:true});try{
+ for(const width of [1440,390,320]){
+  const page=await browser.newPage({viewport:{width,height:810}}),errors=[];
+  page.on('pageerror',err=>errors.push(err.message));
+  await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
+  await page.goto(ROOT+'ai.html?lesson=3&subject=english',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>document.querySelector('#aiStatus').textContent.includes('Войди'));
+  assert.equal(await page.locator('#subject').inputValue(),'english');
+  assert.equal(await page.locator('#lesson').inputValue(),'3');
+  assert.equal(await page.locator('#send').isDisabled(),true,'guest cannot call paid API');
+  assert.equal(await page.locator('.mobile-nav a').count(),4);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  assert.ok(overflow<=2,`${width}px: AI tutor overflow ${overflow}`);
+  assert.deepEqual(errors,[],`${width}px guest errors ${errors.join('; ')}`);
+  console.log(`PASS: guest tutor ${width}px: safe lock, lesson context and no horizontal overflow`);
+  await page.close();
+ }
+ const waiting=await browser.newPage();await waiting.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:OWNER}));
+ await waiting.route('**/functions/v1/academy-tutor',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({configured:false})}));
+ await waiting.goto(ROOT+'ai.html',{waitUntil:'domcontentloaded'});
+ await waiting.waitForFunction(()=>document.querySelector('#aiStatus').textContent.includes('ACADEMY_OPENAI_API_KEY'));
+ assert.equal(await waiting.locator('#send').isDisabled(),true,'cannot advertise a working provider without a secret');
+ console.log('PASS: missing OpenAI secret is explicit, no fake assistant');await waiting.close();
+ const owner=await browser.newPage({viewport:{width:390,height:844}}),requests=[],errors=[];
+ owner.on('pageerror',err=>errors.push(err.message));
+ await owner.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:OWNER}));
+ await owner.route('**/functions/v1/academy-tutor',route=>{if(route.request().method()==='GET')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({configured:true,model:'gpt-5.6-terra'})});requests.push(JSON.parse(route.request().postData()));return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({reply:'Первый шаг: сравни ожидаемый и фактический результат. Какой результат ты наблюдал?'})});});
+ await owner.goto(ROOT+'ai.html?lesson=5&subject=qa',{waitUntil:'domcontentloaded'});
+ await owner.waitForFunction(()=>document.querySelector('#aiStatus').textContent.includes('Наставник подключён'));
+ assert.equal(await owner.locator('#lesson').inputValue(),'5');
+ assert.match(await owner.locator('#lessonTopic').textContent(),/ошибк/i);
+ assert.equal(await owner.locator('#returnToLesson').getAttribute('href'),'path.html?lesson=5&subject=qa');
+ await owner.locator('[data-mode="review"]').click();await owner.locator('#question').fill('Я проверил форму. Ожидал отказ, но она сохранила неверный адрес.');await owner.locator('#send').click();
+ await owner.waitForFunction(()=>document.querySelectorAll('.chat-message').length===2);
+ assert.equal(requests.length,1);assert.equal(requests[0].mode,'review');assert.equal(requests[0].subject,'qa');assert.equal(requests[0].lesson,5);
+ assert.match(requests[0].theory,/ошибк/i);assert.equal(requests[0].history.length,0);
+ await owner.locator('#question').fill('Как оформить это в отчёт?');await owner.locator('#send').click();await owner.waitForFunction(()=>document.querySelectorAll('.chat-message').length===4);
+ assert.equal(requests[1].history.length,2,'assistant may use only recent session turns');
+ await owner.locator('#clearChat').click();assert.equal(await owner.locator('.chat-message').count(),1);
+ await owner.locator('#subject').selectOption('english');assert.equal(await owner.locator('#returnToLesson').getAttribute('href'),'path.html?lesson=5&subject=english');
+ assert.deepEqual(errors,[],`authenticated owner errors ${errors.join('; ')}`);
+ console.log('PASS: owner tutor sends current lesson and mode, keeps bounded temporary history, safe restart and English link');
+ await owner.close();
+}finally{await browser.close();}})().catch(error=>{console.error(error);process.exitCode=1;});
