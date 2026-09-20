@@ -8,6 +8,11 @@ on:
       - 'ai.html'
       - 'ai.js'
       - 'ai-polish.css'
+      - 'courses.html'
+      - 'courses.js'
+      - 'courses.css'
+      - 'lesson-flow.js'
+      - 'lesson-flow.css'
       - 'supabase/functions/academy-tutor/**'
       - 'path.html'
       - 'path-entry.js'
@@ -39,6 +44,7 @@ on:
       - 'tests/home-browser.cjs'
       - 'tests/ai-browser.cjs'
       - 'tests/ai-rubric.mjs'
+      - 'tests/course-flow.cjs'
       - 'tests/path-browser.cjs'
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
@@ -64,7 +70,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -84,9 +90,13 @@ jobs:
           node --check skills.js
           node --check skills-controls.js
           node --check ai.js
+          node --check theme.js
+          node --check courses.js
+          node --check lesson-flow.js
           node --experimental-strip-types tests/ai-rubric.mjs
           node tests/home-browser.cjs
           node tests/ai-browser.cjs
+          node tests/course-flow.cjs
           node tests/path-browser.cjs
           node tests/browser.cjs
           node tests/foundation-browser.cjs
