@@ -1,0 +1,5 @@
+/* Additions to the existing Academy sandbox design. */
+#orderForm{max-width:450px}#orderForm .input{width:100%;margin-top:6px}#orderForm .check{display:flex;align-items:center;gap:10px}
+#journal{max-height:340px;overflow:auto;padding-right:8px}#journal li{overflow-wrap:anywhere;margin-bottom:12px}#journal .mini{font-size:.82rem;padding:5px 10px;margin-left:8px;min-height:34px}
+.probe-list{padding-left:20px;line-height:1.8}.probe-list li{overflow-wrap:anywhere}.report-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.report-columns select,#evidencePick{width:100%;max-width:100%;margin-top:6px}.export{width:100%;min-height:150px;margin-top:14px;white-space:pre-wrap}.rule{overflow-wrap:anywhere}
+@media(max-width:650px){.report-columns{grid-template-columns:1fr}#journal .mini{display:block;margin:7px 0 0}.actions{gap:10px}.actions button{min-height:44px}}
