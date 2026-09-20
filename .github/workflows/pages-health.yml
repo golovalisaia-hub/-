@@ -5,6 +5,10 @@ on:
     paths:
       - '.github/workflows/pages-health.yml'
       - 'index.html'
+      - 'path.html'
+      - 'path.css'
+      - 'path.js'
+      - 'path-lessons.js'
       - 'studio.html'
       - 'foundation.js'
       - 'foundation.css'
@@ -17,27 +21,28 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
-      - name: Check Pages DNS, root, lesson and required mobile assets
+      - name: Check Pages root, QA-first route, legacy studio and required assets
         shell: bash
         run: |
           set -euo pipefail
           HOST=golovalisaia-hub.github.io
           BASE="https://$HOST/-/"
-          echo "DNS for $HOST:"
           getent ahostsv4 "$HOST" | head -n 3 || true
           fail=0
-          for path in '' studio.html studio.css studio-extras.css curriculum.js lesson-guide.js studio.js studio-extras.js library.html python-worker.mjs foundation.js foundation.css vendor/supabase.js; do
+          for path in '' path.html path.css path.js path-lessons.js studio.html studio.css studio-extras.css curriculum.js lesson-guide.js studio.js studio-extras.js library.html python-worker.mjs foundation.js foundation.css vendor/supabase.js; do
             url="$BASE$path"
             status=$(curl -sSL --retry 2 --retry-delay 2 --connect-timeout 8 --max-time 20 -o /tmp/academy-health-body -w '%{http_code}' "$url") || status=000
             printf '%-23s HTTP %s\n' "${path:-/}" "$status"
             if [ "$status" != 200 ]; then fail=1; fi
-            if [ "$status" = 200 ] && [ "$path" = studio.html ]; then
-              if ! grep -q 'Academy' /tmp/academy-health-body; then echo 'Unexpected Studio HTML'; fail=1; fi
-              if ! grep -q 'foundation.js' /tmp/academy-health-body; then echo 'Published Studio has not deployed beginner content'; fail=1; fi
+            if [ "$status" = 200 ] && [ -z "$path" ]; then
+              grep -q 'url=path.html' /tmp/academy-health-body || { echo 'Homepage still points to old route'; fail=1; }
+            fi
+            if [ "$status" = 200 ] && [ "$path" = path.html ]; then
+              grep -q 'path-lessons.js' /tmp/academy-health-body || { echo 'QA-first curriculum missing'; fail=1; }
             fi
           done
           if [ "$fail" -ne 0 ]; then
-            echo 'FAIL: Public Pages link or required lesson asset unavailable, or deployment is older than the latest beginner module. Check Settings > Pages and current published branch.'
+            echo 'FAIL: Published Academy route or required asset unavailable. Check GitHub Pages deployment.'
             exit 1
           fi
-          echo 'PASS: Published Academy contains beginner lessons and all required assets return HTTP 200.'
+          echo 'PASS: Published Academy defaults to QA + English and all required assets return HTTP 200.'
