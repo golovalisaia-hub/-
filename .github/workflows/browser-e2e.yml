@@ -7,6 +7,7 @@ on:
       - 'home.css'
       - 'home.js'
       - 'mobile-clean.css'
+      - 'archive-mobile.css'
       - 'path.html'
       - 'path.css'
       - 'path-redesign.css'
