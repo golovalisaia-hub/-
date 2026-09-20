@@ -1,4 +1,4 @@
-/* No real user, API billing or writes. Exercise every guided stage in Chromium. */
+/* No real user, API billing or writes. Exercise guided stages in Chromium. */
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const ROOT='http://127.0.0.1:4173/';
@@ -9,7 +9,8 @@ const GUEST='window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
   const page=await browser.newPage({viewport:{width,height:900}});
   await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  await page.goto(ROOT+'/',{waitUntil:'domcontentloaded'});
+  await page.goto(ROOT,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('.nav-links a').count(),5,'Main navigation must be present');
   await page.locator('.nav-links a').nth(1).click();
   await page.waitForURL(/courses\.html/);
   await page.locator('#qaList a').first().waitFor();
