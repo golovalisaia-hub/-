@@ -4,6 +4,10 @@ const API='https://vdhazibkfpgclcwyvvbi.supabase.co';
 const KEY='sb_publishable_eRp5yJyhKF9EBTDdhi77_Q_iGaZJaUj';
 const STORAGE='sever-academy-auth-v1';
 const $=id=>document.getElementById(id);
+/* Подпись кнопки меняется, иконка остаётся на месте. */
+const setLabel=(node,text)=>{const span=node.querySelector('.btn-label');(span||node).textContent=text;};
+const setIcon=(node,glyph)=>{const span=node.querySelector('.btn-icon');if(span)span.textContent=glyph;};
+const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
 const lessons=window.AcademyPathLessons;
 let db=null,token='',ready=false,busy=false,mode='explain',history=[];
 const params=new URLSearchParams(location.search);
@@ -50,7 +54,7 @@ async function prepare(){
 }
 async function send(event){event.preventDefault();if(!ready||busy)return;
  const message=$('question').value.trim();if(!message)return;
- busy=true;$('send').disabled=true;$('send').textContent='Отправляем…';$('chatHint').textContent='Ждём ответ модели. Это может занять несколько секунд.';
+ busy=true;$('send').disabled=true;setLabel($('send'),'Отправляем…');$('chatHint').textContent='Ждём ответ модели. Это может занять несколько секунд.';
  add('user',message);$('question').value='';
  try{
   const session=await db.auth.getSession();if(session.error||!session.data?.session?.access_token)throw Error('AUTH');
@@ -62,7 +66,7 @@ async function send(event){event.preventDefault();if(!ready||busy)return;
   status('✓ Ответ получен. Теперь попробуй объяснить решение своими словами.','good');
  }catch(error){const info=error instanceof Error&&error.message==='AUTH'?'Войди повторно на главной странице Academy.':error instanceof Error?error.message:'Попробуй позже.';
   add('assistant',`Ответ пока не получен: ${info}`);status(info,'bad');$('question').value=message;
- }finally{busy=false;$('send').disabled=!ready;$('send').textContent='Отправить ↗';$('chatHint').textContent=ready?'Сообщение отправляется только после нажатия.':'Сначала подключи API и войди в Academy.';}
+ }finally{busy=false;$('send').disabled=!ready;setLabel($('send'),'Отправить');$('chatHint').textContent=ready?'Сообщение отправляется только после нажатия.':'Сначала подключи API и войди в Academy.';}
 }
 function init(){
  const subject=params.get('subject');if(['qa','english','python'].includes(subject))$('subject').value=subject;

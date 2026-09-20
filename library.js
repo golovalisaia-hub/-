@@ -3,6 +3,10 @@
 const PROJECT_URL='https://vdhazibkfpgclcwyvvbi.supabase.co';
 const PUBLISHABLE_KEY='sb_publishable_eRp5yJyhKF9EBTDdhi77_Q_iGaZJaUj';
 const $=id=>document.getElementById(id);
+/* Подпись кнопки меняется, иконка остаётся на месте. */
+const setLabel=(node,text)=>{const span=node.querySelector('.btn-label');(span||node).textContent=text;};
+const setIcon=(node,glyph)=>{const span=node.querySelector('.btn-icon');if(span)span.textContent=glyph;};
+const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
 let db=null,user=null,entries=[],editing=null,loading=false;
 const fields=['book','chapter','notes','qaTask','pythonTask','readingStatus'];
 const text=(tag,value,className='')=>{const el=document.createElement(tag);el.textContent=String(value||'');if(className)el.className=className;return el;};
@@ -32,10 +36,10 @@ function render(){
     card.append(text('span',entry.status==='done'?'✓ РАЗОБРАНО':'◌ В ПРОЦЕССЕ','tag'),text('h3',entry.chapter),text('small',entry.book_title));
     if(entry.notes.trim())card.append(text('p',entry.notes.length>240?entry.notes.slice(0,240)+'…':entry.notes));
     const actions=text('div','','record-buttons');
-    const edit=text('button','Открыть','secondary');edit.type='button';edit.addEventListener('click',()=>{
+    const edit=iconButton('▸','Открыть','secondary');edit.addEventListener('click',()=>{
       editing=entry.id;fill(entry);$('formTitle').textContent='Редактирование записи';error('');backup();document.querySelector('.editor').scrollIntoView({behavior:'smooth',block:'start'});$('chapter').focus();
     });
-    const remove=text('button','Удалить','secondary danger');remove.type='button';remove.addEventListener('click',()=>removeEntry(entry));
+    const remove=iconButton('⌫','Удалить','secondary danger');remove.addEventListener('click',()=>removeEntry(entry));
     actions.append(edit,remove);card.append(actions);list.append(card);
   }
 }

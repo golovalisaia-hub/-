@@ -6,6 +6,10 @@ const KEY='sb_publishable_eRp5yJyhKF9EBTDdhi77_Q_iGaZJaUj';
 const TOTAL=84, NAMES={qa:'Тестирование',python:'Python',english:'Английский'};
 const SUBJECTS=['qa','python','english'];
 const $=id=>document.getElementById(id);
+/* Подпись кнопки меняется, иконка остаётся на месте. */
+const setLabel=(node,text)=>{const span=node.querySelector('.btn-label');(span||node).textContent=text;};
+const setIcon=(node,glyph)=>{const span=node.querySelector('.btn-icon');if(span)span.textContent=glyph;};
+const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
 const days=window.ACADEMY_DAYS||[], weeks=window.ACADEMY_WEEKS||[];
 let db=null,user=null,authorized=false,selected=1,subject='qa',manuallySelected=false;
 let tasks=new Map(),blocks=new Map(),sessions=[],writes=new Map(),saveTimers=new Map();
@@ -68,7 +72,7 @@ function clockText(ms){const sec=Math.floor(ms/1000);return [Math.floor(sec/3600
 function renderTimer(){
   $('clock').textContent=clockText(sessionElapsed());
   $('timerStart').disabled=!authorized||Boolean(timer.startedMs)||sessionElapsed()>=21600000;
-  $('timerStart').textContent=timer.id?'Продолжить':'Начать';
+  setLabel($('timerStart'),timer.id?'Продолжить':'Начать');
   $('timerPause').disabled=!timer.startedMs;
   $('timerSave').disabled=!timer.id;
   const today=sessions.filter(s=>moscowDay(new Date(s.ended_at))===moscowDay(new Date())).reduce((sum,s)=>sum+s.duration_seconds,0);
@@ -110,7 +114,7 @@ function render(){
   const count=[...tasks.values()].filter(t=>t.completed).length;
   $('progressText').textContent=`${count} из ${TOTAL} уроков`;$('progressBar').style.width=`${count/TOTAL*100}%`;
   $('progressSub').textContent=authorized?`Следующий непройденный — урок ${recommended()}`:'Прогресс станет виден после входа.';
-  $('account').textContent=authorized?'Аккаунт ✓':'Войти';
+  setLabel($('account'),authorized?'Аккаунт':'Войти');setIcon($('account'),authorized?'✓':'⇥');
   for(const b of SUBJECTS){const button=$(`tab${b==='qa'?'Qa':b==='python'?'Python':'English'}`);button.setAttribute('aria-pressed',String(b===subject));button.classList.toggle('done',blockDone(selected,b));$(`${b}Badge`).textContent=blockDone(selected,b)?'✓':'○';}
   $('blockCount').textContent=`${SUBJECTS.filter(b=>blockDone(selected,b)).length} / 3`;
   const theory=subject==='qa'?safe(week.qa):subject==='python'?safe(week.py):`Сегодняшнее слово: ${day.english.word}. Вспомни его перевод и произнеси вслух.`;
@@ -130,7 +134,7 @@ function render(){
   const done=blockDone(selected,subject);
   $('answer').disabled=done;$('code').disabled=done;$('stdin').disabled=done;$('run').disabled=done;
   $('saveDraft').disabled=done||!authorized;$('finishBlock').disabled=done||!authorized;
-  $('finishBlock').textContent=done?'✓ Блок завершён':'Завершить блок →';
+  setLabel($('finishBlock'),done?'Блок завершён':'Завершить блок');
   $('feedback').textContent=done?'Этот блок уже сохранён в твоём облаке.':'Проверяй себя по заданию. Это не автоматическая оценка качества текста и кода.';
   $('feedback').className=`feedback${done?' good':''}`;
   $('resultTitle').textContent=isDone(selected)?'✓ Урок завершён':`Завершено ${SUBJECTS.filter(b=>blockDone(selected,b)).length} из 3 блоков`;

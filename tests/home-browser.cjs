@@ -30,7 +30,7 @@ async function stub(page,source){await page.route('**/vendor/supabase.js',route=
    assert.equal(await page.locator('#percent').textContent(),'—','Never fabricate guest progress');
    assert.equal(await page.locator('.module-card').count(),2,'Only two real current modules');
    assert.equal(await page.locator('#weekOneLessons').isHidden(),true,'Lesson list starts collapsed');
-   await page.locator('.module-card').first().getByRole('button',{name:'Уроки ▾'}).click();
+   await page.locator('.module-card').first().getByRole('button',{name:'Уроки'}).click();
    assert.equal(await page.locator('#weekOneLessons a').count(),7);
    assert.equal(await page.locator('#weekOneLessons a').first().getAttribute('href'),'path.html?lesson=1&subject=qa');
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
@@ -50,7 +50,7 @@ async function stub(page,source){await page.route('**/vendor/supabase.js',route=
   assert.equal(await owner.locator('#qaProgress').textContent(),'1 / 14');
   assert.equal(await owner.locator('#englishProgress').textContent(),'1 / 14');
   assert.equal(await owner.locator('#heroContinue').getAttribute('href'),'path.html?lesson=2&subject=qa');
-  await owner.locator('.module-card').nth(1).getByRole('button',{name:'Уроки ▾'}).click();
+  await owner.locator('.module-card').nth(1).getByRole('button',{name:'Уроки'}).click();
   assert.equal(await owner.locator('#weekTwoLessons a').count(),7);
   await owner.locator('#weekTwoLessons a').nth(2).click();
   await owner.waitForURL('**/path.html?lesson=10&subject=qa');

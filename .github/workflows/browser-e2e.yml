@@ -48,6 +48,7 @@ on:
       - 'tests/mentor-browser.cjs'
       - 'tests/skills-browser.cjs'
       - 'tests/mobile-nav-browser.cjs'
+      - 'tests/button-icons.cjs'
       - 'tests/interactive.cjs'
       - 'path-assessment.js'
       - 'tests/real-guest.cjs'
@@ -94,6 +95,7 @@ jobs:
           node tests/mentor-browser.cjs
           node tests/skills-browser.cjs
           node tests/mobile-nav-browser.cjs
+          node tests/button-icons.cjs
           node tests/interactive.cjs
           node tests/visual-audit.cjs
       - name: Upload guest-only screenshots for visual inspection

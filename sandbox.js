@@ -1,6 +1,10 @@
 /* Entirely local teaching simulator. Never talks to Academy, Supabase or SEVER. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
+/* Подпись кнопки меняется, иконка остаётся на месте. */
+const setLabel=(node,text)=>{const span=node.querySelector('.btn-label');(span||node).textContent=text;};
+const setIcon=(node,glyph)=>{const span=node.querySelector('.btn-icon');if(span)span.textContent=glyph;};
+const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
 let saved=[],visible=[],nextId=1,events=[],lastDeleted=null;
 let evidence={boundary:false,delete:false},checked=false;
 const message=(id,value,kind='')=>{const node=$(id);node.textContent=value;node.className=`status${kind?' '+kind:''}`;};
@@ -10,7 +14,7 @@ function render(){
  if(!visible.length){const empty=document.createElement('li');empty.className='muted';empty.textContent='Пока заметок нет.';root.append(empty);}
  for(const note of visible){
    const row=document.createElement('li');row.className='note';const name=document.createElement('span');name.textContent=note.title;
-   const remove=document.createElement('button');remove.type='button';remove.className='secondary';remove.textContent='Удалить';remove.setAttribute('aria-label',`Удалить заметку ${note.title}`);
+   const remove=iconButton('⌫','Удалить','secondary');remove.setAttribute('aria-label',`Удалить заметку ${note.title}`);
    remove.addEventListener('click',()=>{
      visible=visible.filter(item=>item.id!==note.id);
      /* Deliberate simulator defect: saved[] is not updated on delete. */

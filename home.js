@@ -8,6 +8,9 @@ const STORAGE='sever-academy-auth-v1',TOTAL=14,QA='qa_foundation',EN='english_fo
 /* Published plan of the Academy tasks in SEVER: lesson N is scheduled for 20 September 2026 + (N-1) days, 18:00. */
 const PLAN_START=Date.UTC(2026,8,20),PLAN_HOUR='18:00';
 const $=id=>document.getElementById(id);
+/* Подпись кнопки меняется, иконка остаётся на месте. */
+const setLabel=(node,text)=>{const span=node.querySelector('.btn-label');(span||node).textContent=text;};
+const setIcon=(node,glyph)=>{const span=node.querySelector('.btn-icon');if(span)span.textContent=glyph;};
 const lessons=window.AcademyPathLessons;
 let db=null,owner=false,rows=new Map(),library=null,calendarMonth=null;
 const record=(n,track)=>rows.get(`${track}:${n}`);
@@ -212,7 +215,7 @@ function render(){
  $('stageFill').style.width=owner?`${examsQa/TOTAL*100}%`:'0%';
  $('stageNote').textContent=owner?`Зачётов по QA: ${examsQa} из ${TOTAL}`:'Зачётов по QA: — из 14';
  $('stageTag').textContent=owner&&examsQa===TOTAL?'ГОТОВ К ОТКРЫТИЮ':'ЗАКРЫТ';
- $('account').textContent=owner?'Аккаунт ✓':'Войти';$('logout').hidden=!owner;
+ setLabel($('account'),owner?'Аккаунт':'Войти');setIcon($('account'),owner?'✓':'⇥');$('logout').hidden=!owner;
  renderModule(1,7,'weekOne');renderModule(8,14,'weekTwo');
  renderMap();renderCharacter();renderCalendar();renderLibrary();
 }
@@ -255,7 +258,7 @@ async function login(event){event.preventDefault();if(!db)return;
 async function logout(){if(!db)return;try{const result=await db.auth.signOut();if(result.error)throw result.error;owner=false;rows.clear();render();status('Ты вышел из Academy. Твой прогресс остаётся в облаке.');$('loginDialog').close();$('password').value='';}catch(error){$('loginError').textContent='Не получилось выйти. Повтори попытку.';}}
 function init(){
  for(const button of document.querySelectorAll('.toggle-lessons'))button.addEventListener('click',()=>{
-  const target=$(button.getAttribute('aria-controls'));const expanded=button.getAttribute('aria-expanded')==='true';target.hidden=expanded;button.setAttribute('aria-expanded',String(!expanded));button.textContent=expanded?'Уроки ▾':'Скрыть ↑';
+  const target=$(button.getAttribute('aria-controls'));const expanded=button.getAttribute('aria-expanded')==='true';target.hidden=expanded;button.setAttribute('aria-expanded',String(!expanded));setLabel(button,expanded?'Уроки':'Скрыть');setIcon(button,expanded?'▾':'▴');
  });
  $('calPrev').addEventListener('click',()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);renderCalendar();});
  $('calNext').addEventListener('click',()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);renderCalendar();});

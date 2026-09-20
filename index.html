@@ -2,7 +2,7 @@
 <html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#080f1b"><meta name="description" content="Academy — личный учебный кабинет: карта курса, прогресс, модули QA и английского, конспекты и календарь.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://vdhazibkfpgclcwyvvbi.supabase.co wss://vdhazibkfpgclcwyvvbi.supabase.co; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
-<title>Academy · Мой учебный кабинет</title><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="academy-ui.css?v=2"><script src="theme.js?v=1"></script><script src="vendor/supabase.js" defer></script><script src="path-lessons.js?v=1" defer></script><script src="home.js?v=2" defer></script></head>
+<title>Academy · Мой учебный кабинет</title><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="academy-ui.css?v=3"><script src="theme.js?v=1"></script><script src="vendor/supabase.js" defer></script><script src="path-lessons.js?v=1" defer></script><script src="home.js?v=2" defer></script></head>
 <body><a class="skip" href="#main">К содержимому</a>
 <div class="app-shell">
 
@@ -15,7 +15,7 @@
 </aside>
 
 <div class="workspace">
-<header class="topline"><div class="breadcrumbs">ACADEMY <span>/</span> <strong>ОБЗОР</strong></div><div class="topline-actions"><span class="topline-pill">ЛИЧНЫЙ КАБИНЕТ</span><button id="account" class="account-button" type="button">Войти</button></div></header>
+<header class="topline"><div class="breadcrumbs">ACADEMY <span>/</span> <strong>ОБЗОР</strong></div><div class="topline-actions"><span class="topline-pill">ЛИЧНЫЙ КАБИНЕТ</span><button id="account" class="account-button" type="button"><span class="btn-icon" aria-hidden="true">⇥</span><span class="btn-label">Войти</span></button></div></header>
 
 <main id="main" class="main">
 <div class="section-heading"><div><span class="eyebrow">ТВОЯ УЧЕБНАЯ СРЕДА</span><h1>Учись спокойно.<br><span>Шаг за шагом.</span></h1><p>Один понятный маршрут вместо десятков случайных разделов. Открой нужный урок и продолжай с того места, где остановился.</p></div><a id="heroContinue" class="button primary hero-action" href="path.html">Продолжить обучение <span aria-hidden="true">↗</span></a></div>
@@ -58,7 +58,7 @@
         <p>Кто такой тестировщик, требования, ожидаемый результат и первые фразы английского.</p>
         <div class="module-art art-one" aria-hidden="true"><span></span><span></span><span></span></div>
         <div class="module-foot"><span id="weekOneState" class="state">НАЧАЛО</span><span id="weekOneText" class="module-note">Прогресс появится после входа</span></div>
-        <div class="module-buttons"><a class="button primary" href="path.html?lesson=1">Перейти <span aria-hidden="true">↗</span></a><button class="outline toggle-lessons" type="button" aria-expanded="false" aria-controls="weekOneLessons">Уроки ▾</button></div>
+        <div class="module-buttons"><a class="button primary" href="path.html?lesson=1">Перейти <span aria-hidden="true">↗</span></a><button class="outline toggle-lessons" type="button" aria-expanded="false" aria-controls="weekOneLessons"><span class="btn-icon" aria-hidden="true">▾</span><span class="btn-label">Уроки</span></button></div>
         <div class="lesson-list" id="weekOneLessons" hidden></div>
       </article>
 
@@ -69,7 +69,7 @@
         <p>Тест-кейсы, чек-листы, границы и классы эквивалентности, английский для работы.</p>
         <div class="module-art art-two" aria-hidden="true"><span></span><span></span><span></span></div>
         <div class="module-foot"><span id="weekTwoState" class="state muted-state">СЛЕДУЮЩИЙ</span><span id="weekTwoText" class="module-note">Прогресс появится после входа</span></div>
-        <div class="module-buttons"><a class="button primary" href="path.html?lesson=8">Перейти <span aria-hidden="true">↗</span></a><button class="outline toggle-lessons" type="button" aria-expanded="false" aria-controls="weekTwoLessons">Уроки ▾</button></div>
+        <div class="module-buttons"><a class="button primary" href="path.html?lesson=8">Перейти <span aria-hidden="true">↗</span></a><button class="outline toggle-lessons" type="button" aria-expanded="false" aria-controls="weekTwoLessons"><span class="btn-icon" aria-hidden="true">▾</span><span class="btn-label">Уроки</span></button></div>
         <div class="lesson-list" id="weekTwoLessons" hidden></div>
       </article>
 
@@ -134,7 +134,7 @@
   <section class="side-card calendar-card" aria-labelledby="calTitle">
     <div class="cal-head">
       <div><h2 id="calTitle"><span id="calMonth">—</span></h2><small id="calToday">по плану календаря SEVER</small></div>
-      <div class="cal-nav"><button id="calPrev" class="round" type="button" aria-label="Предыдущий месяц">←</button><button id="calNext" class="round" type="button" aria-label="Следующий месяц">→</button></div>
+      <div class="cal-nav"><button id="calPrev" class="round" type="button" aria-label="Предыдущий месяц"><span class="btn-icon" aria-hidden="true">←</span></button><button id="calNext" class="round" type="button" aria-label="Следующий месяц"><span class="btn-icon" aria-hidden="true">→</span></button></div>
     </div>
     <table class="cal-grid"><thead><tr><th abbr="понедельник">пн</th><th abbr="вторник">вт</th><th abbr="среда">ср</th><th abbr="четверг">чт</th><th abbr="пятница">пт</th><th abbr="суббота">сб</th><th abbr="воскресенье">вс</th></tr></thead><tbody id="calGrid"></tbody></table>
     <span class="eyebrow">БЛИЖАЙШИЕ ЗАНЯТИЯ</span>
@@ -154,7 +154,7 @@
 <footer>Academy — твоя личная учебная среда. Прогресс показывается из облака после входа. Никаких вымышленных оценок и достижений.</footer>
 </main></div></div>
 
-<nav class="mobile-nav" aria-label="Разделы Academy"><a href="./" aria-current="page"><span aria-hidden="true">◫</span> <span>Обзор</span></a><a href="path.html"><span aria-hidden="true">▤</span> <span>Уроки</span></a><a href="skills.html"><span aria-hidden="true">✦</span> <span>Практика</span></a><a href="library.html"><span aria-hidden="true">▧</span> <span>Конспекты</span></a></nav>
+<nav class="mobile-nav" aria-label="Разделы Academy"><a href="./" aria-current="page"><span class="nav-glyph" aria-hidden="true">◫</span> <span>Обзор</span></a><a href="path.html"><span class="nav-glyph" aria-hidden="true">▤</span> <span>Уроки</span></a><a href="skills.html"><span class="nav-glyph" aria-hidden="true">✦</span> <span>Практика</span></a><a href="library.html"><span class="nav-glyph" aria-hidden="true">▧</span> <span>Конспекты</span></a></nav>
 
-<dialog id="loginDialog"><form id="loginForm" class="login"><div class="login-head"><h2>Войти в Academy</h2><button type="button" id="closeLogin" aria-label="Закрыть окно">×</button></div><p>Тот же аккаунт, что и в SEVER. После входа покажем твой настоящий прогресс.</p><label for="email">Почта</label><input id="email" type="email" autocomplete="email" required><label for="password">Пароль</label><input id="password" type="password" autocomplete="current-password" required><p id="loginError" role="alert"></p><button class="button primary" id="loginSubmit" type="submit">Войти</button><button type="button" class="outline" id="logout" hidden>Выйти из аккаунта</button></form></dialog>
+<dialog id="loginDialog"><form id="loginForm" class="login"><div class="login-head"><h2>Войти в Academy</h2><button type="button" id="closeLogin" aria-label="Закрыть окно"><span class="btn-icon" aria-hidden="true">×</span></button></div><p>Тот же аккаунт, что и в SEVER. После входа покажем твой настоящий прогресс.</p><label for="email">Почта</label><input id="email" type="email" autocomplete="email" required><label for="password">Пароль</label><input id="password" type="password" autocomplete="current-password" required><p id="loginError" role="alert"></p><button class="button primary" id="loginSubmit" type="submit"><span class="btn-icon" aria-hidden="true">⇥</span><span class="btn-label">Войти</span></button><button type="button" class="outline" id="logout" hidden><span class="btn-icon" aria-hidden="true">⇤</span><span class="btn-label">Выйти из аккаунта</span></button></form></dialog>
 </body></html>

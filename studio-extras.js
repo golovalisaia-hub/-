@@ -4,6 +4,8 @@ function init(){
   const guide=window.AcademyGuide,topic=document.getElementById('topic'),select=document.getElementById('lessonSelect');
   if(!guide||!topic||!select)return;
   const $=id=>document.getElementById(id),insertBefore=$('answerLabel');if(!insertBefore)return;
+  /* Кнопка с собственной иконкой и текстовой подписью. */
+  const iconButton=(glyph,text,className)=>{const b=document.createElement('button');b.type='button';if(className)b.className=className;const i=document.createElement('span');i.className='btn-icon';i.setAttribute('aria-hidden','true');i.textContent=glyph;const l=document.createElement('span');l.className='btn-label';l.textContent=text;b.append(i,l);return b;};
   /* Навигация архива задана в разметке и совпадает с остальными страницами: скрипт её не переписывает. */
   const panel=document.createElement('section');panel.id='academyCompanion';panel.className='companion';panel.setAttribute('aria-label','Дополнительные объяснения и повторение');insertBefore.parentElement.insertBefore(panel,insertBefore);
   const faq=document.createElement('details');faq.className='companion-faq';
@@ -21,7 +23,7 @@ function init(){
       panel.append(title('Что нужно уметь после блока'),p(active==='qa'?'Самостоятельно объяснить правило, написать воспроизводимые шаги и указать ожидаемое поведение.':'Объяснить синтаксис своими словами, самостоятельно изменить пример и проверить результат выполнения.'));
       if(active==='python'){
         const help=p('На телефоне код можно вводить прямо здесь. На компьютере полезно повторить упражнение в VS Code. Код с сайта выполняется только в отдельном браузерном окружении.','companion-note');
-        const insert=document.createElement('button');insert.type='button';insert.className='quiet example-insert';insert.textContent='Вставить учебный пример в редактор ↓';
+        const insert=iconButton('⤵','Вставить учебный пример в редактор','quiet example-insert');
         insert.addEventListener('click',()=>{const input=$('code');if(!input||input.disabled)return;if(input.value.trim()&&!confirm('Заменить введённый код учебным примером?'))return;input.value=data.example;input.dispatchEvent(new Event('input',{bubbles:true}));input.scrollIntoView({behavior:'smooth',block:'center'});input.focus();});
         panel.append(help,insert);
       }else panel.append(p('Не выдавай учебный пример ошибки за действительно обнаруженную проблему. Сначала повтори её и запиши фактическое поведение.','companion-note'));
