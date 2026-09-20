@@ -8,6 +8,7 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
     for(const config of [{name:'desktop',width:1440,height:900},{name:'mobile',width:390,height:844},{name:'small-mobile',width:320,height:720}]){
       const page=await browser.newPage({viewport:{width:config.width,height:config.height},deviceScaleFactor:1});
       await page.route('**/@supabase/supabase-js@*/dist/umd/supabase.min.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
+      await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
       const errors=[];page.on('pageerror',error=>errors.push(error.message));
       await page.goto('http://127.0.0.1:4173/studio.html',{waitUntil:'domcontentloaded'});
       await page.locator('#qualityPanel').waitFor({timeout:20000});
@@ -45,7 +46,6 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
           await page.locator('#tabQa').click();
         }
       }
-      
       await page.locator('#tabEnglish').click();
       await page.locator('.quiz-choices button').first().waitFor();
       for(let index=0;index<4;index++){
@@ -95,6 +95,12 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
     await page.close();
     const offline=await browser.newPage();
     await offline.route('**/cdn.jsdelivr.net/**',route=>route.abort());
+    await offline.goto('http://127.0.0.1:4173/library.html',{waitUntil:'domcontentloaded'});
+    await offline.waitForFunction(()=>Boolean(window.supabase?.createClient),undefined,{timeout:20000});
+    await offline.waitForFunction(()=>!document.querySelector('#cloudStatus').textContent.includes('Проверяем доступ'),undefined,{timeout:15000});
+    const guestStatus=await offline.locator('#cloudStatus').textContent();
+    assert.match(guestStatus,/Войди в Academy/,`Real local SDK must show guest login guidance: ${guestStatus}`);
+    console.log('PASS: unmocked guest book access uses local SDK when CDN is unavailable.');
     await offline.goto('http://127.0.0.1:4173/studio.html',{waitUntil:'domcontentloaded'});
     await offline.waitForFunction(()=>Boolean(window.supabase?.createClient),undefined,{timeout:20000});
     assert.doesNotMatch(await offline.locator('#cloudStatus').textContent(),/Модуль облачного входа не загрузился/,'The vendored copy must replace the blocked CDN module.');
