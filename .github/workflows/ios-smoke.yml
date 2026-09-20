@@ -1,0 +1,30 @@
+name: Academy iPhone WebKit smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ios-smoke.yml'
+      - 'tests/ios-smoke.cjs'
+      - 'studio.html'
+      - 'studio-extras.js'
+      - 'foundation.js'
+      - 'foundation.css'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ios-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Playwright
+        run: npm install --no-save --ignore-scripts playwright@1.63.0
+      - name: Install WebKit and dependencies
+        run: npx playwright install --with-deps webkit
+      - name: Load published root and lesson in mobile WebKit
+        run: node tests/ios-smoke.cjs
