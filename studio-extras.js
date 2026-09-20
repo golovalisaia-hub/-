@@ -1,16 +1,15 @@
-/* An additive teaching layer for the standalone Academy studio. */
+/* Additive original lesson companion; no changes to the SEVER planner application. */
 (()=>{'use strict';
 function init(){
   const guide=window.AcademyGuide,topic=document.getElementById('topic'),select=document.getElementById('lessonSelect');
   if(!guide||!topic||!select)return;
-  const $=id=>document.getElementById(id);
-  const insertBefore=$('answerLabel');
-  if(!insertBefore)return;
+  const $=id=>document.getElementById(id),insertBefore=$('answerLabel');if(!insertBefore)return;
   const panel=document.createElement('section');panel.id='academyCompanion';panel.className='companion';panel.setAttribute('aria-label','Дополнительные объяснения и повторение');insertBefore.parentElement.insertBefore(panel,insertBefore);
-  const faq=document.createElement('details');faq.className='companion-faq';faq.innerHTML='<summary>Не понял задание? Подсказки для самостоятельной работы</summary><div class="faq-content"><p><strong>QA:</strong> выпиши шаги и ожидаемый результат. Если требования неизвестны, сформулируй вопрос, а не придумывай баг.</p><p><strong>Python:</strong> изучи последнюю строку ошибки, проверь отступы, типы и ввод. Меняй одну строку за раз и снова запускай.</p><p><strong>English:</strong> произнеси слово, вспомни перевод, затем раскрой карточку и проверь себя. Возвращайся к старым словам.</p><p>Проверка здесь учебная: Python-консоль подтверждает только запуск без ошибки, а не правильность решения. Это не живой ИИ-чат.</p></div>';
+  const faq=document.createElement('details');faq.className='companion-faq';
+  faq.innerHTML='<summary>Не понял задание? Подсказки для самостоятельной работы</summary><div class="faq-content"><p><strong>QA:</strong> выпиши шаги и ожидаемый результат. Если требования неизвестны, сформулируй вопрос, а не придумывай баг.</p><p><strong>Python:</strong> изучи последнюю строку ошибки, проверь отступы, типы и ввод. Меняй одну строку за раз и снова запускай.</p><p><strong>English:</strong> произнеси слово, вспомни перевод, затем раскрой карточку и проверь себя. Возвращайся к старым словам.</p><p>Проверка здесь учебная: Python-консоль подтверждает только запуск без ошибки, а не правильность решения. Это не живой ИИ-чат.</p></div>';
   panel.after(faq);
   const p=(text,className='')=>{const node=document.createElement('p');node.textContent=text;if(className)node.className=className;return node;};
-  const title=(text)=>{const node=document.createElement('h4');node.textContent=text;return node;};
+  const title=text=>{const node=document.createElement('h4');node.textContent=text;return node;};
   function render(){
     const n=Number(select.value)||1,day=window.ACADEMY_DAYS?.[n-1];if(!day)return;
     const active=['qa','python','english'].find(b=>$('tab'+(b==='qa'?'Qa':b==='python'?'Python':'English'))?.getAttribute('aria-pressed')==='true')||'qa';
@@ -35,14 +34,15 @@ function init(){
     panel.append(title('Английский: правило дня'),p(english.grammar.title,'companion-grammar'),p(english.grammar.example),p(english.grammar.task,'companion-note'),title('Словарные карточки · 1 новое + 4 повторения'));
     const cards=document.createElement('div');cards.className='vocab-grid';
     [english.main,...english.review].forEach((item,i)=>{
-      const details=document.createElement('details');details.className='vocab-card';
-      const summary=document.createElement('summary');summary.textContent=`${i===0?'НОВОЕ':'ПОВТОР'} · ${item.word}`;
+      const details=document.createElement('details');details.className='vocab-card';const summary=document.createElement('summary');summary.textContent=`${i===0?'НОВОЕ':'ПОВТОР'} · ${item.word}`;
       details.append(summary,p(item.translation));cards.append(details);
     });
     panel.append(cards,p('Коснись слова, чтобы открыть перевод. Закрой карточку и попробуй вспомнить его ещё раз. После занятия повтори слова без подсказки.','companion-note'));
   }
-  new MutationObserver(render).observe(topic,{childList:true,characterData:true,subtree:true});
-  render();
+  new MutationObserver(render).observe(topic,{childList:true,characterData:true,subtree:true});render();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+/* Dynamically load versioned, same-origin enhancements without editing the planner or the 84-day course. */
+const css=document.createElement('link');css.rel='stylesheet';css.href='academy-quality.css?v=1';document.head.append(css);
+for(const name of ['learning-checks.js?v=1','academy-quality.js?v=1']){const script=document.createElement('script');script.src=name;script.async=false;document.head.append(script);}
 })();
