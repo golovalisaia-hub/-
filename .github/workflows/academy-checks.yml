@@ -1,0 +1,19 @@
+name: Academy checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify JavaScript parses
+        run: |
+          node --check curriculum.js
+          node --check app.js
+          node --check studio.js
+          node --check python-worker.mjs
+      - name: Validate learning program and UI wiring
+        run: node tests/smoke.cjs
