@@ -1,0 +1,37 @@
+/* Accessibility-first refinements layered over the original Studio theme. */
+:root{--academy-accent:#b8f08e;--academy-outline:#3a536b;--academy-soft:#a8bed0}
+body{background:radial-gradient(ellipse 67% 32% at 94% -5%,#254637 0%,transparent 78%),#0a1220;-webkit-tap-highlight-color:transparent}
+.topbar{background:#101b2bed;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.logo-mark{box-shadow:0 6px 21px #9ee67e23}.content{padding-bottom:90px}.welcome h1{letter-spacing:-.055em}
+.rail{background:linear-gradient(185deg,#102037,#0c1828)}
+.rail-head strong{letter-spacing:-.02em}.nav-action{box-shadow:0 7px 24px #b8f08e14}
+.dashboard-card,.lesson,.finish,.reading{box-shadow:0 8px 38px #00000018}
+.dashboard-card{background:linear-gradient(140deg,#14263a,#101d31)}
+.lesson{background:linear-gradient(160deg,#14253a 0%,#101d30 65%)}
+.lesson-body{background:#0e1a2c}.tabs button{transition:background .16s,border-color .16s,transform .16s}
+.tabs button:active,.primary:active,.nav-action:active{transform:scale(.985)}
+button,select,input,textarea{min-height:44px}textarea{min-height:125px}
+#answer{scroll-margin-top:90px}.code{line-height:1.65;background:#071423;border-color:#426076;min-height:230px;font-size:14px}
+.output{white-space:pre-wrap;overflow-wrap:anywhere;background:#080e17;border-color:#385469}
+.lesson-body h3{letter-spacing:-.025em}.question{background:linear-gradient(130deg,#233b3d,#192f38)}
+.companion{border:1px solid #33546a;border-radius:17px;background:linear-gradient(145deg,#142940,#172d32);margin:25px 0 15px;padding:21px}
+.companion h4{font-size:17px;letter-spacing:-.02em;color:#eef7fb;margin:0 0 11px}.companion h4:not(:first-child){margin-top:24px}
+.companion p{margin:9px 0;color:#d2e0e8;line-height:1.7}.companion .companion-note{font-size:13px;color:#aecbd2}
+.companion-grammar{font-size:17px;font-weight:750;color:#c2f296!important}
+.example-insert{margin-top:14px;border-color:#5b8462;color:#d0f7bc;text-align:left}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.vocab-card{border:1px solid #3d5870;background:#132439;border-radius:14px;min-width:0;overflow:hidden}
+.vocab-card[open]{border-color:#88bf72;background:#1a3440}
+.vocab-card summary{cursor:pointer;list-style:none;min-height:65px;display:flex;align-items:center;padding:12px;font-size:13px;line-height:1.4;font-weight:700;color:#e5f4f6;overflow-wrap:anywhere}
+.vocab-card summary::-webkit-details-marker{display:none}.vocab-card summary::after{content:'＋';margin-left:auto;color:#a7d986;font-size:18px;padding-left:7px}
+.vocab-card[open] summary::after{content:'−'}
+.vocab-card p{margin:0;padding:0 12px 16px;color:#c9f2b3;font-size:14px}
+.companion-faq{margin:0 0 27px;border:1px solid #32465e;border-radius:14px;background:#132037;overflow:hidden}
+.companion-faq summary{cursor:pointer;padding:15px 17px;color:#d6eabf;font-weight:650;line-height:1.45}
+.faq-content{border-top:1px solid #32465e;padding:5px 17px 12px}.faq-content p{font-size:13px;line-height:1.6}
+:focus-visible{outline:3px solid #b8f08e;outline-offset:3px}.primary:focus-visible{outline-color:#edfdeb}
+@media(min-width:1100px){.rail{position:sticky;top:76px;align-self:start;min-height:calc(100vh - 76px);max-height:calc(100vh - 76px);overflow:auto}.content{padding:35px clamp(30px,4vw,55px) 95px}.lesson-body{padding:31px}}
+@media(max-width:900px){.rail{position:static;min-height:auto;max-height:none}.rail-head{display:none}.rail{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center}.nav-action{grid-column:1/-1}.rail select{min-width:0}.rail-progress{grid-column:1/-1}.rail-bottom{grid-column:1/-1}}
+@media(max-width:600px){.topbar{gap:8px}.logo{font-size:17px;letter-spacing:.09em}.logo-mark{width:33px;height:33px;margin-right:3px;border-radius:10px}.topbar .quiet{font-size:12px}.rail{gap:8px}.rail label{margin:0}.rail select{min-height:50px}.content{padding:18px 12px 85px}.welcome{flex-wrap:wrap}.welcome h1{font-size:29px}.welcome-actions{flex-direction:row;width:100%}.welcome-actions .quiet{flex:1;min-height:44px}.lesson-head h2{font-size:22px}.tabs{position:sticky;top:66px;z-index:3;background:#101d30;padding:8px 0;margin:16px -3px;border-radius:10px}.tabs button{min-height:50px;font-size:12px}.companion{padding:16px;border-radius:13px}.vocab-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vocab-card summary{min-height:64px}.lesson-actions{flex-direction:column}.lesson-actions button{width:100%;min-height:49px}.example-insert{width:100%;min-height:49px}.session-actions button{min-height:46px}.finish button{min-height:49px}}
+@media(max-width:360px){.vocab-grid{grid-template-columns:1fr}.tabs button{font-size:11px;letter-spacing:-.02em}.logo{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.tabs button,.primary,.nav-action{transition:none!important}}
