@@ -3,6 +3,11 @@ on:
   push:
     branches: [main]
     paths:
+      - 'index.html'
+      - 'path.html'
+      - 'path.css'
+      - 'path-lessons.js'
+      - 'path.js'
       - 'studio.html'
       - 'studio.css'
       - 'studio-extras.css'
@@ -21,6 +26,7 @@ on:
       - 'library.js'
       - 'vendor/supabase.js'
       - 'tests/browser.cjs'
+      - 'tests/path-browser.cjs'
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
       - 'tests/mock-cloud.js'
@@ -42,13 +48,14 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install headless Chromium
         run: npx playwright install --with-deps --only-shell chromium
-      - name: Test desktop, mobile, beginner guides, owner-only sync and Python execution
+      - name: Test QA-first workspace, legacy lessons, library and Python execution
         run: |
           node tests/server.cjs > /tmp/academy-http.log 2>&1 &
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
-            if curl -fsS http://127.0.0.1:4173/studio.html >/dev/null; then break; fi
+            if curl -fsS http://127.0.0.1:4173/path.html >/dev/null; then break; fi
             sleep 1
           done
+          node tests/path-browser.cjs
           node tests/browser.cjs
           node tests/foundation-browser.cjs
           node tests/cloud-e2e.cjs
