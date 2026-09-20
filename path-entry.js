@@ -22,6 +22,9 @@ function syncTools(){
  if($('sandboxCallout'))$('sandboxCallout').hidden=!qa;
  if($('mentorCallout'))$('mentorCallout').hidden=!qa;
  if($('mentorLink')&&Number.isInteger(n)&&n>=1&&n<=14)$('mentorLink').href=`mentor.html?lesson=${n}`;
+ const subject=qa?'qa':'english';
+ if($('aiTutorLink')&&Number.isInteger(n)&&n>=1&&n<=14)$('aiTutorLink').href=`ai.html?lesson=${n}&subject=${subject}`;
+ if($('aiNavLink')&&Number.isInteger(n)&&n>=1&&n<=14)$('aiNavLink').href=`ai.html?lesson=${n}&subject=${subject}`;
 }
 function reflect(){
  const picker=$('lessonSelect'),n=Number(picker?.value);if(!Number.isInteger(n)||n<1||n>14)return;
@@ -51,10 +54,23 @@ function addMentor(){
    const navLink=document.createElement('a');navLink.href='mentor.html';navLink.textContent='↻ Тренер повторения QA';nav.append(navLink);
  }
 }
+function addAi(){
+ const first=document.querySelector('.lesson-body > .step');if(!first||$('aiTutorCallout'))return;
+ const section=document.createElement('section');section.id='aiTutorCallout';section.className='step practice-step';
+ const marker=document.createElement('span');marker.className='step-number';marker.textContent='✦';
+ const body=document.createElement('div'),heading=document.createElement('h5'),description=document.createElement('p');
+ heading.textContent='Застрял? Спроси ИИ-наставника';
+ description.textContent='Наставник разберёт именно эту тему, задаст вопрос, даст подсказку или посмотрит твой ответ. Переписка отдельная от ChatGPT; прогресс автоматически не засчитывается. Для работы нужен настроенный API.';
+ const link=document.createElement('a');link.id='aiTutorLink';link.href='ai.html?lesson=1&subject=qa';link.className='primary';link.textContent='Разобрать этот урок с ИИ ↗';
+ body.append(heading,description,link);section.append(marker,body);first.after(section);
+ const nav=document.querySelector('.sidebar .navigation');if(nav&&!$('aiNavLink')){
+   const navLink=document.createElement('a');navLink.id='aiNavLink';navLink.href='ai.html';navLink.textContent='✦ ИИ-наставник';nav.append(navLink);
+ }
+}
 function init(){
  const picker=$('lessonSelect'),status=$('cloudStatus');if(!picker||!status)return;
  const observer=new MutationObserver(apply);observer.observe(status,{childList:true,characterData:true,subtree:true});
- addPracticalLab();addMentor();apply();syncTools();
+ addPracticalLab();addMentor();addAi();apply();syncTools();
  picker.addEventListener('change',reflect);
  for(const id of ['previous','next','continue','qaTab','englishTab'])$(id)?.addEventListener('click',()=>queueMicrotask(reflect));
 }
