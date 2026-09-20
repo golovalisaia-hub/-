@@ -7,7 +7,7 @@ function init(){
   const nav=document.querySelector('.rail-bottom');
   if(nav&&!nav.querySelector('a[href="library.html"]')){
     const links=nav.querySelectorAll('a');
-    if(links[0]){links[0].textContent='◈ Уроки';links[0].setAttribute('aria-current','page');}
+    if(links[0]){links[0].textContent='◈ Новый курс';links[0].href='path.html';links[0].removeAttribute('aria-current');links[0].setAttribute('aria-label','Перейти из архива в текущие уроки Academy');}
     if(links[1])links[1].textContent='↗ Календарь';
     const book=document.createElement('a');book.href='library.html';book.textContent='▤ Книги';
     book.setAttribute('aria-label','Открыть книги и конспекты Academy');
@@ -51,9 +51,7 @@ function init(){
   new MutationObserver(render).observe(topic,{childList:true,characterData:true,subtree:true});render();
 }
 /* Below the theme's sidebar breakpoint the progress block is collapsed so the lesson starts on the
-   first screen. Resume, lesson picker and the Уроки/Книги/Календарь navigation always stay visible. */
-/* On a phone the progress block is collapsed so the lesson itself starts on the first screen.
-   The resume button and the lesson picker stay visible; only the passive part folds away. */
+   first screen. Resume, lesson picker and navigation stay visible. */
 function setupRail(){
   const rail=document.querySelector('.rail'),toggle=document.getElementById('railToggle');
   if(!rail||!toggle)return;
@@ -72,8 +70,9 @@ function setupRail(){
 }
 function boot(){setupRail();init();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-/* Versioned same-origin enhancements are loaded in order. Brand theme comes last so it wins the cascade. */
+/* Versioned same-origin enhancements loaded in order. The archive fix follows the design sheet. */
 const css=document.createElement('link');css.rel='stylesheet';css.href='academy-quality.css?v=1';document.head.append(css);
 const design=document.createElement('link');design.rel='stylesheet';design.href='academy-design.css?v=1';document.head.append(design);
+const archive=document.createElement('link');archive.rel='stylesheet';archive.href='archive-mobile.css?v=1';document.head.append(archive);
 for(const name of ['learning-checks.js?v=1','academy-quality.js?v=1']){const script=document.createElement('script');script.src=name;script.async=false;document.head.append(script);}
 })();
