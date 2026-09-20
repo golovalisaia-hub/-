@@ -15,7 +15,13 @@ function backup(){const key=draftKey();if(!key)return;try{localStorage.setItem(k
 function restore(){const key=draftKey();if(!key)return;try{const data=JSON.parse(localStorage.getItem(key)||'null');if(!data?.payload)return;editing=data.editing||null;fill(data.payload);$('formTitle').textContent=editing?'Редактирование записи':'Восстановленный черновик';}catch{}}
 function clearBackup(){const key=draftKey();if(key)try{localStorage.removeItem(key);}catch{}}
 function fill(data){$('book').value=data.book_title||'';$('chapter').value=data.chapter||'';$('notes').value=data.notes||'';$('qaTask').value=data.qa_task||'';$('pythonTask').value=data.python_task||'';$('readingStatus').value=data.status==='done'?'done':'reading';}
-function fresh(confirmUnsaved=false){if(confirmUnsaved&&$('chapter').value.trim()&&!window.confirm('Создать новую запись? Несохранённые изменения останутся только в черновике до нового сохранения.'))return;editing=null;$('readingForm').reset();$('formTitle').textContent='Новая запись';error('');clearBackup();$('chapter').focus();}
+function fresh(confirmUnsaved=false){
+  if(confirmUnsaved&&$('chapter').value.trim()&&!window.confirm('Создать новую запись? Текущий несохранённый черновик будет заменён.'))return;
+  editing=null;
+  /* Form controls with id="reset" shadow form.reset() on HTMLFormElement. Call the native method explicitly. */
+  HTMLFormElement.prototype.reset.call($('readingForm'));
+  $('formTitle').textContent='Новая запись';error('');clearBackup();$('chapter').focus();
+}
 function render(){
   $('entryTotal').textContent=`${entries.length} ${entries.length===1?'глава':entries.length>=2&&entries.length<=4?'главы':'глав'} в дневнике`;
   $('finishedTotal').textContent=`${entries.filter(r=>r.status==='done').length} изучено`;
