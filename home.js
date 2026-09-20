@@ -54,10 +54,41 @@ function render(){
  $('qaProgress').textContent=owner?`${q} / ${TOTAL}`:'— / 14';$('englishProgress').textContent=owner?`${e} / ${TOTAL}`:'— / 14';
  $('qaFill').style.width=owner?`${q/TOTAL*100}%`:'0%';$('englishFill').style.width=owner?`${e/TOTAL*100}%`:'0%';
  $('account').textContent=owner?'Аккаунт ✓':'Войти';$('logout').hidden=!owner;
- renderModule(1,7,'weekOne');renderModule(8,14,'weekTwo');
+ renderModule(1,7,'weekOne');renderModule(8,14,'weekTwo');renderLibrary();
 }
+/* Library preview: real counts from the owner's own reading diary, never invented. */
+let library=null;
+function renderLibrary(){
+ const summary=$('librarySummary'),list=$('libraryPreview');
+ if(!summary||!list)return;
+ list.replaceChildren();
+ if(!owner){
+   summary.textContent='После входа здесь появятся твои книги, главы и конспекты.';
+   for(const item of ['Книга и глава, которую читаешь','Свой конспект своими словами','Задание по QA и эксперимент на Python'])
+     {const line=document.createElement('li');line.textContent=item;list.append(line);}
+   return;
+ }
+ if(!library){summary.textContent='Не удалось прочитать дневник чтения. Открой раздел, чтобы проверить.';return;}
+ if(!library.total){
+   summary.textContent='Дневник пока пуст: ни одной записи. Первая запись занимает пару минут.';
+   return;
+ }
+ summary.textContent=`${library.total} ${plural(library.total,'запись','записи','записей')} · ${library.books} ${plural(library.books,'книга','книги','книг')}.`;
+ for(const item of library.recent){
+   const line=document.createElement('li');
+   line.textContent=item.chapter?`${item.book_title} — ${item.chapter}`:item.book_title;
+   list.append(line);
+ }
+}
+const plural=(n,one,few,many)=>{
+ const tens=n%100,units=n%10;
+ if(tens>10&&tens<20)return many;
+ if(units===1)return one;
+ if(units>=2&&units<=4)return few;
+ return many;
+};
 async function load(){
- owner=false;rows.clear();render();
+ owner=false;rows.clear();library=null;render();
  if(!db){status('Модуль облака недоступен. Уроки можно открыть без входа; прогресс пока не загрузится.','bad');return;}
  try{
   /* Session presence is only a guest check; getUser() and profile verify access. */
@@ -72,7 +103,12 @@ async function load(){
   const result=await db.from('academy_path_progress').select('track,lesson_number,status').eq('user_id',auth.data.user.id).limit(100);
   if(result.error)throw result.error;
   rows=new Map((result.data||[]).filter(item=>[QA,EN].includes(item.track)&&Number.isInteger(item.lesson_number)&&item.lesson_number>=1&&item.lesson_number<=TOTAL).map(item=>[`${item.track}:${item.lesson_number}`,item]));
-  owner=true;render();status('✓ Облачный прогресс загружен. Перейди к любому уроку — черновики останутся на месте.','good');
+  owner=true;
+  try{
+    const diary=await db.from('academy_reading').select('book_title,chapter,updated_at').eq('user_id',auth.data.user.id).order('updated_at',{ascending:false}).limit(50);
+    library=diary.error?null:{total:(diary.data||[]).length,books:new Set((diary.data||[]).map(item=>item.book_title)).size,recent:(diary.data||[]).slice(0,3)};
+  }catch(error){console.error('Academy library preview failed',error);library=null;}
+  render();status('✓ Облачный прогресс загружен. Перейди к любому уроку — черновики останутся на месте.','good');
  }catch(error){console.error('Academy overview load failed',error);owner=false;rows.clear();render();status('Не удалось проверить прогресс. Попробуй обновить страницу при стабильном соединении.','bad');}
 }
 async function login(event){event.preventDefault();if(!db)return;

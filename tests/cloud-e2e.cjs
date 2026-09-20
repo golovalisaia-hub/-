@@ -35,11 +35,13 @@ const {chromium}=require('playwright');
     await page.locator('#finishBlock').click();
     await page.waitForFunction(()=>document.querySelector('#resultTitle').textContent.includes('✓ Урок завершён'),undefined,{timeout:15000});
     const outcome=await page.evaluate(()=>({tasks:window.__academyMock.tasks,blocks:window.__academyMock.academy_blocks,writes:window.__academyMock.writes}));
-    assert.equal(outcome.tasks.filter(t=>t.user_id==='test-owner'&&t.completed).length,1,'Only lesson one completed');
-    assert.equal(outcome.tasks.find(t=>t.id==='stranger').completed,false,'Another user is unchanged');
+    /* The archive keeps its own cloud progress, but the calendar now belongs to the live
+       QA + English path only: finishing three archived blocks must move no planner task. */
     assert.equal(outcome.blocks.filter(b=>b.lesson_number===1&&b.completed).length,3,'All blocks cloud-confirmed');
-    assert.equal(outcome.writes.filter(w=>w.table==='tasks'&&w.kind==='update').length,1,'Exactly one calendar task updated');
-    console.log('PASS: QA + Python + English → three cloud blocks → one owner-only calendar completion.');
+    assert.equal(outcome.tasks.filter(t=>t.completed).length,0,'The archive completes no calendar task');
+    assert.equal(outcome.tasks.find(t=>t.id==='stranger').completed,false,'Another user is unchanged');
+    assert.equal(outcome.writes.filter(w=>w.table==='tasks').length,0,'The archive performs zero planner writes');
+    console.log('PASS: archived QA + Python + English → three cloud blocks → zero planner writes.');
     await page.goto('http://127.0.0.1:4173/library.html',{waitUntil:'domcontentloaded'});
     await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('загружен'));
     await page.locator('#chapter').fill('Переменные и строки');

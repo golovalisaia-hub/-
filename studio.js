@@ -24,9 +24,11 @@ function lessonDate(n){const start=Date.parse(`${window.ACADEMY_START}T12:00:00Z
 function labelDate(n){const date=tasks.get(n)?.scheduled_for||lessonDate(n);return new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(`${date}T12:00:00Z`));}
 function toast(message){const node=$('toast');node.textContent=message;node.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>node.classList.remove('show'),4000);}
 function status(message,kind=''){const node=$('cloudStatus');node.textContent=message;node.className=`message ${kind}`.trim();}
-function isDone(n){return Boolean(tasks.get(n)?.completed);}
-function blockDone(n,b){return isDone(n)||Boolean(blocks.get(blockKey(n,b))?.completed);}
+/* Archive route. It never writes to the planner and never restores learning evidence
+   from a calendar checkbox: the current QA + English path owns the calendar. */
+function blockDone(n,b){return Boolean(blocks.get(blockKey(n,b))?.completed);}
 function allDone(n){return SUBJECTS.every(b=>blockDone(n,b));}
+function isDone(n){return allDone(n);}
 function recommended(){for(let n=1;n<=TOTAL;n++)if(!isDone(n))return n;return TOTAL;}
 function readLocal(n,b){try{const item=JSON.parse(localStorage.getItem(localKey(n,b))||'null');return item&&typeof item.text==='string'?item:null;}catch{return null;}}
 function storeLocal(n,b,text){try{localStorage.setItem(localKey(n,b),JSON.stringify({text,ts:Date.now()}));}catch{toast('Локальный черновик не сохранился: проверь свободное место.');}}
@@ -98,7 +100,6 @@ function selection(n){
   if(!Number.isInteger(n)||n<1||n>TOTAL)return;
   manuallySelected=true;selected=n;subject=SUBJECTS.find(b=>!blockDone(n,b))||'qa';runEvidence.clear();render();
   document.querySelector('.welcome').scrollIntoView({behavior:'smooth',block:'start'});
-  if(authorized&&allDone(n)&&!isDone(n))syncDay(n);
 }
 function render(){
   if(days.length!==TOTAL){status('Программа загружена не полностью; занятие пока недоступно.','bad');return;}
@@ -160,7 +161,6 @@ async function loadCloud(){
     authorized=true;if(!manuallySelected){selected=recommended();subject=SUBJECTS.find(b=>!blockDone(selected,b))||'qa';}
     render();
     if(tasks.size!==TOTAL)status(`Найдено ${tasks.size} из 84 учебных задач. Недостающие задачи не будут заменяться другими.`, 'bad');
-    if(allDone(selected)&&!isDone(selected)&&tasks.has(selected))await syncDay(selected);
   }catch(error){console.error('Academy cloud load failed',error);authorized=false;tasks.clear();blocks.clear();sessions=[];render();status('Не удалось проверить облачные данные. Не закрывай урок, пока соединение не восстановится.','bad');}
 }
 function logicalStamp(row){
@@ -172,31 +172,10 @@ function logicalStamp(row){
 }
 let syncing=false;
 async function syncDay(n){
-  if(syncing||!authorized||isDone(n)||!tasks.has(n))return;
-  syncing=true;$('retry').disabled=true;
-  try{
-    const proof=await db.from('academy_blocks').select('block,completed').eq('user_id',user.id).eq('lesson_number',n).eq('completed',true);
-    if(proof.error)throw proof.error;
-    if(new Set((proof.data||[]).map(b=>b.block)).size!==3)throw Error('Не все блоки подтверждены облаком.');
-    const id=tasks.get(n).id;
-    const fresh=await db.from('tasks').select('id,user_id,title,completed,deleted_at,updated_at,sync_versions').eq('id',id).eq('user_id',user.id).single();
-    if(fresh.error)throw fresh.error;
-    const row=fresh.data;
-    if(row.user_id!==user.id||row.deleted_at||!row.title.startsWith(taskPrefix(n)))throw Error('Учебная задача не совпала.');
-    if(row.completed){tasks.set(n,{...tasks.get(n),...row});render();return;}
-    if(row.sync_versions?.v!==1||!Array.isArray(row.sync_versions?.fields?.completion))throw Error('Формат синхронизации календаря изменился.');
-    const stamp=logicalStamp(row),iso=new Date(stamp).toISOString(),meta=structuredClone(row.sync_versions);
-    meta.fields.completion=[stamp,`academy-studio-${crypto.randomUUID()}`];
-    const saved=await db.from('tasks').update({completed:true,completed_at:iso,updated_at:iso,sync_versions:meta})
-      .eq('id',id).eq('user_id',user.id).eq('completed',false).is('deleted_at',null)
-      .select('id,completed,completed_at,updated_at,sync_versions').maybeSingle();
-    if(saved.error)throw saved.error;
-    let confirmed=saved.data;
-    if(!confirmed){const check=await db.from('tasks').select('id,completed,completed_at,updated_at,sync_versions').eq('id',id).eq('user_id',user.id).single();if(check.error)throw check.error;confirmed=check.data;}
-    if(!confirmed?.completed)throw Error('Сервер не подтвердил отметку.');
-    tasks.set(n,{...tasks.get(n),...confirmed});render();toast(`✓ Урок ${n} завершён. Галочка сохранена в календаре.`);
-  }catch(error){console.error('Academy sync failed',error);status('Блоки сохранены, но календарь не подтвердил галочку. Нажми «Повторить синхронизацию».','bad');toast('Календарь пока не подтвердил выполнение.');}
-  finally{syncing=false;$('retry').disabled=false;}
+  /* Deliberately inert: the archived 84 combined lessons must not open, close or touch any
+     SEVER task. The live QA + English path in path.html is the only route linked to the calendar. */
+  if(!n)return;
+  status('Это архив прежних уроков. Прогресс сохраняется в облаке Academy, но календарь SEVER отсюда не изменяется: текущий маршрут — QA + английский на странице «Мои уроки».');
 }
 function translationMatches(value,day){const normalize=text=>safe(text).toLocaleLowerCase('ru-RU').trim().replace(/[.!?\s]+$/g,'');const answer=normalize(value);return day.english.translation.split(/\s*\/\s*/).some(term=>normalize(term)===answer);}
 async function finishBlock(){
@@ -214,7 +193,7 @@ async function finishBlock(){
     const saved=await saveBlock(n,b,raw,true);
     if(!saved.completed)throw Error('Облако не подтвердило завершение блока.');
     storeLocal(n,b,raw);
-    if(allDone(n)){render();await syncDay(n);}else{subject=SUBJECTS.find(item=>!blockDone(n,item))||'qa';render();toast('Блок сохранён. Продолжаем следующий!');}
+    if(allDone(n)){render();syncDay(n);}else{subject=SUBJECTS.find(item=>!blockDone(n,item))||'qa';render();toast('Блок сохранён. Продолжаем следующий!');}
   }catch(error){console.error('Block save failed',error);status('Не удалось сохранить завершение в облаке. Ответ остался на этом устройстве. Повтори при наличии связи.','bad');$('finishBlock').disabled=false;$('saveDraft').disabled=false;}
 }
 async function saveCurrent(){
@@ -274,7 +253,7 @@ function install(){
   $('lessonSelect').addEventListener('change',event=>selection(Number(event.target.value)));
   $('resume').addEventListener('click',()=>selection(recommended()));
   $('previous').addEventListener('click',()=>selection(selected-1));$('next').addEventListener('click',()=>selection(selected+1));
-  $('continue').addEventListener('click',()=>selection(selected+1));$('retry').addEventListener('click',()=>syncDay(selected));
+  $('continue').addEventListener('click',()=>selection(selected+1));$('retry').hidden=true;
   for(const b of SUBJECTS){const id=b==='qa'?'tabQa':b==='python'?'tabPython':'tabEnglish';$(id).addEventListener('click',()=>{subject=b;render();});}
   for(const id of ['answer','code','stdin'])$(id).addEventListener('input',cache);
   $('saveDraft').addEventListener('click',saveCurrent);$('finishBlock').addEventListener('click',finishBlock);

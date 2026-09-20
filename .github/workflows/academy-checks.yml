@@ -32,3 +32,5 @@ jobs:
         run: node tests/quality.cjs
       - name: Validate QA-first curriculum, dashboard and cloud isolation
         run: node tests/path.cjs
+      - name: Reject promises of employment or a language level by a date
+        run: node tests/promises.cjs

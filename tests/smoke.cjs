@@ -40,5 +40,11 @@ const required=[...new Set([...script.matchAll(/\$\('([^']+)'\)/g),...extras.mat
 for(const id of required)assert.ok(html.includes(`id="${id}"`),`Missing legacy studio element #${id}`);
 for(const id of ['tabQa','tabPython','tabEnglish','qaBadge','pythonBadge','englishBadge'])assert.ok(html.includes(`id="${id}"`));
 assert.match(script,/academy_blocks/);assert.match(script,/academy_sessions/);
-assert.match(script,/meta\.fields\.completion/);
-console.log(`PASS: legacy lessons preserved, ${required.length} studio DOM IDs, new QA-first homepage points to path.html.`);
+/* The archive keeps its own cloud progress but must not touch the planner any more:
+   only the live QA + English path is linked to the SEVER calendar. */
+assert.doesNotMatch(script,/from\('tasks'\)[\s\S]{0,400}?\.update\(/,'the archive must not write planner tasks');
+assert.doesNotMatch(script,/meta\.fields\.completion/,'the archive must not stamp calendar completion metadata');
+assert.doesNotMatch(script,/function blockDone\(n,b\)\{return isDone\(n\)/,'a planner checkbox is not learning evidence');
+assert.match(html,/class="archive-banner"/,'the archive page says it is an archive');
+assert.match(html,/href="path\.html"/,'the archive points to the current route');
+console.log(`PASS: legacy lessons preserved as a read-only archive, ${required.length} studio DOM IDs, new QA-first homepage points to path.html.`);

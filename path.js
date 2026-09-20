@@ -198,7 +198,7 @@ function renderExam(){
  const data=exam?.[subject]?.[lesson-1],state=examStateFor(lesson,subject),done=certified(lesson,subject);
  $('examIntro').textContent=subject==='qa'
    ?'Три прикладные задачи с одним верным ответом и рубрика по твоей работе. Зачёт не ставится за сохранённый текст.'
-   :'По одной измеримой цели на каждый навык CEFR: чтение, аудирование, письмо, говорение. Говорение отмечается как самооценка.';
+   :'По одной измеримой цели на каждый навык CEFR: чтение, аудирование, письмо, говорение. Это учебные цели по дескрипторам Pre-A1/A1, а не присвоение уровня и не экзамен; говорение отмечается как самооценка.';
  if(!data){root.append(examLine('Материалы зачёта не загрузились.',false));$('examSubmit').disabled=true;return;}
  if(subject==='qa')renderExamQa(root,data,state,done);else renderExamEnglish(root,data,state,done);
  const history=record(lesson,subject)?.attempts||[];

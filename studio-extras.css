@@ -72,3 +72,8 @@ button,select,input,textarea{min-height:44px}textarea{min-height:125px}
   /* «Закончить и сохранить» gets its own row instead of wrapping onto three lines. */
   .session-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.session-actions #timerSave{grid-column:1/-1}}
 @media(prefers-reduced-motion:reduce){.rail-toggle-icon{transition:none!important}}
+
+/* Archive marker: the old combined lessons are kept, but they are not the current route. */
+.archive-banner{display:grid;gap:6px;margin:20px 0 0;padding:15px 17px;border:1px solid #8a6a3a;border-left:4px solid #e0a75a;border-radius:13px;background:#2a2113;color:#f1dcb8;font-size:14px;line-height:1.55}
+.archive-banner strong{font-size:15px;color:#ffd79a}
+.archive-banner a{color:#ffd79a;text-decoration:underline}
