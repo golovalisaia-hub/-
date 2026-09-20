@@ -7,7 +7,9 @@ const {chromium}=require('playwright');
   try{
     const page=await browser.newPage({viewport:{width:1280,height:850}});
     const errors=[];page.on('pageerror',err=>errors.push(err.message));
-    await page.route('**/@supabase/supabase-js@*/dist/umd/supabase.min.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:fs.readFileSync('tests/mock-cloud.js','utf8')}));
+    const mockSource=fs.readFileSync('tests/mock-cloud.js','utf8');
+    await page.route('**/@supabase/supabase-js@*/dist/umd/supabase.min.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:mockSource}));
+    await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:mockSource}));
     await page.goto('http://127.0.0.1:4173/studio.html',{waitUntil:'domcontentloaded'});
     await page.locator('#qualityPanel').waitFor();
     await page.waitForFunction(()=>document.querySelector('#cloudStatus').textContent.includes('Облако подключено'));
