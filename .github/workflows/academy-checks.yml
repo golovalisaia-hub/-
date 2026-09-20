@@ -25,6 +25,7 @@ jobs:
           node --check home.js
           node --check path-entry.js
           node --check library.js
+          node --check theme.js
           node --check path-assessment.js
       - name: Validate legacy curriculum, content and UI wiring
         run: node tests/smoke.cjs

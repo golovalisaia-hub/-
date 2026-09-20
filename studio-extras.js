@@ -4,15 +4,7 @@ function init(){
   const guide=window.AcademyGuide,topic=document.getElementById('topic'),select=document.getElementById('lessonSelect');
   if(!guide||!topic||!select)return;
   const $=id=>document.getElementById(id),insertBefore=$('answerLabel');if(!insertBefore)return;
-  const nav=document.querySelector('.rail-bottom');
-  if(nav&&!nav.querySelector('a[href="library.html"]')){
-    const links=nav.querySelectorAll('a');
-    if(links[0]){links[0].textContent='◈ Новый курс';links[0].href='path.html';links[0].removeAttribute('aria-current');links[0].setAttribute('aria-label','Перейти из архива в текущие уроки Academy');}
-    if(links[1])links[1].textContent='↗ Календарь';
-    const book=document.createElement('a');book.href='library.html';book.textContent='▤ Книги';
-    book.setAttribute('aria-label','Открыть книги и конспекты Academy');
-    nav.insertBefore(book,links[1]||null);
-  }
+  /* Навигация архива задана в разметке и совпадает с остальными страницами: скрипт её не переписывает. */
   const panel=document.createElement('section');panel.id='academyCompanion';panel.className='companion';panel.setAttribute('aria-label','Дополнительные объяснения и повторение');insertBefore.parentElement.insertBefore(panel,insertBefore);
   const faq=document.createElement('details');faq.className='companion-faq';
   faq.innerHTML='<summary>Не понял задание? Подсказки для самостоятельной работы</summary><div class="faq-content"><p><strong>QA:</strong> выпиши шаги и ожидаемый результат. Если требования неизвестны, сформулируй вопрос, а не придумывай баг.</p><p><strong>Python:</strong> изучи последнюю строку ошибки, проверь отступы, типы и ввод. Меняй одну строку за раз и снова запускай.</p><p><strong>English:</strong> произнеси слово, вспомни перевод, затем раскрой карточку и проверь себя. Возвращайся к старым словам.</p><p>Проверка здесь учебная: Python-консоль подтверждает только запуск без ошибки, а не правильность решения. Это не живой ИИ-чат.</p></div>';

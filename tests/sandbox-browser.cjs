@@ -14,14 +14,24 @@ const {chromium}=require('playwright');
    await page.goto('http://127.0.0.1:4173/sandbox.html',{waitUntil:'domcontentloaded'});
    await page.locator('#reportHeading').waitFor();
    // The first version had CSS inline under style-src self: Chromium silently blocked its design.
-   assert.equal(await page.locator('link[rel="stylesheet"][href="academy-ui.css?v=1"]').count(),1);
-   const styling=await page.evaluate(()=>({
-    panel:getComputedStyle(document.querySelector('.panel')).backgroundColor,
-    radius:getComputedStyle(document.querySelector('.panel')).borderRadius,
-    accent:getComputedStyle(document.querySelector('.brand b')).backgroundColor,
-    background:getComputedStyle(document.body).backgroundImage
-   }));
-   assert.equal(styling.panel,'rgb(255, 255, 255)',`${width}px: actual CSS panel background`);
+   assert.equal(await page.locator('link[rel="stylesheet"][href="academy-ui.css?v=2"]').count(),1);
+   const styling=await page.evaluate(()=>{
+    const token=name=>{
+     const probe=document.createElement('span');probe.style.color=`var(${name})`;document.body.append(probe);
+     const value=getComputedStyle(probe).color;probe.remove();return value;
+    };
+    return {
+     panel:getComputedStyle(document.querySelector('.panel')).backgroundColor,
+     card:token('--card'),
+     theme:document.documentElement.dataset.theme,
+     radius:getComputedStyle(document.querySelector('.panel')).borderRadius,
+     accent:getComputedStyle(document.querySelector('.brand b')).backgroundColor,
+     background:getComputedStyle(document.body).backgroundImage
+    };
+   });
+   /* Панель окрашена токеном темы, а не случайным цветом: работает и в тёмной, и в светлой. */
+   assert.equal(styling.panel,styling.card,`${width}px: actual CSS panel background from the theme token`);
+   assert.ok(['dark','light'].includes(styling.theme),`${width}px: theme attribute is set before paint`);
    assert.equal(styling.accent,'rgb(184, 240, 142)',`${width}px: Academy brand accent`);
    assert.equal(styling.radius,width<=600?'16px':'22px',`${width}px: responsive card radius`);
    assert.match(styling.background,/radial-gradient/,`${width}px: real stylesheet is applied`);

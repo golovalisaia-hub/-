@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#0b1220"><meta name="description" content="Academy — самостоятельные уроки QA, Python и английского, консоль и облачный прогресс">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://vdhazibkfpgclcwyvvbi.supabase.co wss://vdhazibkfpgclcwyvvbi.supabase.co; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <title>Academy · Архив прежних уроков</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="academy-ui.css?v=1">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="academy-ui.css?v=2"><script src="theme.js?v=1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js" defer></script>
 <script src="curriculum.js" defer></script><script src="lesson-guide.js" defer></script><script src="studio.js" defer></script><script src="studio-extras.js" defer></script><script src="foundation.js?v=1" defer></script>
 </head>
@@ -20,7 +20,7 @@
   <div class="rail-extra" id="railExtra">
     <div class="rail-progress"><strong id="progressText">0 из 84 уроков</strong><div class="bar"><span id="progressBar"></span></div><span class="fine" id="progressSub">Войди, чтобы загрузить облачный прогресс.</span></div>
   </div>
-  <div class="rail-bottom"><a href="./">← Главная Academy</a><a href="https://golovalisaia-hub.github.io/sever-planner/" target="_blank" rel="noopener noreferrer">Открыть календарь ↗</a></div>
+  <div class="rail-bottom"><a href="./"><span aria-hidden="true">◫</span> Обзор</a><a href="path.html"><span aria-hidden="true">▤</span> Уроки</a><a href="skills.html"><span aria-hidden="true">✦</span> Практика</a><a href="library.html"><span aria-hidden="true">▧</span> Конспекты</a></div>
 </aside>
 <main class="content">
   <div class="welcome"><div><span class="eyebrow">ТВОЙ СЛЕДУЮЩИЙ ШАГ</span><h1 id="heading">Урок 01 / 84</h1><p id="subtitle">QA · Python · English</p></div><div class="welcome-actions"><button id="previous" class="quiet" type="button">← Назад</button><button id="next" class="quiet" type="button">Вперёд →</button></div></div>
@@ -43,5 +43,5 @@
 </div>
 <dialog id="loginDialog"><form id="loginForm" class="login" method="dialog"><div class="login-head"><h2>Подключить учебный прогресс</h2><button id="closeLogin" type="button" aria-label="Закрыть">×</button></div><p>Войди в ту же учётную запись, что используешь в календаре. Academy не сохраняет введённый пароль своим кодом.</p><label for="email">Почта</label><input id="email" type="email" required autocomplete="email"><label for="password">Пароль</label><input id="password" type="password" required autocomplete="current-password"><p id="loginError" role="alert"></p><button id="loginSubmit" class="primary" type="submit">Войти</button><button id="logout" type="button" class="quiet" hidden>Выйти из Academy</button></form></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-</body>
+<nav class="mobile-nav" aria-label="Разделы Academy"><a href="./"><span aria-hidden="true">◫</span> <span>Обзор</span></a><a href="path.html"><span aria-hidden="true">▤</span> <span>Уроки</span></a><a href="skills.html"><span aria-hidden="true">✦</span> <span>Практика</span></a><a href="library.html"><span aria-hidden="true">▧</span> <span>Конспекты</span></a></nav></body>
 </html>

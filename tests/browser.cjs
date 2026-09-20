@@ -17,20 +17,27 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       assert.equal(await page.locator('#topic').count(),1);
       assert.equal(await page.locator('#academyCompanion').count(),1);
       const links=page.locator('.rail-bottom a');
-      assert.equal(await links.count(),3,`${config.name}: expected new-course, books, calendar links`);
-      assert.equal(await links.first().getAttribute('href'),'path.html',`${config.name}: archived course must link to current lessons`);
-      assert.equal(await links.nth(1).getAttribute('href'),'library.html');
-      assert.equal(await links.nth(2).getAttribute('href'),'https://golovalisaia-hub.github.io/sever-planner/');
+      /* Навигация архива совпадает с остальными страницами: обзор, уроки, практика, конспекты. */
+      assert.equal(await links.count(),4,`${config.name}: the archive shows the same four destinations`);
+      assert.deepEqual(await links.evaluateAll(list=>list.map(link=>link.getAttribute('href'))),
+        ['./','path.html','skills.html','library.html'],`${config.name}: same order as everywhere else`);
       const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
       assert.ok(horizontal<=2,`${config.name}: horizontal overflow ${horizontal}px`);
       const compact=config.width<=1024;
       assert.equal(await page.locator('#railExtra').isHidden(),compact,`${config.name}: progress block starts collapsed only below the sidebar breakpoint`);
       assert.equal(await page.locator('#resume').isVisible(),true,`${config.name}: resume button stays reachable`);
       assert.equal(await page.locator('#lessonSelect').isVisible(),true,`${config.name}: lesson picker stays reachable`);
-      assert.equal(await links.first().isVisible(),true,`${config.name}: collapsing the rail must never hide the navigation`);
+      /* Навигация остаётся доступной: на широком экране — в рельсе, на узком — вкладками сверху. */
+      const reachable=await links.first().isVisible()||await page.locator('body>.mobile-nav a').first().isVisible();
+      assert.equal(reachable,true,`${config.name}: collapsing the rail must never hide the navigation`);
       if(config.width<=600){
-        const nav=await links.first().evaluate(el=>getComputedStyle(el.closest('.rail-bottom')).position);
-        assert.equal(nav,'static',`${config.name}: archived navigation stays in the page instead of covering exercises`);
+        /* Навигация телефона — липкие вкладки сверху, а не панель поверх кнопок урока. */
+        const mobile=await page.locator('body>.mobile-nav').evaluate(node=>{
+          const box=node.getBoundingClientRect();
+          return {position:getComputedStyle(node).position,top:Math.round(box.top),bottom:Math.round(box.bottom)};
+        });
+        assert.equal(mobile.position,'sticky',`${config.name}: no fixed bottom menu over the exercises`);
+        assert.ok(mobile.bottom<120,`${config.name}: navigation stays at the top of the page`);
       }
       if(compact){
         await page.locator('#railToggle').click();

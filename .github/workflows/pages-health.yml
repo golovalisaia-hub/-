@@ -29,7 +29,7 @@ jobs:
           HOST=golovalisaia-hub.github.io
           BASE="https://$HOST/-/"
           fail=0
-          for path in '' academy-ui.css home.js path.html path-entry.js path.js path-lessons.js path-assessment.js studio.html curriculum.js lesson-guide.js studio.js studio-extras.js library.html library.js python-worker.mjs foundation.js vendor/supabase.js; do
+          for path in '' academy-ui.css theme.js home.js path.html path-entry.js path.js path-lessons.js path-assessment.js studio.html curriculum.js lesson-guide.js studio.js studio-extras.js library.html library.js python-worker.mjs foundation.js vendor/supabase.js; do
             url="$BASE$path"
             status=$(curl -sSL --retry 2 --retry-delay 2 --connect-timeout 8 --max-time 20 -o /tmp/academy-health-body -w '%{http_code}' "$url") || status=000
             printf '%-23s HTTP %s\n' "${path:-/}" "$status"
