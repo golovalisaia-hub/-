@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1220"><meta name="description" content="Academy — личный читательский дневник для самостоятельной учёбы">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; connect-src 'self' https://vdhazibkfpgclcwyvvbi.supabase.co wss://vdhazibkfpgclcwyvvbi.supabase.co; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<title>Academy · Книги и конспекты</title><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="library.css">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script><script defer src="library.js"></script>
+</head><body>
+<header class="site-header"><a class="brand" href="studio.html" aria-label="Вернуться в Academy"><span class="mark">A.</span> ACADEMY</a><a class="back" href="studio.html">← К урокам</a></header>
+<main class="layout">
+<section class="hero"><span class="kicker">ТВОЯ БИБЛИОТЕКА</span><h1>Читай. Пробуй.<br><em>Запоминай.</em></h1><p>Сохраняй свои конспекты, проверяй идеи на практике и возвращайся к сложным главам. Оригинальный текст книг не копируется на сайт.</p><div class="hero-badges"><span id="entryTotal">0 глав в дневнике</span><span id="finishedTotal">0 изучено</span></div></section>
+<div id="cloudStatus" class="status" role="status">Проверяем доступ к твоему облаку…</div>
+<div class="columns">
+<section class="editor"><span class="kicker">УЧЕБНЫЙ ДНЕВНИК</span><h2 id="formTitle">Новая запись</h2><form id="readingForm">
+<label for="book">Название книги</label><input id="book" name="book" required maxlength="140" value="Эрик Матес — Изучаем Python" autocomplete="off">
+<label for="chapter">Глава или тема</label><input id="chapter" name="chapter" required maxlength="160" placeholder="Например: переменные и строки" autocomplete="off">
+<label for="notes">Объясни главу своими словами</label><textarea id="notes" name="notes" maxlength="4000" rows="5" placeholder="Что понял? Как бы ты объяснил тему начинающему?"></textarea>
+<label for="qaTask">QA: какую проверку можно придумать?</label><textarea id="qaTask" name="qaTask" maxlength="2000" rows="3" placeholder="Предусловие → шаги → ожидаемый результат"></textarea>
+<label for="pythonTask">Python: собственный эксперимент</label><textarea id="pythonTask" name="pythonTask" maxlength="2000" rows="3" placeholder="Измени пример из главы, запусти его и опиши результат"></textarea>
+<label for="readingStatus">Состояние</label><select id="readingStatus" name="readingStatus"><option value="reading">Изучаю</option><option value="done">Разобрал и проверил на практике</option></select>
+<div class="actions"><button id="save" class="primary" type="submit">Сохранить в облако</button><button id="reset" class="secondary" type="button">Новая запись</button></div><p id="formError" class="error" role="alert"></p></form>
+</section>
+<aside class="study-method"><span class="kicker">КАК УЧИТЬСЯ ПО КНИГЕ</span><h2>Пять шагов</h2><ol><li>Прочитай небольшой раздел и выдели одну главную мысль.</li><li>Объясни идею своими словами, не переписывая страницы.</li><li>Запусти пример Python и измени входные данные.</li><li>Составь один QA-тест с ожидаемым результатом.</li><li>Сохрани вывод и вернись к теме, если остались вопросы.</li></ol><p class="warning">Этот дневник не содержит самих книг. Подбирай главу по своему изданию. Не вставляй пароли, токены или личные данные в конспекты.</p><a class="secondary full" href="studio.html">Открыть Python-консоль ↗</a></aside>
+</div>
+<section class="records"><div class="records-head"><div><span class="kicker">ТВОИ ЗАПИСИ</span><h2>История чтения</h2></div><button id="reload" class="secondary" type="button">Обновить облако ↻</button></div><div id="records" class="record-grid"><p>Пока записей нет.</p></div></section>
+<footer>Academy. Этот дневник хранит только твои заметки в твоей учётной записи. Календарные задачи SEVER здесь не изменяются.</footer>
+</main>
+</body></html>
