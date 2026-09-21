@@ -80,12 +80,21 @@ function renderQuiz(){
 }
 /* ---- Зачёт: objective checks, an explicit rubric and a kept attempt history ---- */
 const speechReady=()=>'speechSynthesis'in window&&'SpeechSynthesisUtterance'in window;
-const normalise=text=>String(text||'').toLowerCase().replace(/[.,!?;:'"«»]/g,'').replace(/\s+/g,' ').trim();
+/* Телефоны и macOS сами подставляют типографские кавычки: I’m, don’t. Без этого
+   правильный ответ ученика считался бы ошибкой. skills.js делает то же самое. */
+const normalise=text=>String(text||'').toLowerCase()
+ .replace(/[\u2018\u2019\u02bc\u0060\u00b4]/g,"'")
+ .replace(/[\u201c\u201d\u201e]/g,'"')
+ .replace(/[.,!?;:'"\u00ab\u00bb]/g,'')
+ .replace(/\s+/g,' ').trim();
 function speak(phrase){
  if(!speechReady())return;
  window.speechSynthesis.cancel();
  const voice=new SpeechSynthesisUtterance(phrase);voice.lang='en-US';voice.rate=.85;window.speechSynthesis.speak(voice);
 }
+/* Одно правило на все три места: раньше обработчик поля письма пересчитывал его
+   без schemaReady и включал кнопку, которая не могла записать зачёт. */
+const examSubmitLocked=(busy=saving)=>busy||!ready||certified(lesson,subject)||!schemaReady;
 function examVerdict(n,s){
  const data=exam?.[s]?.[n-1],state=examStateFor(n,s);
  if(!data)return {ok:false,reason:'Материалы зачёта для этого урока не загрузились.'};
@@ -174,14 +183,25 @@ function renderExamEnglish(root,data,state,locked){
    const task=document.createElement('strong');task.textContent=data.writing.task;section.append(task);
    const field=document.createElement('input');field.type='text';field.className='skill-input';field.value=state.skills.writingText||'';
    field.setAttribute('aria-label',data.writing.task);field.disabled=locked;
+   /* Подсказка вместо молчаливого «○»: называет правило, но не готовую фразу,
+      и появляется только после реальной попытки. Исправлять ответ можно сколько угодно раз. */
+   const hint=document.createElement('p');hint.className='skill-hint';hint.setAttribute('role','status');
+   const refreshHint=()=>{
+     const typed=normalise(field.value);
+     const show=!state.skills.writing&&typed.length>=3&&Boolean(data.writing.hint);
+     hint.textContent=show?`Пока не засчитано. ${data.writing.hint}`:'';
+     hint.hidden=!show;
+   };
    field.addEventListener('input',()=>{
      state.skills.writingText=field.value;
      state.skills.writing=data.writing.accept.includes(normalise(field.value));
-     $('examSubmit').disabled=!ready||saving||locked;
+     $('examSubmit').disabled=examSubmitLocked();
      const mark=section.querySelector('.exam-line');
      if(mark){mark.textContent=`${state.skills.writing?'✓':'○'} Письмо засчитано`;mark.className=`exam-line${state.skills.writing?' done':''}`;}
+     refreshHint();
    });
-   section.append(field,examLine('Письмо засчитано',Boolean(state.skills.writing)));
+   section.append(field,examLine('Письмо засчитано',Boolean(state.skills.writing)),hint);
+   refreshHint();
  });
  block(data.speaking.goal,section=>{
    const phrase=document.createElement('p');phrase.className='skill-prompt';phrase.textContent=data.speaking.phrase;section.append(phrase);
@@ -213,7 +233,7 @@ function renderExam(){
    list.append(line);
  }
  $('examHistoryBox').hidden=history.length===0;
- $('examSubmit').disabled=!ready||saving||done||!schemaReady;
+ $('examSubmit').disabled=examSubmitLocked();
  setLabel($('examSubmit'),done?'Зачёт сдан':'Сдать зачёт');
  if(done)$('examFeedback').textContent='✓ Зачёт сдан. Переcдавать не нужно; повторить материал можно в любой момент.';
  else if(!schemaReady)$('examFeedback').textContent='Запись зачёта отключена: в облаке нет колонок certified_at, assessment и attempts. Примени миграцию academy_three_stage_assessment.';
@@ -264,7 +284,7 @@ function lockSaving(locked){
  for(const id of ['qaTab','englishTab','lessonSelect','continue','useCloud'])$(id).disabled=locked;
  $('previous').disabled=locked||lesson===1;$('next').disabled=locked||lesson===total;
  $('save').disabled=locked||!ready;$('complete').disabled=locked||!ready;
- $('examSubmit').disabled=locked||!ready||certified(lesson,subject)||!schemaReady;
+ $('examSubmit').disabled=examSubmitLocked(locked);
 }
 const columns=()=>`user_id,track,lesson_number,answer,quiz_score,status,updated_at${schemaReady?',certified_at,assessment,attempts':''}`;
 /* Keep the last 20 attempts: enough to see progress, small enough for one row. */
