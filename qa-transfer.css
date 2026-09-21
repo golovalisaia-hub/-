@@ -1,0 +1,38 @@
+/* Standalone styles for the independent QA challenge.
+   Layout and colour come from academy-ui.css; this file only adds what the exercise needs
+   and re-scopes two shared class names (.check, .logs) that mean something else there. */
+
+/* --- Спецификация и список границ --- */
+.rules{margin:11px 0 0;padding-left:20px;line-height:1.7}
+.rules li{margin-bottom:7px;overflow-wrap:anywhere}
+.rule{overflow-wrap:anywhere}
+.probe-list{margin:9px 0 0;padding-left:20px;line-height:1.8}
+.probe-list li{overflow-wrap:anywhere}
+
+/* --- Приложение под тестом --- */
+#orderForm{max-width:450px}
+#orderForm .input{width:100%;margin-top:6px}
+/* В дизайн-системе .check — это круглая плашка-бейдж. Здесь это строка с флажком. */
+#orderForm .check{display:flex;align-items:center;gap:10px;min-height:44px;margin-top:4px;padding:0;
+  border-radius:0;background:none;color:var(--text);font-size:15px;font-weight:500;cursor:pointer}
+#orderForm .check input[type=checkbox]{width:24px;height:24px;min-height:24px;flex-shrink:0;
+  margin:0;padding:0;accent-color:var(--violet)}
+
+/* --- Журнал запусков: читаемый список, а не блок кода --- */
+#journal.logs{max-height:340px;padding:14px 14px 14px 32px;overflow:auto;
+  white-space:normal;font-family:inherit;color:var(--text)}
+#journal li{margin-bottom:12px;line-height:1.55;overflow-wrap:anywhere}
+#journal li:last-child{margin-bottom:0}
+#journal .mini{display:inline-flex;align-items:center;justify-content:center;min-height:34px;
+  margin-left:8px;padding:5px 10px;font-size:.82rem}
+
+/* --- Отчёт --- */
+.report-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.report-columns select,#evidencePick{width:100%;max-width:100%;margin-top:6px}
+.export{width:100%;min-height:150px;margin-top:14px;white-space:pre-wrap}
+
+@media(max-width:650px){
+  .report-columns{grid-template-columns:1fr}
+  #journal.logs{padding-left:28px}
+  #journal .mini{display:flex;width:100%;margin:7px 0 0;min-height:44px}
+}
