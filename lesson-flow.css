@@ -28,4 +28,5 @@ body.guided-lesson .lesson-body{min-width:0}
 body.guided-lesson .lesson-toolbar{padding-top:16px}
 body.guided-lesson .lesson-body>.step,body.guided-lesson .lesson-body>.quiz,body.guided-lesson .lesson-body>.response,body.guided-lesson .lesson-body>.exam{max-width:100%;min-width:0}
 @media(max-width:600px){body.guided-lesson .lesson-layout>.main{padding:12px 12px calc(var(--mobile-nav-h,65px) + env(safe-area-inset-bottom) + 28px)}.flow-heading{padding:19px 16px 10px}.flow-steps{grid-template-columns:repeat(2,minmax(0,1fr));margin:14px 15px;gap:5px}.flow-controls{margin:12px 15px 18px;flex-direction:column-reverse;align-items:stretch}.flow-controls button{width:100%}.flow-info{margin:0 15px 16px}.flow-steps button{min-height:46px}.flow-heading h2{font-size:25px}}
+@media(max-width:375px){body.guided-lesson .top #account{white-space:nowrap;min-width:max-content;padding-left:10px;padding-right:10px}body.guided-lesson .top #account .btn-label{white-space:nowrap}}
 @media(prefers-reduced-motion:reduce){.flow-steps button,.flow-controls button{transition:none!important}}
