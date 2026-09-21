@@ -9,6 +9,7 @@ const descriptions=['Прочитай объяснение и разберись
 let stage=0,lastKey='',pending=false;
 const create=(tag,className,text)=>{const n=document.createElement(tag);if(className)n.className=className;if(text)n.textContent=text;return n;};
 const number=()=>Number($('lessonSelect')?.value)||1;
+const finalLesson=()=>number()>=lessons[subject].length;
 const quizDone=()=>$('stageViewed')?.classList.contains('done')||$('questions')?.querySelectorAll('.choice-note').length===2;
 const practiced=()=>$('stagePractised')?.classList.contains('done');
 const certified=()=>$('stagePassed')?.classList.contains('done');
@@ -40,12 +41,13 @@ function render(){
   button.disabled=!unlocked(i);button.setAttribute('aria-current',i===stage?'step':'false');button.dataset.done=String(i>0&&marks[i]);
  }
  $('flowPrev').disabled=stage===0;
- $('flowNext').textContent=stage===3?'Следующий урок →':`Дальше · ${names[stage+1]} →`;
- $('flowNext').disabled=stage===3?(n===14||!certified()):!unlocked(stage+1);
+ $('flowNext').textContent=stage===3?(finalLesson()?'К списку уроков →':'Следующий урок →'):`Дальше · ${names[stage+1]} →`;
+ $('flowNext').disabled=stage===3?!certified():!unlocked(stage+1);
  $('flowInfo').textContent=stage===0?'Чтение не засчитывается автоматически: после объяснения ответь на два вопроса.':
  stage===1&&!quizDone()?'Для перехода к практике нужны два верных ответа. Ты можешь вернуться к теории.':
  stage===2&&!practiced()?'Чтобы открыть зачёт, войди в Academy и дождись подтверждения сохранения практики облаком.':
  stage===3&&!certified()?'Сдай зачёт самостоятельно. Другие темы можно открыть через список уроков сверху.':
+ stage===3&&finalLesson()?'Последний урок этого предмета завершён. Вернись к списку уроков, чтобы выбрать следующий шаг.':
  stage===3?'Зачёт сохранён. Можно переходить к следующей теме.':'Продолжай в удобном темпе.';
 }
 function queue(){if(pending)return;pending=true;queueMicrotask(()=>{pending=false;render();});}
@@ -66,7 +68,12 @@ function init(){
  card.querySelector('.lesson-toolbar')?.after(nav);
  const controls=create('div','flow-controls'),prev=create('button','flow-secondary','← Назад'),next=create('button','flow-primary');
  prev.id='flowPrev';next.id='flowNext';prev.type=next.type='button';prev.addEventListener('click',()=>go(stage-1));
- next.addEventListener('click',()=>{if(stage!==3){go(stage+1);return;}if(number()>=14||!certified())return;$('next').click();stage=0;queue();document.querySelector('.lesson-card')?.scrollIntoView({block:'start',behavior:'instant'});});
+ next.addEventListener('click',()=>{
+  if(stage!==3){go(stage+1);return;}
+  if(!certified())return;
+  if(finalLesson()){location.assign($('flowBack').href);return;}
+  $('next').click();stage=0;queue();document.querySelector('.lesson-card')?.scrollIntoView({block:'start',behavior:'instant'});
+ });
  controls.append(prev,next);const info=create('p','flow-info');info.id='flowInfo';card.append(controls,info);
  for(const id of ['topic','quizStatus','stageViewed','stagePractised','stagePassed']){
   const node=$(id);if(!node)continue;
