@@ -55,10 +55,20 @@ const { chromium } = require('playwright');
             const hit = document.elementFromPoint(Math.max(2, Math.min(innerWidth - 2, box.left + box.width / 2)), box.top + box.height / 2);
             return !!hit && nav.contains(hit);
           });
-        return { bottom: rect.bottom, viewport: innerHeight, covered: covered.length };
+        return {
+          bottom: rect.bottom, viewport: innerHeight,
+          covered: covered.length,
+          coveredDetails: covered.map(({ node, box }) => ({
+            tag: node.tagName.toLowerCase(),
+            text: (node.textContent || '').trim().slice(0, 90),
+            href: node.getAttribute('href'),
+            top: Math.round(box.top), bottom: Math.round(box.bottom)
+          })),
+          scrollY, scrollHeight: document.documentElement.scrollHeight
+        };
       });
       assert.ok(Math.abs(after.bottom - after.viewport) <= 2, `${route} ${width}: pinned after scrolling`);
-      assert.equal(after.covered, 0, `${route} ${width}: covered controls`);
+      assert.equal(after.covered, 0, `${route} ${width}: covered controls ${JSON.stringify(after.coveredDetails)} (scrollY=${after.scrollY}, scrollHeight=${after.scrollHeight})`);
       if (route === '/') {
         await page.locator('body > .mobile-nav a[href="path.html"]').click();
         await page.waitForURL('**/courses.html');
