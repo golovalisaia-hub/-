@@ -53,10 +53,10 @@ function init(){
  // Some links are updated later by home.js as cloud progress loads.
  if(document.body)new MutationObserver(scheduleNavigation).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['href']});
  const page=location.pathname.split('/').pop();
- if(page==='courses.html')addCss('academy-scaffold.css?v=1');
+ if(page==='courses.html')addCss('academy-scaffold.css?v=2');
  if(page==='path.html'&&new URLSearchParams(location.search).get('flow')==='1'){
-  addCss('academy-scaffold.css?v=1');
-  addScript('academy-scaffold.js?v=1');
+  addCss('academy-scaffold.css?v=2');
+  addScript('academy-scaffold.js?v=2');
   addScript('lesson-flow.js?v=2');
  }
 }
