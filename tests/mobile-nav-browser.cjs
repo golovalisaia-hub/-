@@ -1,5 +1,5 @@
 /* Mobile/tablet navigation: four real links, visible touch targets and no overlap.
-   Legacy dashboard link path.html redirects to the new subject chooser. */
+   Overview navigation opens a separate subject chooser rather than the legacy mixed lesson page. */
 const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
 (async () => {
@@ -70,7 +70,8 @@ const { chromium } = require('playwright');
       assert.ok(Math.abs(after.bottom - after.viewport) <= 2, `${route} ${width}: pinned after scrolling`);
       assert.equal(after.covered, 0, `${route} ${width}: covered controls ${JSON.stringify(after.coveredDetails)} (scrollY=${after.scrollY}, scrollHeight=${after.scrollHeight})`);
       if (route === '/') {
-        await page.locator('body > .mobile-nav a[href="path.html"]').click();
+        assert.equal(await page.locator('body > .mobile-nav a').nth(1).getAttribute('href'),'courses.html','Learner sees the real subject-choice link');
+        await page.locator('body > .mobile-nav a[href="courses.html"]').click();
         await page.waitForURL('**/courses.html');
         await page.locator('#qaLessons summary').waitFor({ state: 'visible' });
         assert.equal(await page.locator('#englishLessons summary').count(), 1, 'English remains a separate subject');

@@ -17,21 +17,19 @@ const GUEST='window.supabase={createClient:()=>({auth:{getUser:async()=>({data:{
       assert.equal(await page.locator('#topic').count(),1);
       assert.equal(await page.locator('#academyCompanion').count(),1);
       const links=page.locator('.rail-bottom a');
-      /* Навигация архива совпадает с остальными страницами: обзор, уроки, практика, конспекты. */
+      /* The archive still exists, but its main navigation must lead to the new subject choice. */
       assert.equal(await links.count(),4,`${config.name}: the archive shows the same four destinations`);
       assert.deepEqual(await links.evaluateAll(list=>list.map(link=>link.getAttribute('href'))),
-        ['./','path.html','skills.html','library.html'],`${config.name}: same order as everywhere else`);
+        ['./','courses.html','skills.html','library.html'],`${config.name}: the archive must not lead learners to the mixed lesson view`);
       const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
       assert.ok(horizontal<=2,`${config.name}: horizontal overflow ${horizontal}px`);
       const compact=config.width<=1024;
       assert.equal(await page.locator('#railExtra').isHidden(),compact,`${config.name}: progress block starts collapsed only below the sidebar breakpoint`);
       assert.equal(await page.locator('#resume').isVisible(),true,`${config.name}: resume button stays reachable`);
       assert.equal(await page.locator('#lessonSelect').isVisible(),true,`${config.name}: lesson picker stays reachable`);
-      /* Навигация остаётся доступной: на широком экране — в рельсе, на узком — нижней панелью. */
       const reachable=await links.first().isVisible()||await page.locator('body>.mobile-nav a').first().isVisible();
       assert.equal(reachable,true,`${config.name}: collapsing the rail must never hide the navigation`);
       if(config.width<=600){
-        /* Навигация телефона — закреплённая панель внизу, под ней зарезервировано место. */
         const mobile=await page.locator('body>.mobile-nav').evaluate(node=>{
           const box=node.getBoundingClientRect();
           return {position:getComputedStyle(node).position,bottom:Math.round(box.bottom),height:Math.round(box.height),

@@ -11,6 +11,9 @@ on:
       - 'courses.html'
       - 'courses.js'
       - 'courses.css'
+      - 'academy-scaffold.js'
+      - 'academy-scaffold.css'
+      - 'ACADEMY-LESSON-STANDARD.md'
       - 'lesson-flow.js'
       - 'lesson-flow.css'
       - 'supabase/functions/academy-tutor/**'
@@ -45,6 +48,7 @@ on:
       - 'tests/ai-browser.cjs'
       - 'tests/ai-rubric.mjs'
       - 'tests/course-flow.cjs'
+      - 'tests/lesson-guides-browser.cjs'
       - 'tests/path-browser.cjs'
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
@@ -92,11 +96,13 @@ jobs:
           node --check ai.js
           node --check theme.js
           node --check courses.js
+          node --check academy-scaffold.js
           node --check lesson-flow.js
           node --experimental-strip-types tests/ai-rubric.mjs
           node tests/home-browser.cjs
           node tests/ai-browser.cjs
           node tests/course-flow.cjs
+          node tests/lesson-guides-browser.cjs
           node tests/path-browser.cjs
           node tests/browser.cjs
           node tests/foundation-browser.cjs
