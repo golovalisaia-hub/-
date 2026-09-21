@@ -27,11 +27,15 @@ jobs:
           node --check library.js
           node --check theme.js
           node --check path-assessment.js
+          node --check lesson-flow.js
+          node --check tests/final-navigation.cjs
       - name: Validate legacy curriculum, content and UI wiring
         run: node tests/smoke.cjs
       - name: Validate learning feedback and revision quizzes
         run: node tests/quality.cjs
       - name: Validate QA-first curriculum, dashboard and cloud isolation
         run: node tests/path.cjs
+      - name: Validate final lesson navigation for QA and English
+        run: node tests/final-navigation.cjs
       - name: Reject promises of employment or a language level by a date
         run: node tests/promises.cjs
