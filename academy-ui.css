@@ -450,6 +450,14 @@ input:focus,textarea:focus,select:focus{border-color:var(--violet);outline:none;
 /* Подсказка после неудачной попытки в письменном задании. */
 .skill-hint{margin-top:9px;padding:10px 13px;border-left:3px solid var(--violet);border-radius:var(--radius-xs);background:var(--violet-pale);color:var(--text);font-size:14px;line-height:1.5}
 .skill-hint[hidden]{display:none}
+/* «Загружаем учебную среду…» — одна строка, а сообщение о входе после проверки
+   аккаунта занимает две, три или четыре в зависимости от ширины. Без резерва страница
+   подпрыгивает на 21–65 px уже после того, как ученик начал читать, и последняя ссылка
+   боковой навигации уезжает под нижнюю панель. Резервируем место заранее.
+   Правила идут от широкого к узкому: у них одинаковая специфичность, побеждает последнее. */
+@media(max-width:1023px){ #cloudStatus{min-height:calc(2 * 1.55em + 28px)} }
+@media(max-width:599px){  #cloudStatus{min-height:calc(3 * 1.55em + 28px)} }
+@media(max-width:374px){  #cloudStatus{min-height:calc(4 * 1.55em + 28px)} }
 #examHistoryBox{margin-top:12px;font-size:13px}
 #examHistoryBox summary{min-height:44px;display:flex;align-items:center;font-weight:700;cursor:pointer}
 #examHistory{display:grid;gap:5px;padding:4px 0 0}
