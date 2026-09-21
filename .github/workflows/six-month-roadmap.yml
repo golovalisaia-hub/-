@@ -1,0 +1,47 @@
+name: Academy six-month roadmap
+on:
+  pull_request:
+    paths:
+      - 'six-month-plan.js'
+      - 'roadmap.html'
+      - 'roadmap.js'
+      - 'roadmap.css'
+      - 'courses.js'
+      - 'tests/roadmap-browser.cjs'
+      - '.github/workflows/six-month-roadmap.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  roadmap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Chromium test dependency
+        run: npm install --no-save --ignore-scripts playwright@1.63.0
+      - name: Install Chromium
+        run: npx playwright install --with-deps --only-shell chromium
+      - name: Check curriculum source and real browser navigation
+        run: |
+          node --check six-month-plan.js
+          node --check roadmap.js
+          node --check courses.js
+          node --check tests/roadmap-browser.cjs
+          node tests/server.cjs > /tmp/academy-roadmap.log 2>&1 &
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            if curl -fsS http://127.0.0.1:4173/roadmap.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/roadmap-browser.cjs
+      - name: Save desktop and mobile roadmap screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: six-month-roadmap-screenshots
+          path: screenshots/*-six-month-roadmap.png
+          if-no-files-found: ignore
+          retention-days: 3
