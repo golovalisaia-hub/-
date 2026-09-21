@@ -7,6 +7,12 @@ on:
       - 'home.js'
       - 'ai.html'
       - 'ai.js'
+      - 'ai-polish.css'
+      - 'courses.html'
+      - 'courses.js'
+      - 'courses.css'
+      - 'lesson-flow.js'
+      - 'lesson-flow.css'
       - 'supabase/functions/academy-tutor/**'
       - 'path.html'
       - 'path-entry.js'
@@ -29,6 +35,10 @@ on:
       - 'sandbox.js'
       - 'mentor.html'
       - 'mentor.js'
+      - 'qa-transfer.html'
+      - 'qa-transfer.css'
+      - 'qa-transfer.js'
+      - 'qa-transfer-core.js'
       - 'skills.html'
       - 'skills.js'
       - 'skills-controls.js'
@@ -37,6 +47,8 @@ on:
       - 'tests/browser.cjs'
       - 'tests/home-browser.cjs'
       - 'tests/ai-browser.cjs'
+      - 'tests/ai-rubric.mjs'
+      - 'tests/course-flow.cjs'
       - 'tests/path-browser.cjs'
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
@@ -46,6 +58,9 @@ on:
       - 'tests/assessment.cjs'
       - 'tests/sandbox-browser.cjs'
       - 'tests/mentor-browser.cjs'
+      - 'tests/qa-transfer-browser.cjs'
+      - 'tests/asset-integrity.cjs'
+      - 'tests/english-answers.cjs'
       - 'tests/skills-browser.cjs'
       - 'tests/mobile-nav-browser.cjs'
       - 'tests/button-icons.cjs'
@@ -55,13 +70,14 @@ on:
       - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
       - '.github/workflows/browser-e2e.yml'
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -81,8 +97,16 @@ jobs:
           node --check skills.js
           node --check skills-controls.js
           node --check ai.js
+          node --check theme.js
+          node --check courses.js
+          node --check lesson-flow.js
+          node --check qa-transfer.js
+          node --check qa-transfer-core.js
+          node --check tests/qa-transfer-browser.cjs
+          node --experimental-strip-types tests/ai-rubric.mjs
           node tests/home-browser.cjs
           node tests/ai-browser.cjs
+          node tests/course-flow.cjs
           node tests/path-browser.cjs
           node tests/browser.cjs
           node tests/foundation-browser.cjs
@@ -93,12 +117,13 @@ jobs:
           node tests/assessment.cjs
           node tests/sandbox-browser.cjs
           node tests/mentor-browser.cjs
+          node tests/qa-transfer-browser.cjs
           node tests/skills-browser.cjs
           node tests/mobile-nav-browser.cjs
           node tests/button-icons.cjs
           node tests/interactive.cjs
           node tests/visual-audit.cjs
-      - name: Upload guest-only screenshots for visual inspection
+      - name: Upload guest and mocked tutor screenshots for visual inspection
         if: always()
         uses: actions/upload-artifact@v4
         with:

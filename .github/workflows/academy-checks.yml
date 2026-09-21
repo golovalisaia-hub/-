@@ -27,11 +27,29 @@ jobs:
           node --check library.js
           node --check theme.js
           node --check path-assessment.js
+          node --check qa-transfer-core.js
+          node --check qa-transfer.js
+          node --check courses.js
+          node --check lesson-flow.js
+          node --check tests/final-navigation.cjs
+          node --check tests/asset-integrity.cjs
+          node --check tests/english-answers.cjs
+          node --check tests/python-grading.cjs
       - name: Validate legacy curriculum, content and UI wiring
         run: node tests/smoke.cjs
       - name: Validate learning feedback and revision quizzes
         run: node tests/quality.cjs
       - name: Validate QA-first curriculum, dashboard and cloud isolation
         run: node tests/path.cjs
+      - name: Validate independent QA challenge and evidence checks
+        run: node tests/qa-transfer.cjs
+      - name: Validate final lesson navigation for QA and English
+        run: node tests/final-navigation.cjs
+      - name: Verify every page loads existing assets and one design system
+        run: node tests/asset-integrity.cjs
+      - name: Verify written English grading ignores case and typographic punctuation
+        run: node tests/english-answers.cjs
+      - name: Verify Python work is graded on results, not on a clean run
+        run: node tests/python-grading.cjs
       - name: Reject promises of employment or a language level by a date
         run: node tests/promises.cjs
