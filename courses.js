@@ -25,7 +25,15 @@ function render(subject){
   anchor.append(number,heading,arrow);root.append(anchor);
  }
 }
-function init(){render('qa');render('english');
+function addRoadmap(){
+ const header=document.querySelector('.course-intro');if(!header||header.querySelector('a[href="roadmap.html"]'))return;
+ const link=document.createElement('a');link.className='course-python-link';link.href='roadmap.html';
+ link.textContent='Вся программа на полгода · 26 недель →';
+ const note=document.createElement('small');note.className='course-start-hint';
+ note.textContent='На карте честно показано, какие уроки опубликованы, а какие ещё в разработке. Это не индикатор твоих оценок.';
+ header.append(link,note);
+}
+function init(){render('qa');render('english');addRoadmap();
  const params=new URLSearchParams(location.search),selected=params.get('subject');
  if(['qa','english'].includes(selected)){
   const box=document.getElementById(selected+'Lessons');
