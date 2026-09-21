@@ -1,0 +1,57 @@
+/* No real user, API billing or writes. Exercise guided stages in Chromium. */
+const assert=require('node:assert/strict');
+const {chromium}=require('playwright');
+const ROOT='http://127.0.0.1:4173/';
+const GUEST='window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:null},error:null}),getUser:async()=>({data:{user:null},error:null})}})};';
+(async()=>{
+ const browser=await chromium.launch({headless:true});
+ try{for(const width of [1440,390,320]){
+  const page=await browser.newPage({viewport:{width,height:900}});
+  await page.route('**/vendor/supabase.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:GUEST}));
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(ROOT,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('.nav-links a').count(),5,'Main navigation must be present');
+  await page.locator(width<=834?'.mobile-nav a':'.nav-links a').nth(1).click();
+  await page.waitForURL(/courses\.html/);
+  await page.locator('#qaLessons summary').click();
+  await page.locator('#qaList a').first().waitFor();
+  assert.equal(await page.locator('#qaList a').count(),14,'QA lessons count');
+  assert.equal(await page.locator('#englishList a').count(),14,'English lessons count');
+  assert.equal(await page.locator('.course-card.py a[href="skills.html"]').count(),1,'Python remains separate practical route');
+  await page.locator('#qaList a').first().click();
+  await page.waitForURL(/subject=qa.*lesson=1.*flow=1/);
+  await page.locator('body.guided-lesson #flowTitle').waitFor();
+  assert.equal(await page.locator('link[href*="lesson-flow.css"]').count(),1,'Guided lesson styles must be attached');
+  assert.match(await page.locator('#flowTitle').innerText(),/QA|Урок 01/i);
+  assert.equal(await page.locator('.subject-tabs').isVisible(),false,'QA and English cannot mix in one lesson');
+  assert.equal(await page.locator('#theory').isVisible(),true);
+  assert.equal(await page.locator('.quiz').isVisible(),false,'quiz must not precede explanation');
+  assert.equal(await page.locator('.response').isVisible(),false,'practice must not precede explanation');
+  await page.locator('#flowNext').click();
+  assert.equal(await page.locator('.quiz').isVisible(),true,'step two shows comprehension quiz');
+  assert.equal(await page.locator('#flowNext').isDisabled(),true,'practice gated by both correct answers');
+  const answers=await page.evaluate(()=>AcademyPathLessons.qa[0].quiz.map(q=>q[2]));
+  for(let i=0;i<answers.length;i++)await page.locator('#questions .question').nth(i).locator('button').nth(answers[i]).click();
+  await page.waitForFunction(()=>!document.getElementById('flowNext').disabled);
+  await page.locator('#flowNext').click();
+  assert.equal(await page.locator('.response').isVisible(),true,'practice appears after quiz');
+  assert.equal(await page.locator('.exam').isVisible(),false,'assessment is not merged into practice');
+  assert.equal(await page.locator('#flowNext').isDisabled(),true,'cloud-confirmed practice required for assessment');
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  assert.ok(overflow<=2,`QA horizontal overflow at ${width}: ${overflow}`);
+  await page.screenshot({path:`screenshots/${width}-qa-guided-practice.png`,fullPage:true,animations:'disabled'});
+  await page.goto(ROOT+'courses.html?subject=english',{waitUntil:'domcontentloaded'});
+  await page.locator('#englishList a').first().click();
+  await page.waitForURL(/subject=english.*lesson=1.*flow=1/);
+  await page.locator('body.guided-lesson #flowTitle').waitFor();
+  assert.match(await page.locator('#flowCourse').innerText(),/English/i);
+  assert.equal(await page.locator('#qaTab').isVisible(),false);
+  assert.equal(await page.locator('#lessonTitle').innerText(),await page.evaluate(()=>AcademyPathLessons.english[0].title),'English title must not use QA topic');
+  assert.equal(await page.locator('.quiz').isVisible(),false);
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=2,'English horizontal overflow');
+  await page.screenshot({path:`screenshots/${width}-english-guided-intro.png`,fullPage:true,animations:'disabled'});
+  assert.deepEqual(errors,[],`JavaScript errors at ${width}`);
+  console.log(`PASS subject-first routing, QA stages and isolated English at ${width}px`);
+  await page.close();
+ }}finally{await browser.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});
