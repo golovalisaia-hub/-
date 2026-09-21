@@ -1,4 +1,5 @@
-/* Published Academy WebKit smoke. Guest only: no login or private database writes. */
+/* Published Academy WebKit smoke. Guest only: no login or private database writes.
+   Traverse the actual user journey; the root is intentionally the overview. */
 const assert=require('node:assert/strict');
 const {webkit,devices}=require('playwright');
 const ORIGIN='https://golovalisaia-hub.github.io/-/';
@@ -14,8 +15,16 @@ const ORIGIN='https://golovalisaia-hub.github.io/-/';
    const page=await context.newPage();const errors=[];
    page.on('pageerror',error=>errors.push(error.message));
    const response=await page.goto(ORIGIN,{waitUntil:'domcontentloaded',timeout:45000});
-   assert.equal(response?.status(),200,`${preset.name}: public root`);
-   await page.waitForURL(/path\.html/,{timeout:20000});
+   assert.equal(response?.status(),200,`${preset.name}: public dashboard`);
+   await page.locator('#heroContinue').waitFor({state:'visible'});
+   /* On small viewports the desktop nav is hidden. Use the visible real href,
+      not the retired assumption that / redirects directly to path.html. */
+   await page.locator('a[href="courses.html"]:visible').first().click();
+   await page.waitForURL(/\/courses\.html(?:\?.*)?$/,{timeout:20000});
+   await page.locator('.course-card.qa a.course-first').waitFor({state:'visible'});
+   assert.equal(await page.locator('.course-card.en a.course-first').count(),1,'English has its own entry');
+   await page.locator('.course-card.qa a.course-first').click();
+   await page.waitForURL(url=>url.pathname.endsWith('/path.html')&&url.searchParams.get('subject')==='qa'&&url.searchParams.get('flow')==='1',{timeout:20000});
    await page.waitForFunction(()=>document.querySelector('#topic')?.textContent?.length>0,undefined,{timeout:25000});
    assert.equal(await page.locator('#lessonTitle').textContent(),'Кто такой тестировщик?');
    assert.equal(await page.locator('#qaTab').getAttribute('aria-pressed'),'true');
@@ -31,7 +40,7 @@ const ORIGIN='https://golovalisaia-hub.github.io/-/';
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
    assert.ok(overflow<=2,`${preset.name}: horizontal overflow ${overflow}px`);
    assert.deepEqual(errors,[],`${preset.name}: JS errors: ${errors.join(' | ')}`);
-   console.log(`PASS: ${preset.name}: published QA-first root, English lesson, cloud guest protection and responsive layout.`);
+   console.log(`PASS: ${preset.name}: dashboard → subject chooser → QA → English, guest protection and responsive layout.`);
    await context.close();
   }
  }finally{await browser.close();}
