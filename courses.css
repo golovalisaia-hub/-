@@ -15,12 +15,15 @@
 .course-lessons summary:focus-visible,.course-lessons nav a:focus-visible,.course-python-link:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
 .course-lessons[open] summary{border-bottom:1px solid var(--line)}
 .course-lessons[open] summary span{transform:rotate(180deg)}
-.course-lessons nav{display:grid;max-height:min(58vh,610px);overflow-y:auto;overscroll-behavior:contain;padding:7px}
+/* An author-level display:grid overrides the browser's hidden rule for closed
+   <details>. Keep the links genuinely collapsed until the learner opens a subject. */
+.course-lessons:not([open]) > nav{display:none}
+.course-lessons[open] > nav{display:grid;max-height:min(58vh,610px);overflow-y:auto;overscroll-behavior:contain;padding:7px}
 .course-lessons nav a{display:grid;grid-template-columns:32px minmax(0,1fr) 20px;align-items:center;gap:12px;padding:13px 10px;min-height:50px;border-radius:10px;color:var(--text);text-decoration:none;font-size:13px;line-height:1.4}
 .course-lessons nav a:hover{background:var(--violet-pale)}
 .course-lesson-num{font-size:12px;font-weight:800;color:var(--muted)}
 .course-lesson-title{overflow-wrap:anywhere;font-weight:650}
 .course-python-link{display:inline-flex;min-height:48px;align-items:center;justify-content:center;gap:10px;margin-top:8px;padding:12px 18px;border-radius:11px;background:var(--lime);color:var(--ink);font-size:14px;font-weight:800;text-decoration:none}
 .course-note{margin-top:22px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--muted);font-size:13px;line-height:1.6}
-@media(max-width:834px){.course-grid{grid-template-columns:minmax(0,1fr)}.course-card.py{grid-column:auto}.course-intro{padding:23px}.course-card{padding:21px}.course-lessons nav{max-height:unset}.course-note{margin-bottom:calc(var(--mobile-nav-h,65px) + env(safe-area-inset-bottom) + 40px)}}
+@media(max-width:834px){.course-grid{grid-template-columns:minmax(0,1fr)}.course-card.py{grid-column:auto}.course-intro{padding:23px}.course-card{padding:21px}.course-lessons[open] > nav{max-height:unset}.course-note{margin-bottom:calc(var(--mobile-nav-h,65px) + env(safe-area-inset-bottom) + 40px)}}
 @media(max-width:375px){.course-intro{padding:18px}.course-card{padding:17px}.course-lessons nav a{gap:7px;padding:12px 6px}}
