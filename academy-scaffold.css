@@ -5,9 +5,11 @@
 .academy-scaffold dl{display:grid;gap:5px;margin:0}
 .academy-scaffold dt{font-size:14px;font-weight:800;margin-top:8px}
 .academy-scaffold dd{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
-.academy-scaffold ol{margin:0;padding:0 0 0 22px}
+.academy-scaffold ol,.academy-scaffold ul{margin:0;padding:0 0 0 22px}
 .academy-scaffold li{font-size:14px;line-height:1.65;padding-left:4px;margin:0 0 11px;color:var(--text)}
 .academy-scaffold li::marker{font-weight:800;color:var(--lime)}
+.academy-scaffold-example h6:not(:first-child){margin-top:18px}
+.academy-scaffold-example ul{padding-top:4px;border-top:1px solid var(--line)}
 .academy-scaffold-task{border-color:var(--lime);background:var(--card)}
 .academy-scaffold-note{margin-top:12px!important;padding:12px;border-left:3px solid var(--lime);background:var(--card-2);border-radius:5px}
 .course-first{display:flex;align-items:center;justify-content:center;min-height:51px;margin-top:18px;padding:12px 15px;border-radius:12px;background:var(--lime);color:var(--ink);font-size:14px;font-weight:800;text-decoration:none;line-height:1.4;text-align:center}
