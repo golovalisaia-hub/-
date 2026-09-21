@@ -7,6 +7,18 @@ on:
       - 'home.js'
       - 'ai.html'
       - 'ai.js'
+      - 'ai-polish.css'
+      - 'courses.html'
+      - 'courses.js'
+      - 'courses.css'
+      - 'lesson-flow.js'
+      - 'lesson-flow.css'
+      - 'academy-scaffold.js'
+      - 'academy-scaffold.css'
+      - 'roadmap.html'
+      - 'roadmap.js'
+      - 'roadmap.css'
+      - 'six-month-plan.js'
       - 'supabase/functions/academy-tutor/**'
       - 'path.html'
       - 'path-entry.js'
@@ -29,6 +41,10 @@ on:
       - 'sandbox.js'
       - 'mentor.html'
       - 'mentor.js'
+      - 'qa-transfer.html'
+      - 'qa-transfer.css'
+      - 'qa-transfer.js'
+      - 'qa-transfer-core.js'
       - 'skills.html'
       - 'skills.js'
       - 'skills-controls.js'
@@ -37,6 +53,10 @@ on:
       - 'tests/browser.cjs'
       - 'tests/home-browser.cjs'
       - 'tests/ai-browser.cjs'
+      - 'tests/ai-rubric.mjs'
+      - 'tests/course-flow.cjs'
+      - 'tests/lesson-guides-browser.cjs'
+      - 'tests/roadmap-browser.cjs'
       - 'tests/path-browser.cjs'
       - 'tests/foundation-browser.cjs'
       - 'tests/cloud-e2e.cjs'
@@ -46,6 +66,10 @@ on:
       - 'tests/assessment.cjs'
       - 'tests/sandbox-browser.cjs'
       - 'tests/mentor-browser.cjs'
+      - 'tests/qa-transfer-browser.cjs'
+      - 'tests/asset-integrity.cjs'
+      - 'tests/layout-stability.cjs'
+      - 'tests/english-answers.cjs'
       - 'tests/skills-browser.cjs'
       - 'tests/mobile-nav-browser.cjs'
       - 'tests/button-icons.cjs'
@@ -55,13 +79,14 @@ on:
       - 'tests/mock-cloud.js'
       - 'tests/server.cjs'
       - '.github/workflows/browser-e2e.yml'
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -71,7 +96,7 @@ jobs:
         run: npm install --no-save --ignore-scripts playwright@1.63.0
       - name: Install headless Chromium
         run: npx playwright install --with-deps --only-shell chromium
-      - name: Test learning flows and mobile navigation on real Chromium
+      - name: Test integrated Academy flows on real Chromium
         run: |
           node tests/server.cjs > /tmp/academy-http.log 2>&1 &
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
@@ -81,8 +106,22 @@ jobs:
           node --check skills.js
           node --check skills-controls.js
           node --check ai.js
+          node --check theme.js
+          node --check courses.js
+          node --check lesson-flow.js
+          node --check academy-scaffold.js
+          node --check six-month-plan.js
+          node --check roadmap.js
+          node --check qa-transfer.js
+          node --check qa-transfer-core.js
+          node --check tests/qa-transfer-browser.cjs
+          node --check tests/layout-stability.cjs
+          node --experimental-strip-types tests/ai-rubric.mjs
           node tests/home-browser.cjs
           node tests/ai-browser.cjs
+          node tests/course-flow.cjs
+          node tests/lesson-guides-browser.cjs
+          node tests/roadmap-browser.cjs
           node tests/path-browser.cjs
           node tests/browser.cjs
           node tests/foundation-browser.cjs
@@ -93,12 +132,14 @@ jobs:
           node tests/assessment.cjs
           node tests/sandbox-browser.cjs
           node tests/mentor-browser.cjs
+          node tests/qa-transfer-browser.cjs
           node tests/skills-browser.cjs
+          node tests/layout-stability.cjs
           node tests/mobile-nav-browser.cjs
           node tests/button-icons.cjs
           node tests/interactive.cjs
           node tests/visual-audit.cjs
-      - name: Upload guest-only screenshots for visual inspection
+      - name: Upload integrated screenshots for visual inspection
         if: always()
         uses: actions/upload-artifact@v4
         with:

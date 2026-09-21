@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js" defer></script>
 <script src="curriculum.js" defer></script><script src="lesson-guide.js" defer></script><script src="studio.js" defer></script><script src="studio-extras.js" defer></script><script src="foundation.js?v=1" defer></script>
 </head>
-<body>
+<body><a class="skip" href="#main">К материалам</a>
 <header class="topbar"><a class="logo" href="./" aria-label="Academy — главная"><span class="logo-mark">A.</span> ACADEMY</a><span class="top-subtitle">УЧЕБНАЯ СРЕДА</span><button class="quiet" id="account" type="button"><span class="btn-icon" aria-hidden="true">⇥</span><span class="btn-label">Войти</span></button></header>
 <div class="shell">
 <aside class="rail" aria-label="Программа обучения">
@@ -22,7 +22,7 @@
   </div>
   <div class="rail-bottom"><a href="./"><span aria-hidden="true">◫</span> Обзор</a><a href="path.html"><span aria-hidden="true">▤</span> Уроки</a><a href="skills.html"><span aria-hidden="true">✦</span> Практика</a><a href="library.html"><span aria-hidden="true">▧</span> Конспекты</a></div>
 </aside>
-<main class="content">
+<main class="content" id="main">
   <div class="welcome"><div><span class="eyebrow">ТВОЙ СЛЕДУЮЩИЙ ШАГ</span><h1 id="heading">Урок 01 / 84</h1><p id="subtitle">QA · Python · English</p></div><div class="welcome-actions"><button id="previous" class="quiet" type="button"><span class="btn-icon" aria-hidden="true">←</span><span class="btn-label">Назад</span></button><button id="next" class="quiet" type="button"><span class="btn-icon" aria-hidden="true">→</span><span class="btn-label">Вперёд</span></button></div></div>
   <div class="archive-banner" role="note"><strong>Архив. Это не текущий курс.</strong><span>Здесь лежат прежние 84 комбинированных урока с обязательным Python. Они сохранены для истории, их прогресс не влияет на календарь SEVER и не открывает этапы. Текущий маршрут — QA и английский: <a href="path.html">перейти к моим урокам</a>.</span></div><div id="cloudStatus" class="message" role="status">Программа доступна для просмотра. Для сохранения войди в свой аккаунт.</div>
   <div class="dashboard"><section class="dashboard-card"><span class="eyebrow">СЕГОДНЯ ЗАНИМАЛСЯ</span><strong id="todayMinutes">0 минут</strong><small>По сохранённым учебным сессиям</small><div class="stat-extra"><div><span class="eyebrow">ЗА 7 ДНЕЙ</span><b id="weekMinutes">0 мин</b></div><div><span class="eyebrow">ВСЕГО СЕССИЙ</span><b id="sessionCount">0</b></div></div></section><section class="dashboard-card"><span class="eyebrow">УЧЕБНАЯ СЕССИЯ</span><strong id="clock">00:00:00</strong><div class="session-actions"><button id="timerStart" type="button"><span class="btn-icon" aria-hidden="true">⏱</span><span class="btn-label">Начать</span></button><button id="timerPause" type="button" disabled><span class="btn-icon" aria-hidden="true">⏸</span><span class="btn-label">Пауза</span></button><button id="timerSave" type="button" disabled><span class="btn-icon" aria-hidden="true">⏹</span><span class="btn-label">Закончить и сохранить</span></button></div><small>Время по таймеру: перед закрытием вкладки нажми «Закончить и сохранить».</small></section></div>

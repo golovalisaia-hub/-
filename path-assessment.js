@@ -92,71 +92,71 @@ qa:[
 english:[
 {reading:{goal:'Pre-A1 · Чтение: узнаю знакомое короткое приветствие.',prompt:'Hello! My name is Alex.',question:'Что говорит человек?',options:['Прощается','Здоровается и называет имя','Спрашивает дорогу'],answer:1},
  listening:{goal:'Pre-A1 · Аудирование: узнаю короткую фразу-приветствие на слух.',phrase:'Hello! My name is Alex.',question:'Что прозвучало?',options:['Hello! My name is Alex.','Goodbye! See you.','I am a tester.'],answer:0},
- writing:{goal:'Pre-A1 · Письмо: пишу приветствие и своё имя.',task:'Напиши по-английски: «Привет! Меня зовут Анна.»',accept:['hello my name is anna','hi my name is anna']},
+ writing:{goal:'Pre-A1 · Письмо: пишу приветствие и своё имя.',task:'Напиши по-английски: «Привет! Меня зовут Анна.»',accept:['hello my name is anna','hi my name is anna'],hint:'Нужны две части: приветствие Hello и представление My name is + имя.'},
  speaking:{goal:'Pre-A1 · Говорение: произношу приветствие вслух.',phrase:'Hello! My name is Anna.'}},
 
 {reading:{goal:'Pre-A1 · Чтение: различаю знакомые буквы и короткие слова.',prompt:'name — test — hello',question:'В каком слове есть буква «t»?',options:['name','test','hello'],answer:1},
  listening:{goal:'Pre-A1 · Аудирование: различаю отдельные буквы на слух.',phrase:'A. B. C.',question:'Какие буквы прозвучали?',options:['A B C','X Y Z','M N O'],answer:0},
- writing:{goal:'Pre-A1 · Письмо: записываю знакомое слово по буквам.',task:'Напиши по-английски слово «тест».',accept:['test']},
+ writing:{goal:'Pre-A1 · Письмо: записываю знакомое слово по буквам.',task:'Напиши по-английски слово «тест».',accept:['test'],hint:'Это одно английское слово из урока — то, которым называют проверку.'},
  speaking:{goal:'Pre-A1 · Говорение: называю буквы своего имени вслух.',phrase:'My name is Anna: A-N-N-A.'}},
 
 {reading:{goal:'Pre-A1 · Чтение: понимаю простое предложение с I am.',prompt:'I am a student. You are a tester.',question:'Кто такой «I»?',options:['Тестировщик','Ученик','Учитель'],answer:1},
  listening:{goal:'Pre-A1 · Аудирование: слышу разницу между I am и You are.',phrase:'I am a student.',question:'Что прозвучало?',options:['You are a student.','I am a student.','He is a student.'],answer:1},
- writing:{goal:'Pre-A1 · Письмо: составляю предложение о себе с I am.',task:'Напиши по-английски: «Я ученик.»',accept:['i am a student','im a student','i am student']},
+ writing:{goal:'Pre-A1 · Письмо: составляю предложение о себе с I am.',task:'Напиши по-английски: «Я ученик.»',accept:['i am a student','im a student'],hint:'После I ставится am, а перед ролью в единственном числе нужен артикль a.'},
  speaking:{goal:'Pre-A1 · Говорение: говорю о себе одной фразой.',phrase:'I am a student. I am learning testing.'}},
 
 {reading:{goal:'Pre-A1 · Чтение: понимаю указание на предмет.',prompt:'This is a button. This is a form.',question:'О чём речь?',options:['О кнопке и форме','О человеке','О времени'],answer:0},
  listening:{goal:'Pre-A1 · Аудирование: узнаю фразу This is a...',phrase:'This is a button.',question:'Что прозвучало?',options:['This is a button.','That was a bug.','These are buttons.'],answer:0},
- writing:{goal:'Pre-A1 · Письмо: называю предмет простой фразой.',task:'Напиши по-английски: «Это форма.»',accept:['this is a form']},
+ writing:{goal:'Pre-A1 · Письмо: называю предмет простой фразой.',task:'Напиши по-английски: «Это форма.»',accept:['this is a form'],hint:'Начни с This is, затем артикль a и само существительное.'},
  speaking:{goal:'Pre-A1 · Говорение: называю два предмета вокруг себя.',phrase:'This is a screen. This is a keyboard.'}},
 
 {reading:{goal:'Pre-A1 · Чтение: замечаю артикль перед словом.',prompt:'a test — an error — a report',question:'Почему перед error стоит an?',options:['Слово длинное','Слово начинается с гласного звука','Так красивее'],answer:1},
  listening:{goal:'Pre-A1 · Аудирование: слышу артикль в короткой фразе.',phrase:'This is an error.',question:'Что прозвучало?',options:['This is a error.','This is an error.','This is the error.'],answer:1},
- writing:{goal:'Pre-A1 · Письмо: выбираю правильный артикль.',task:'Напиши по-английски: «приложение» с нужным артиклем (application).',accept:['an application']},
+ writing:{goal:'Pre-A1 · Письмо: выбираю правильный артикль.',task:'Напиши по-английски: «приложение» с нужным артиклем (application).',accept:['an application'],hint:'Выбери a или an по первому ЗВУКУ слова application.'},
  speaking:{goal:'Pre-A1 · Говорение: произношу пары с артиклями.',phrase:'A test, an error, an application.'}},
 
 {reading:{goal:'Pre-A1 · Чтение: понимаю фразу о наличии.',prompt:'I have a question about the requirement.',question:'Что есть у человека?',options:['Вопрос','Ответ','Задача'],answer:0},
  listening:{goal:'Pre-A1 · Аудирование: узнаю I have на слух.',phrase:'I have a question.',question:'Что прозвучало?',options:['I have a question.','I had a question.','I need a question.'],answer:0},
- writing:{goal:'Pre-A1 · Письмо: сообщаю о том, что у меня есть.',task:'Напиши по-английски: «У меня есть вопрос.»',accept:['i have a question','i have got a question']},
+ writing:{goal:'Pre-A1 · Письмо: сообщаю о том, что у меня есть.',task:'Напиши по-английски: «У меня есть вопрос.»',accept:['i have a question','i have got a question'],hint:'Наличие передаётся через I have, дальше артикль и существительное.'},
  speaking:{goal:'Pre-A1 · Говорение: сообщаю о своей задаче вслух.',phrase:'I have a task and a question.'}},
 
 {reading:{goal:'Pre-A1 · Чтение: понимаю отрицание в простом предложении.',prompt:'The button does not work.',question:'Что сообщает предложение?',options:['Кнопка работает','Кнопка не работает','Кнопки нет'],answer:1},
  listening:{goal:'Pre-A1 · Аудирование: слышу отрицание.',phrase:'It does not work.',question:'Что прозвучало?',options:['It works.','It does not work.','It will work.'],answer:1},
- writing:{goal:'Pre-A1 · Письмо: пишу простое отрицание.',task:'Напиши по-английски: «Я не понимаю.»',accept:['i do not understand','i dont understand']},
+ writing:{goal:'Pre-A1 · Письмо: пишу простое отрицание.',task:'Напиши по-английски: «Я не понимаю.»',accept:['i do not understand','i dont understand'],hint:'Отрицание строится с do: I do not … (или сокращение don\'t).'},
  speaking:{goal:'Pre-A1 · Говорение: вежливо сообщаю о непонимании.',phrase:'Sorry, I do not understand.'}},
 
 {reading:{goal:'Pre-A1 · Чтение: понимаю фразу о возможности.',prompt:'I can open the page, but I cannot save the note.',question:'Что человек не может сделать?',options:['Открыть страницу','Сохранить заметку','Закрыть страницу'],answer:1},
  listening:{goal:'Pre-A1 · Аудирование: различаю can и cannot.',phrase:'I cannot save the note.',question:'Что прозвучало?',options:['I can save the note.','I cannot save the note.','I will save the note.'],answer:1},
- writing:{goal:'Pre-A1 · Письмо: сообщаю о своей возможности.',task:'Напиши по-английски: «Я могу проверить это.»',accept:['i can check it','i can check this']},
+ writing:{goal:'Pre-A1 · Письмо: сообщаю о своей возможности.',task:'Напиши по-английски: «Я могу проверить это.»',accept:['i can check it','i can check this'],hint:'После can глагол идёт без to; «это» — it или this.'},
  speaking:{goal:'Pre-A1 · Говорение: говорю, что умею и чего пока нет.',phrase:'I can write a test case. I cannot fix the code.'}},
 
 {reading:{goal:'A1 · Чтение: понимаю сообщение о наличии объектов.',prompt:'There is one error in the form. There are two empty fields.',question:'Сколько пустых полей?',options:['Одно','Два','Ни одного'],answer:1},
  listening:{goal:'A1 · Аудирование: различаю there is и there are.',phrase:'There are two empty fields.',question:'Что прозвучало?',options:['There is one empty field.','There are two empty fields.','There was an empty field.'],answer:1},
- writing:{goal:'A1 · Письмо: сообщаю о наличии дефекта.',task:'Напиши по-английски: «В форме есть ошибка.»',accept:['there is an error in the form','there is a error in the form']},
+ writing:{goal:'A1 · Письмо: сообщаю о наличии дефекта.',task:'Напиши по-английски: «В форме есть ошибка.»',accept:['there is an error in the form'],hint:'Один предмет — there is. И вспомни урок 5: error начинается с гласного звука.'},
  speaking:{goal:'A1 · Говорение: описываю, что вижу на экране.',phrase:'There is a button and there are two fields.'}},
 
 {reading:{goal:'A1 · Чтение: понимаю описание регулярного действия.',prompt:'I test the application every day.',question:'Как часто человек тестирует?',options:['Каждый день','Один раз','Никогда'],answer:0},
  listening:{goal:'A1 · Аудирование: узнаю Present Simple на слух.',phrase:'I test the application every day.',question:'Что прозвучало?',options:['I tested the application.','I test the application every day.','I will test the application.'],answer:1},
- writing:{goal:'A1 · Письмо: описываю своё обычное действие.',task:'Напиши по-английски: «Я работаю каждый день.»',accept:['i work every day','i work everyday']},
+ writing:{goal:'A1 · Письмо: описываю своё обычное действие.',task:'Напиши по-английски: «Я работаю каждый день.»',accept:['i work every day'],hint:'Present Simple: I work. «Каждый день» по-английски — два отдельных слова.'},
  speaking:{goal:'A1 · Говорение: рассказываю о своём дне одной фразой.',phrase:'I study English and I test applications every day.'}},
 
 {reading:{goal:'A1 · Чтение: узнаю вопрос с do.',prompt:'Do you have the requirements?',question:'Что это за предложение?',options:['Утверждение','Вопрос','Просьба замолчать'],answer:1},
  listening:{goal:'A1 · Аудирование: слышу вопросительную фразу.',phrase:'Do you have the requirements?',question:'Что прозвучало?',options:['You have the requirements.','Do you have the requirements?','I have the requirements.'],answer:1},
- writing:{goal:'A1 · Письмо: задаю простой вопрос.',task:'Напиши по-английски вопрос: «Ты знаешь ответ?»',accept:['do you know the answer']},
+ writing:{goal:'A1 · Письмо: задаю простой вопрос.',task:'Напиши по-английски вопрос: «Ты знаешь ответ?»',accept:['do you know the answer'],hint:'Вопрос в Present Simple начинается с Do you и дальше глагол.'},
  speaking:{goal:'A1 · Говорение: задаю вопрос коллеге вслух.',phrase:'Do you have a minute? I have a question.'}},
 
 {reading:{goal:'A1 · Чтение: понимаю инструкцию из шагов.',prompt:'Open the page, click the button and check the result.',question:'Сколько действий в инструкции?',options:['Одно','Два','Три'],answer:2},
  listening:{goal:'A1 · Аудирование: понимаю короткую команду.',phrase:'Click the button and check the result.',question:'Что прозвучало?',options:['Close the page.','Click the button and check the result.','Open the file and save it.'],answer:1},
- writing:{goal:'A1 · Письмо: пишу шаг инструкции.',task:'Напиши по-английски: «Открой страницу и проверь результат.»',accept:['open the page and check the result']},
+ writing:{goal:'A1 · Письмо: пишу шаг инструкции.',task:'Напиши по-английски: «Открой страницу и проверь результат.»',accept:['open the page and check the result'],hint:'Две команды подряд соединяются словом and: сначала open, затем check.'},
  speaking:{goal:'A1 · Говорение: проговариваю шаги проверки.',phrase:'Open the page, click the button, check the result.'}},
 
 {reading:{goal:'A1 · Чтение: понимаю короткое сообщение об ошибке.',prompt:'Error: the field "email" is required.',question:'Что сообщает система?',options:['Почта сохранена','Поле почты обязательно','Почта неверна'],answer:1},
  listening:{goal:'A1 · Аудирование: понимаю текст ошибки на слух.',phrase:'The field is required.',question:'Что прозвучало?',options:['The field is required.','The field is correct.','The field is empty.'],answer:0},
- writing:{goal:'A1 · Письмо: описываю ошибку по-английски.',task:'Напиши по-английски: «Поле обязательно.»',accept:['the field is required','field is required']},
+ writing:{goal:'A1 · Письмо: описываю ошибку по-английски.',task:'Напиши по-английски: «Поле обязательно.»',accept:['the field is required','field is required'],hint:'«Поле» — the field, «обязательно» — is required.'},
  speaking:{goal:'A1 · Говорение: зачитываю сообщение об ошибке.',phrase:'Error: the field email is required.'}},
 
 {reading:{goal:'A1 · Чтение: понимаю короткий рассказ о работе.',prompt:'My name is Anna. I am a junior tester. I write test cases and report bugs.',question:'Чем занимается Анна?',options:['Пишет тест-кейсы и сообщает о дефектах','Продаёт телефоны','Учит английский детей'],answer:0},
  listening:{goal:'A1 · Аудирование: понимаю рассказ о себе на слух.',phrase:'I am a junior tester and I write test cases.',question:'Что прозвучало?',options:['I am a junior tester and I write test cases.','I am a senior developer and I write code.','I am a student and I read books.'],answer:0},
- writing:{goal:'A1 · Письмо: пишу две фразы о себе и своей работе.',task:'Напиши по-английски: «Я тестировщик. Я пишу тест-кейсы.»',accept:['i am a tester i write test cases','i am a tester and i write test cases']},
+ writing:{goal:'A1 · Письмо: пишу две фразы о себе и своей работе.',task:'Напиши по-английски: «Я тестировщик. Я пишу тест-кейсы.»',accept:['i am a tester i write test cases','i am a tester and i write test cases'],hint:'Две части: кем ты являешься (I am a …) и что делаешь (I write …).'},
  speaking:{goal:'A1 · Говорение: рассказываю о себе тремя фразами.',phrase:'Hello! My name is Anna. I am a tester and I write test cases.'}}
 ]});
