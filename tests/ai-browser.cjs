@@ -43,7 +43,8 @@ const OWNER=`window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
  assert.match(await owner.locator('#lessonTopic').textContent(),/ошибк/i);
  assert.match(await owner.locator('#aiRubricText').textContent(),/шаг/i);
  assert.equal(await owner.locator('.mode[data-mode="review"]').getAttribute('aria-pressed'),'true');
- assert.equal(await owner.locator('#returnToLesson').getAttribute('href'),'path.html?lesson=5&subject=qa');
+ await owner.waitForFunction(()=>document.querySelector('#returnToLesson')?.getAttribute('href')?.includes('flow=1'));
+ assert.equal(await owner.locator('#returnToLesson').getAttribute('href'),'path.html?lesson=5&subject=qa&flow=1');
  assert.equal(requests.length,0,'Opening a lesson must not spend tokens');
  await owner.locator('#question').fill('Баг');await owner.locator('#send').click();
  assert.equal(requests.length,0,'Review of empty work cannot spend tokens');
@@ -59,7 +60,9 @@ const OWNER=`window.supabase={createClient:()=>({auth:{getSession:async()=>({dat
  assert.equal(requests[1].history.length,2);
  assert.equal(await owner.locator('#question').inputValue(),'Как оформить это в отчёт?','Restore draft when provider fails');
  await owner.locator('#clearChat').click();assert.equal(await owner.locator('.chat-message').count(),1);
- await owner.locator('#subject').selectOption('english');assert.equal(await owner.locator('#returnToLesson').getAttribute('href'),'path.html?lesson=5&subject=english');
+ await owner.locator('#subject').selectOption('english');
+ await owner.waitForFunction(()=>document.querySelector('#returnToLesson')?.getAttribute('href')?.includes('subject=english&flow=1'));
+ assert.equal(await owner.locator('#returnToLesson').getAttribute('href'),'path.html?lesson=5&subject=english&flow=1');
  await owner.locator('#subject').selectOption('python');
  assert.equal(await owner.locator('#lesson option').count(),4,'Python only has four real workshop exercises');
  assert.deepEqual(errors,[],`Owner errors: ${errors.join('; ')}`);
