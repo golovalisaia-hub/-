@@ -36,13 +36,25 @@ const { chromium } = require('playwright');
       assert.ok(result.links.every(link => link.height >= 44), `${route} ${width}: touch targets`);
       assert.ok(result.links.every(link => link.glyph.trim()), `${route} ${width}: missing glyph`);
       assert.equal(new Set(result.links.map(link => link.glyph)).size, 4, `${route} ${width}: distinct glyphs`);
+      /* Stylesheets are still arriving at domcontentloaded on a loaded runner; measuring the
+         bottom of a half-styled page is what made this check machine-speed dependent. */
+      await page.waitForLoadState('load');
       await page.evaluate(async () => {
-        for (let i = 0; i < 20; i++) {
+        /* Scroll only once the layout has settled. The old loop watched scrollY alone, so on a
+           slow machine it finished while the page was still growing and then measured a bottom
+           that no longer existed. Require BOTH the document height and the scroll position to
+           stop changing: strictly more than before, and the assertions below are unchanged. */
+        let stable = 0;
+        for (let i = 0; i < 60 && stable < 3; i++) {
+          const height = document.documentElement.scrollHeight;
           const before = scrollY;
-          scrollTo(0, document.documentElement.scrollHeight);
+          scrollTo(0, height);
           await new Promise(resolve => setTimeout(resolve, 60));
-          if (Math.abs(scrollY - before) < 1) break;
+          const settled = document.documentElement.scrollHeight === height && Math.abs(scrollY - before) < 1;
+          stable = settled ? stable + 1 : 0;
         }
+        scrollTo(0, document.documentElement.scrollHeight);
+        await new Promise(resolve => requestAnimationFrame(() => resolve()));
       });
       const after = await page.evaluate(() => {
         const nav = document.querySelector('body > .mobile-nav, body > .mobile');
