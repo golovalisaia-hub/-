@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Python Academy — полный учебник</title>
+<style>
+:root{
+  --bg:#0b0e13;--panel:#11161e;--panel2:#151b24;--panel3:#1b2330;--text:#edf2f7;--muted:#8e9bad;
+  --line:#273142;--accent:#76a9ff;--accent2:#9f7aea;--green:#58d68d;--yellow:#f2c94c;--red:#ff7b7b;
+  --shadow:0 18px 60px rgba(0,0,0,.28);--r:18px;--code:#090c11;--max:1540px;
+}
+body.light{
+  --bg:#f4f7fb;--panel:#fff;--panel2:#f8fafc;--panel3:#eef3f9;--text:#152033;--muted:#657288;
+  --line:#dce4ee;--accent:#2869c7;--accent2:#7048bd;--green:#178451;--yellow:#9d7100;--red:#c34242;
+  --shadow:0 18px 60px rgba(26,48,74,.10);--code:#0f1620;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+.hidden{display:none!important}
+.app{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:50;height:66px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(16px);display:flex;align-items:center;padding:0 22px;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;min-width:245px}
+.logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:900;color:white;box-shadow:0 8px 26px rgba(63,120,255,.26)}
+.brand strong{display:block}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:-2px}
+.topnav{display:flex;gap:6px;overflow:auto;flex:1}
+.navbtn,.iconbtn,.ghost,.primary,.pillbtn{border:1px solid transparent;border-radius:11px;padding:9px 12px;background:transparent;color:var(--muted);white-space:nowrap}
+.navbtn:hover,.navbtn.active{color:var(--text);background:var(--panel3)}
+.primary{background:linear-gradient(135deg,var(--accent),#5f7cff);color:#fff;font-weight:800}
+.ghost{border-color:var(--line);color:var(--text);background:var(--panel)}
+.iconbtn{width:40px;padding:8px;border-color:var(--line);color:var(--text);background:var(--panel)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);display:inline-block;margin-right:7px}
+.status-dot.ok{background:var(--green)}.status-dot.bad{background:var(--red)}
+.shell{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:285px minmax(0,1fr) 260px;min-height:calc(100vh - 66px)}
+.left,.right{position:sticky;top:66px;height:calc(100vh - 66px);overflow:auto;background:var(--panel);border-color:var(--line)}
+.left{border-right:1px solid var(--line);padding:18px 14px}.right{border-left:1px solid var(--line);padding:18px 14px}
+.main{min-width:0;padding:30px 38px 90px}
+.side-title{font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:900;margin:13px 9px 7px}
+.side-search{width:100%;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);padding:10px 11px;outline:none;margin-bottom:10px}
+.doc-group{margin-bottom:10px}.doc-group>button{width:100%;border:0;background:transparent;color:var(--muted);text-align:left;padding:8px 9px;font-weight:800;font-size:12px}
+.doc-item{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;color:var(--muted);text-align:left;padding:8px 9px;border-radius:9px;font-size:13px}
+.doc-item:hover,.doc-item.active{background:var(--panel3);color:var(--text)}.doc-item.done{color:var(--green)}
+.doc-icon{width:17px;opacity:.85}.doc-item span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.reader-head{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:25px}
+.reader-head .crumb{font-size:12px;color:var(--muted);margin-bottom:8px}.reader-head h1{font-size:34px;line-height:1.18;margin:0 0 10px}.reader-head .meta{display:flex;flex-wrap:wrap;gap:8px}
+.badge{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700}
+.reader-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.article{max-width:900px;margin:0 auto}
+.article h1,.article h2,.article h3,.article h4{line-height:1.25;scroll-margin-top:86px}
+.article h1{font-size:32px;margin:42px 0 18px}.article h2{font-size:26px;margin:44px 0 16px;padding-top:5px;border-top:1px solid var(--line)}.article h3{font-size:20px;margin:30px 0 12px}.article h4{font-size:17px;margin:24px 0 10px}
+.article p{margin:12px 0}.article ul,.article ol{padding-left:25px}.article li{margin:5px 0}
+.article blockquote{margin:18px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--panel2);color:var(--muted);border-radius:0 12px 12px 0}
+.article hr{border:0;border-top:1px solid var(--line);margin:34px 0}
+.article img{max-width:100%;border-radius:12px}
+.article table{width:100%;border-collapse:separate;border-spacing:0;margin:18px 0;font-size:13px;overflow:hidden;border:1px solid var(--line);border-radius:12px}
+.article th,.article td{padding:10px 12px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);vertical-align:top}.article th{background:var(--panel3);text-align:left}.article tr:last-child td{border-bottom:0}.article th:last-child,.article td:last-child{border-right:0}
+.article code:not(pre code){background:var(--panel3);border:1px solid var(--line);border-radius:6px;padding:2px 5px;font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.code-wrap{position:relative;margin:18px 0}.code-wrap pre{background:var(--code);color:#dfe9f5;border:1px solid var(--line);border-radius:14px;padding:18px;overflow:auto;font:13px/1.58 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.copy-code{position:absolute;right:9px;top:9px;border:1px solid #263244;background:#141b25;color:#9fb0c4;border-radius:8px;padding:6px 8px;font-size:11px}
+.section-check{vertical-align:middle;margin-left:8px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);width:27px;height:27px;border-radius:8px;font-size:13px}.section-check.done{background:color-mix(in srgb,var(--green) 16%,var(--panel2));border-color:color-mix(in srgb,var(--green) 50%,var(--line));color:var(--green)}
+.toc-item{display:block;color:var(--muted);text-decoration:none;padding:6px 7px;border-radius:8px;font-size:12px;line-height:1.35}.toc-item:hover{background:var(--panel3);color:var(--text)}.toc-item.l3{padding-left:18px;font-size:11px}
+.note-box{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);padding:10px;outline:none}
+.note-help{font-size:11px;color:var(--muted);margin:6px 0 12px}
+.home{max-width:1120px;margin:0 auto}.hero{border:1px solid var(--line);background:radial-gradient(circle at 82% 10%,rgba(90,130,255,.18),transparent 35%),var(--panel);border-radius:26px;padding:34px;box-shadow:var(--shadow)}
+.hero-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:30px;align-items:center}.eyebrow{font-size:11px;letter-spacing:.15em;color:var(--accent);font-weight:900}.hero h1{font-size:42px;line-height:1.08;margin:9px 0 14px;max-width:760px}.hero p{font-size:16px;color:var(--muted);max-width:760px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:21px}.ring{--p:0;width:164px;height:164px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0);position:relative;margin:auto}.ring:before{content:"";position:absolute;inset:13px;background:var(--panel);border-radius:50%}.ring strong{position:relative;font-size:30px}.ring small{position:absolute;bottom:48px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:17px}.stat strong{font-size:24px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.section-title{display:flex;align-items:end;justify-content:space-between;margin:32px 0 12px}.section-title h2{font-size:22px;margin:0}.section-title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stage-card,.resource-card,.project-card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:17px;transition:.15s}.stage-card:hover,.resource-card:hover,.project-card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.stage-card{cursor:pointer}.stage-card .n{font-size:11px;font-weight:900;color:var(--accent)}.stage-card h3{margin:8px 0 6px;font-size:16px}.stage-card p{color:var(--muted);font-size:12px;margin:0 0 13px}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden}.progress i{height:100%;display:block;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.card-foot{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:7px}
+.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.resource-card{text-decoration:none;color:var(--text)}.resource-card h3{font-size:15px;margin:7px 0}.resource-card p{font-size:12px;color:var(--muted);margin:0}.resource-card .tag{font-size:10px;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.search-panel{max-width:1000px;margin:0 auto}.big-search{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:15px;padding:15px 17px;font-size:16px;outline:none}.search-results{display:grid;gap:10px;margin-top:16px}.search-result{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:15px;cursor:pointer}.search-result:hover{border-color:var(--accent)}.search-result h3{font-size:15px;margin:0 0 5px}.search-result p{font-size:12px;color:var(--muted);margin:0}.search-result mark{background:color-mix(in srgb,var(--accent) 30%,transparent);color:inherit;border-radius:3px}
+.sync-overlay{position:fixed;inset:0;background:rgba(5,8,13,.82);backdrop-filter:blur(10px);z-index:100;display:grid;place-items:center;padding:20px}.sync-card{width:min(570px,96vw);border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:25px;box-shadow:var(--shadow)}.sync-card h2{margin:0 0 8px}.sync-card p{color:var(--muted)}.sync-progress{height:9px;background:var(--line);border-radius:99px;overflow:hidden;margin:16px 0}.sync-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.2s}.sync-log{font:12px ui-monospace,monospace;color:var(--muted);max-height:90px;overflow:auto}
+.progress-page{max-width:1000px;margin:0 auto}.prog-row{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:15px;margin:9px 0;cursor:pointer}.prog-row header{display:flex;justify-content:space-between;gap:12px}.prog-row h3{font-size:14px;margin:0}.prog-row small{color:var(--muted)}
+.mobile-side{display:none}
+@media(max-width:1180px){.shell{grid-template-columns:255px minmax(0,1fr)}.right{display:none}.main{padding:28px}.stage-grid,.resource-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.brand{min-width:auto}.brand div:last-child{display:none}.topbar{padding:0 10px}.topnav{display:none}.mobile-side{display:inline-flex}.shell{display:block}.left{position:fixed;left:0;top:66px;bottom:0;width:285px;height:auto;z-index:45;transform:translateX(-102%);transition:.2s;box-shadow:var(--shadow)}.left.open{transform:translateX(0)}.main{padding:22px 15px 70px}.hero-grid{grid-template-columns:1fr}.ring{display:none}.stats{grid-template-columns:repeat(2,1fr)}.stage-grid,.resource-grid{grid-template-columns:1fr}.hero h1{font-size:34px}.article{max-width:100%}.reader-head h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <button id="mobileMenu" class="iconbtn mobile-side">☰</button>
+    <div class="brand"><div class="logo">Py</div><div><strong>Python Academy</strong><small>полный учебник · GitHub sync</small></div></div>
+    <nav class="topnav">
+      <button class="navbtn active" data-view="home">Главная</button>
+      <button class="navbtn" data-view="book">Учебник</button>
+      <button class="navbtn" data-view="prompts">Промпты</button>
+      <button class="navbtn" data-view="templates">Starter-проекты</button>
+      <button class="navbtn" data-view="extras">Доп. файлы</button>
+      <button class="navbtn" data-view="search">Поиск</button>
+      <button class="navbtn" data-view="progress">Прогресс</button>
+    </nav>
+    <button id="syncBtn" class="ghost"><span id="syncDot" class="status-dot"></span><span id="syncLabel">Синхронизация</span></button>
+    <button id="themeBtn" class="iconbtn" title="Тема">◐</button>
+  </header>
+
+  <div class="shell">
+    <aside id="leftSide" class="left">
+      <input id="sideSearch" class="side-search" placeholder="Фильтр содержания…">
+      <div id="leftNav"></div>
+    </aside>
+
+    <main class="main">
+      <section id="homeView" class="home"></section>
+      <section id="readerView" class="hidden">
+        <div id="readerHead" class="reader-head"></div>
+        <article id="article" class="article"></article>
+      </section>
+      <section id="searchView" class="search-panel hidden">
+        <div class="eyebrow">ПОЛНОТЕКСТОВЫЙ ПОИСК</div>
+        <h1>Поиск по всему учебнику</h1>
+        <input id="bigSearch" class="big-search" placeholder="Например: asyncio, FastAPI, pytest, Docker…">
+        <div id="searchResults" class="search-results"></div>
+      </section>
+      <section id="progressView" class="progress-page hidden"></section>
+    </main>
+
+    <aside class="right">
+      <div class="side-title">ОГЛАВЛЕНИЕ ГЛАВЫ</div>
+      <div id="toc"></div>
+      <div class="side-title" style="margin-top:22px">МОИ ЗАМЕТКИ</div>
+      <textarea id="noteBox" class="note-box" placeholder="Заметки по текущей главе…"></textarea>
+      <div class="note-help">Сохраняются автоматически в этом браузере.</div>
+      <button id="bookmarkBtn" class="ghost" style="width:100%">☆ Добавить в закладки</button>
+      <div class="side-title" style="margin-top:22px">ИСТОЧНИК</div>
+      <a id="sourceLink" target="_blank" rel="noreferrer" style="font-size:12px">Открыть файл на GitHub ↗</a>
+    </aside>
+  </div>
+</div>
+
+<div id="syncOverlay" class="sync-overlay hidden">
+  <div class="sync-card">
+    <div class="eyebrow">СИНХРОНИЗАЦИЯ УЧЕБНИКА</div>
+    <h2>Загружаю материалы с GitHub</h2>
+    <p>Все учебные Markdown-файлы и текстовые файлы starter-проектов будут сохранены локально в браузере. После этого учебник можно читать из кэша.</p>
+    <div class="sync-progress"><i id="syncBar"></i></div>
+    <div id="syncText">Подготовка…</div>
+    <div id="syncLog" class="sync-log"></div>
+  </div>
+</div>
+
+<script>
+const REPO="justxor/pythonroamap2026", BRANCH="main";
+const RAW=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
+const GITHUB=`https://github.com/${REPO}/blob/${BRANCH}/`;
+const TREE_URL=`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`;
+const DB_NAME="python-academy-full-v3", DB_VERSION=1;
+const FILE_STORE="files", META_STORE="meta";
+
+const stageMeta=[
+ ["00","Окружение 2026","uv, Ruff, Pyright, pytest и современное рабочее окружение."],
+ ["01","Основы языка","Синтаксис, типы, коллекции, управление потоком, функции и исключения."],
+ ["02","Идиоматичный Python","Comprehensions, итераторы, генераторы, декораторы и Pythonic-подход."],
+ ["03","ООП и проектирование","Классы, композиция, наследование, SOLID и проектирование."],
+ ["04","Типизация","Аннотации, Protocol, generics, pyright и Pydantic."],
+ ["05","Стандартная библиотека","Полезные модули стандартной библиотеки Python."],
+ ["06","Асинхронность","asyncio, конкурентность и structured concurrency."],
+ ["07","Тестирование","pytest, Hypothesis, mocking и качество кода."],
+ ["08","Внутренности CPython","Память, GIL/free-threaded, байткод и профилирование."],
+ ["09","Web / FastAPI","HTTP, FastAPI, API и production web."],
+ ["10","Базы данных","SQL, PostgreSQL, SQLAlchemy и миграции."],
+ ["11","Data / ML / AI","Данные, аналитика и базовый ML."],
+ ["12","DevOps","Docker, CI/CD, observability и продакшн."],
+ ["13","Архитектура","DDD, hexagonal, Saga, Outbox и ADR."],
+ ["14","AI-assisted development","Работа с AI-инструментами для разработки."],
+ ["15","Parsing / Scraping","Сбор веб-данных, Playwright, Scrapy и устойчивые пайплайны."],
+ ["16","Machine Learning","sklearn, boosting, PyTorch, HF и MLOps."],
+ ["17","LLM-приложения","RAG, агенты, LangGraph, MCP, eval и guardrails."]
+];
+
+const supplemental=[
+ {name:"Exercism Python",desc:"Concept + practice exercises и тесты для закрепления Python.",url:"https://github.com/exercism/python",tag:"Практика"},
+ {name:"The Algorithms — Python",desc:"Большая библиотека алгоритмов на Python для чтения и практики.",url:"https://github.com/TheAlgorithms/Python",tag:"Алгоритмы"},
+ {name:"Project Based Learning",desc:"Проектные туториалы: учёба через создание реальных приложений.",url:"https://github.com/practical-tutorials/project-based-learning",tag:"Проекты"},
+ {name:"Real Python Materials",desc:"Примеры, упражнения и дополнительные материалы к Python-темам.",url:"https://github.com/realpython/materials",tag:"Материалы"},
+ {name:"Awesome Python",desc:"Каталог библиотек и инструментов Python по задачам.",url:"https://github.com/vinta/awesome-python",tag:"Справочник"},
+ {name:"Learn Python",desc:"Playground/cheatsheet с небольшими проверяемыми примерами кода.",url:"https://github.com/trekhleb/learn-python",tag:"Справочник"}
+];
+
+const state={files:[],fileMap:new Map(),currentPath:null,currentView:"home",bookmarks:JSON.parse(localStorage.getItem("pa-bookmarks")||"[]"),progress:JSON.parse(localStorage.getItem("pa-progress")||"{}"),notes:JSON.parse(localStorage.getItem("pa-notes")||"{}"),meta:null};
+
+function esc(s=""){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function slug(s){return s.toLowerCase().replace(/<[^>]+>/g,"").replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-|-$/g,"").slice(0,80)||"section"}
+function normalizePath(base,href){
+  if(!href||href.startsWith("#")||/^(https?:|mailto:|tel:)/i.test(href))return href;
+  const root="https://x.local/";
+  const dir=base.includes("/")?base.slice(0,base.lastIndexOf("/")+1):"";
+  const u=new URL(href,root+dir);
+  return u.pathname.slice(1)+(u.hash||"");
+}
+function isTextPath(p){
+  const name=p.split("/").pop();
+  if(["Dockerfile","Makefile",".cursorrules",".env.example","requirements.txt","pyproject.toml","docker-compose.yml"].includes(name))return true;
+  return /\.(md|py|toml|ya?ml|json|txt|ini|cfg|sh|sql|env|dockerignore|gitignore|tpl)$/i.test(p);
+}
+function titleFromPath(p){
+  const f=p.split("/").pop().replace(/\.(md|py|toml|ya?ml|json|txt|ini|cfg|sh|sql)$/i,"");
+  return f.replace(/^stage-(\d+)-/,"Этап $1 · ").replace(/[-_]/g," ").replace(/\b\w/g,m=>m.toUpperCase());
+}
+function category(p){
+  if(/^course\/stage-/.test(p)||["course/README.md","course/MAP.md","course/glossary.md","course/async-course.md","course/containers-course.md"].includes(p))return "Учебник";
+  if(/^course\/prompts\//.test(p))return "Промпты";
+  if(/^templates\//.test(p))return "Starter-проекты";
+  return "Дополнительно";
+}
+function stagePath(n){
+  const m={
+    "00":"stage-00-environment.md","01":"stage-01-basics.md","02":"stage-02-idiomatic.md","03":"stage-03-oop.md","04":"stage-04-typing.md",
+    "05":"stage-05-stdlib.md","06":"stage-06-async.md","07":"stage-07-testing.md","08":"stage-08-cpython.md","09":"stage-09-web.md",
+    "10":"stage-10-databases.md","11":"stage-11-data-ml.md","12":"stage-12-devops.md","13":"stage-13-architecture.md","14":"stage-14-vibecoding.md",
+    "15":"stage-15-parsing.md","16":"stage-16-ml.md","17":"stage-17-llm-apps.md"
+  }; return "course/"+m[n];
+}
+
+function openDB(){
+ return new Promise((res,rej)=>{
+  const req=indexedDB.open(DB_NAME,DB_VERSION);
+  req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(FILE_STORE))db.createObjectStore(FILE_STORE,{keyPath:"path"});if(!db.objectStoreNames.contains(META_STORE))db.createObjectStore(META_STORE,{keyPath:"key"})};
+  req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);
+ });
+}
+async function dbAll(store){
+ const db=await openDB();return new Promise((res,rej)=>{const r=db.transaction(store).objectStore(store).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+}
+async function dbPut(store,obj){
+ const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");t.objectStore(store).put(obj);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});
+}
+async function dbClear(store){
+ const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");t.objectStore(store).clear();t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});
+}
+async function dbDelete(store,key){
+ const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");t.objectStore(store).delete(key);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});
+}
+
+async function loadCache(){
+ const files=await dbAll(FILE_STORE); state.files=files.sort((a,b)=>a.path.localeCompare(b.path)); state.fileMap=new Map(files.map(f=>[f.path,f]));
+ const metas=await dbAll(META_STORE); state.meta=metas.find(x=>x.key==="repo")||null; updateSyncUI(); renderLeft();
+}
+function updateSyncUI(){
+ const dot=document.querySelector("#syncDot"), lab=document.querySelector("#syncLabel");
+ if(state.files.length){dot.className="status-dot ok";lab.textContent=`${state.files.length} файлов`;}
+ else{dot.className="status-dot";lab.textContent="Синхронизировать";}
+}
+
+async function syncRepo(force=false){
+ const overlay=document.querySelector("#syncOverlay"), bar=document.querySelector("#syncBar"), txt=document.querySelector("#syncText"), log=document.querySelector("#syncLog");
+ overlay.classList.remove("hidden");bar.style.width="2%";txt.textContent="Получаю дерево репозитория…";log.textContent="";
+ try{
+  const tr=await fetch(TREE_URL,{headers:{"Accept":"application/vnd.github+json"}});
+  if(!tr.ok)throw new Error(`GitHub API: ${tr.status}`);
+  const tree=await tr.json();
+  const blobs=tree.tree.filter(x=>x.type==="blob"&&isTextPath(x.path)&&x.size<400000);
+  if(!force && state.meta && state.meta.sha===tree.sha && state.files.length>=blobs.length){
+    txt.textContent="Учебник уже актуален.";bar.style.width="100%";setTimeout(()=>overlay.classList.add("hidden"),700);return;
+  }
+  // Не очищаем рабочий кэш заранее: при обрыве сети старая полная копия должна остаться доступной.
+  let done=0, failed=0;
+  const queue=[...blobs];
+  async function worker(){
+    while(queue.length){
+      const it=queue.shift();
+      try{
+        const r=await fetch(RAW+it.path);
+        if(!r.ok)throw new Error(String(r.status));
+        const text=await r.text();
+        await dbPut(FILE_STORE,{path:it.path,text,sha:it.sha,size:it.size,syncedAt:Date.now(),category:category(it.path)});
+      }catch(e){failed++;log.textContent+=`\nОшибка: ${it.path}`;}
+      done++;bar.style.width=`${Math.max(3,Math.round(done/blobs.length*100))}%`;txt.textContent=`Загружено ${done} из ${blobs.length} файлов`;
+    }
+  }
+  await Promise.all(Array.from({length:6},worker));
+  // Удаляем устаревшие файлы только после полностью успешной загрузки новой версии.
+  if(failed===0){
+    const wanted=new Set(blobs.map(x=>x.path));
+    for(const old of state.files) if(!wanted.has(old.path)) await dbDelete(FILE_STORE,old.path);
+  }
+  await dbPut(META_STORE,{key:"repo",sha:tree.sha,syncedAt:Date.now(),count:blobs.length,failed});
+  await loadCache();
+  txt.textContent=failed?`Готово. ${failed} файлов не удалось загрузить.`:"Готово. Весь текстовый учебный репозиторий сохранён локально.";
+  bar.style.width="100%";
+  setTimeout(()=>overlay.classList.add("hidden"),1100);
+  renderHome();
+ }catch(e){
+  txt.textContent="Синхронизация не удалась";
+  log.textContent=`${e.message}\nПроверь подключение к интернету. Если кэш уже был создан раньше, учебник продолжит работать из него.`;
+  bar.style.width="100%";
+  setTimeout(()=>overlay.classList.add("hidden"),2500);
+ }
+}
+
+function extractTitle(text,path){
+ const m=text.match(/^#\s+(.+)$/m); return m?m[1].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim():titleFromPath(path);
+}
+function extractSections(text,path){
+ const arr=[];let idx=0;
+ for(const line of text.split(/\r?\n/)){
+   const m=line.match(/^(#{2,3})\s+(.+)$/); if(!m)continue;
+   const clean=m[2].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim();
+   const id=slug(clean)+"-"+(++idx);arr.push({level:m[1].length,title:clean,id,key:path+"#"+id});
+ }
+ return arr;
+}
+function fileProgress(path){
+ const f=state.fileMap.get(path); if(!f)return 0;
+ const ss=extractSections(f.text,path); if(!ss.length)return state.progress[path]?100:0;
+ const done=ss.filter(s=>state.progress[s.key]).length;return Math.round(done/ss.length*100);
+}
+function saveProgress(){localStorage.setItem("pa-progress",JSON.stringify(state.progress));renderLeft();}
+function saveNotes(){localStorage.setItem("pa-notes",JSON.stringify(state.notes))}
+function saveBookmarks(){localStorage.setItem("pa-bookmarks",JSON.stringify(state.bookmarks))}
+
+function inlineMd(s,base){
+ let x=esc(s);
+ x=x.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,(m,a,u)=>`<img alt="${esc(a)}" src="${esc(u)}">`);
+ x=x.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(m,a,u)=>{
+   const href=u.trim();
+   if(/^(https?:|mailto:|tel:|#)/i.test(href))return `<a href="${esc(href)}" ${href.startsWith("http")?'target="_blank" rel="noreferrer"':""}>${a}</a>`;
+   const p=normalizePath(base,href); return `<a href="#" data-doc="${esc(p)}">${a}</a>`;
+ });
+ x=x.replace(/`([^`]+)`/g,"<code>$1</code>");
+ x=x.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+ x=x.replace(/__([^_]+)__/g,"<strong>$1</strong>");
+ x=x.replace(/(^|[\s(])\*([^*\n]+)\*/g,"$1<em>$2</em>");
+ x=x.replace(/~~([^~]+)~~/g,"<del>$1</del>");
+ return x;
+}
+function markdownToHtml(md,base){
+ const lines=md.replace(/\r/g,"").split("\n");let out=[],i=0,sec=0;
+ const special=l=>/^(#{1,6})\s|^```|^>\s?|^[-*+]\s|^\d+\.\s|^---+$|^\|/.test(l);
+ while(i<lines.length){
+  let l=lines[i];
+  if(l.startsWith("```")){
+    const lang=l.slice(3).trim();let buf=[];i++;
+    while(i<lines.length&&!lines[i].startsWith("```"))buf.push(lines[i++]);i++;
+    out.push(`<div class="code-wrap"><button class="copy-code">Копировать</button><pre><code data-lang="${esc(lang)}">${esc(buf.join("\n"))}</code></pre></div>`);continue;
+  }
+  let h=l.match(/^(#{1,6})\s+(.+)$/);
+  if(h){const lv=h[1].length,clean=h[2].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim();const id=(lv>=2&&lv<=3)?slug(clean)+"-"+(++sec):slug(clean);const chk=(lv>=2&&lv<=3)?` <button class="section-check" data-section="${esc(base+"#"+id)}" title="Отметить раздел пройденным">✓</button>`:"";out.push(`<h${lv} id="${esc(id)}">${inlineMd(h[2],base)}${chk}</h${lv}>`);i++;continue}
+  if(/^---+$/.test(l.trim())){out.push("<hr>");i++;continue}
+  if(l.startsWith(">")){let b=[];while(i<lines.length&&lines[i].startsWith(">"))b.push(lines[i++].replace(/^>\s?/,""));out.push(`<blockquote>${b.map(x=>inlineMd(x,base)).join("<br>")}</blockquote>`);continue}
+  if(/^[-*+]\s/.test(l)){let a=[];while(i<lines.length&&/^[-*+]\s/.test(lines[i])){let z=lines[i++].replace(/^[-*+]\s/,"");const cm=z.match(/^\[([ xX])\]\s*(.*)$/);if(cm)a.push(`<li>☐ ${inlineMd(cm[2],base)}</li>`);else a.push(`<li>${inlineMd(z,base)}</li>`)}out.push(`<ul>${a.join("")}</ul>`);continue}
+  if(/^\d+\.\s/.test(l)){let a=[];while(i<lines.length&&/^\d+\.\s/.test(lines[i]))a.push(`<li>${inlineMd(lines[i++].replace(/^\d+\.\s/,""),base)}</li>`);out.push(`<ol>${a.join("")}</ol>`);continue}
+  if(l.includes("|")&&i+1<lines.length&&/^\s*\|?[\s:|-]+\|/.test(lines[i+1])){
+    const hdr=l.split("|").map(x=>x.trim()).filter(Boolean);i+=2;let rows=[];
+    while(i<lines.length&&lines[i].includes("|")&&lines[i].trim()){rows.push(lines[i].split("|").map(x=>x.trim()).filter(Boolean));i++}
+    out.push(`<table><thead><tr>${hdr.map(x=>`<th>${inlineMd(x,base)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${inlineMd(x,base)}</td>`).join("")}</tr>`).join("")}</tbody></table>`);continue;
+  }
+  if(!l.trim()){i++;continue}
+  if(l.trim().startsWith("<")&&l.trim().endsWith(">")){out.push(l);i++;continue}
+  let p=[l];i++;while(i<lines.length&&lines[i].trim()&&!special(lines[i]))p.push(lines[i++]);
+  out.push(`<p>${inlineMd(p.join(" "),base)}</p>`);
+ }
+ return out.join("\n");
+}
+function sanitize(root){
+ root.querySelectorAll("script,style,iframe,object,embed,meta,link,form").forEach(x=>x.remove());
+ root.querySelectorAll("*").forEach(el=>[...el.attributes].forEach(a=>{if(/^on/i.test(a.name)||a.name.toLowerCase()==="style"||(/^(href|src)$/i.test(a.name)&&/^javascript:/i.test(a.value)))el.removeAttribute(a.name)}));
+}
+
+function renderLeft(mode=state.currentView){
+ const q=(document.querySelector("#sideSearch")?.value||"").toLowerCase();
+ const el=document.querySelector("#leftNav");if(!el)return;
+ let groups={};
+ for(const f of state.files){
+   const c=category(f.path);
+   if(mode==="prompts"&&c!=="Промпты")continue;
+   if(mode==="templates"&&c!=="Starter-проекты")continue;
+   if(mode==="extras"&&c!=="Дополнительно")continue;
+   if(mode==="book"&&c!=="Учебник")continue;
+   const title=extractTitle(f.text,f.path);
+   if(q&&!(`${title} ${f.path}`).toLowerCase().includes(q))continue;
+   (groups[c]??=[]).push({...f,title});
+ }
+ const order=["Учебник","Промпты","Starter-проекты","Дополнительно"];
+ const bookmarkFiles=state.bookmarks.map(p=>state.fileMap.get(p)).filter(Boolean).filter(f=>{
+   const c=category(f.path);
+   if(mode==="prompts")return c==="Промпты"; if(mode==="templates")return c==="Starter-проекты"; if(mode==="extras")return c==="Дополнительно"; if(mode==="book")return c==="Учебник"; return true;
+ }).filter(f=>!q||(extractTitle(f.text,f.path)+" "+f.path).toLowerCase().includes(q));
+ const bookmarkHtml=bookmarkFiles.length?`<div class="doc-group"><button>★ Закладки · ${bookmarkFiles.length}</button>${bookmarkFiles.map(f=>`<button class="doc-item ${state.currentPath===f.path?"active":""}" data-open="${esc(f.path)}"><span class="doc-icon">★</span><span>${esc(extractTitle(f.text,f.path))}</span><small>${fileProgress(f.path)||""}${fileProgress(f.path)?"%":""}</small></button>`).join("")}</div>`:"";
+ el.innerHTML=bookmarkHtml+order.filter(c=>groups[c]?.length).map(c=>{
+   let fs=groups[c];
+   if(c==="Учебник")fs.sort((a,b)=>{
+     const ax=a.path.match(/stage-(\d+)/),bx=b.path.match(/stage-(\d+)/);
+     if(ax&&bx)return Number(ax[1])-Number(bx[1]);if(ax)return -1;if(bx)return 1;return a.path.localeCompare(b.path);
+   });
+   return `<div class="doc-group"><button>${c} · ${fs.length}</button>${fs.map(f=>`<button class="doc-item ${state.currentPath===f.path?"active":""} ${fileProgress(f.path)===100?"done":""}" data-open="${esc(f.path)}"><span class="doc-icon">${c==="Starter-проекты"?"⌘":c==="Промпты"?"✦":"▤"}</span><span>${esc(f.title)}</span><small>${fileProgress(f.path)||""}${fileProgress(f.path)?"%":""}</small></button>`).join("")}</div>`;
+ }).join("") || `<div style="color:var(--muted);padding:10px">Нет файлов</div>`;
+ el.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openDoc(b.dataset.open));
+}
+
+function setView(v,autoOpen=true){
+ state.currentView=v;document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
+ document.querySelector("#homeView").classList.toggle("hidden",v!=="home");
+ document.querySelector("#readerView").classList.toggle("hidden",!["book","prompts","templates","extras"].includes(v));
+ document.querySelector("#searchView").classList.toggle("hidden",v!=="search");
+ document.querySelector("#progressView").classList.toggle("hidden",v!=="progress");
+ renderLeft(v);
+ if(v==="home")renderHome();
+ if(v==="search")document.querySelector("#bigSearch").focus();
+ if(v==="progress")renderProgressPage();
+ const expected=v==="book"?"Учебник":v==="prompts"?"Промпты":v==="templates"?"Starter-проекты":v==="extras"?"Дополнительно":null;
+ if(autoOpen&&expected&&(!state.currentPath||category(state.currentPath)!==expected)){
+   const first=state.files.find(f=>category(f.path)===expected);
+   if(first)openDoc(first.path,false);
+ }
+}
+function renderHome(){
+ const hv=document.querySelector("#homeView");
+ const educational=state.files.filter(f=>category(f.path)==="Учебник"), allSections=educational.flatMap(f=>extractSections(f.text,f.path));
+ const done=allSections.filter(s=>state.progress[s.key]).length, pct=allSections.length?Math.round(done/allSections.length*100):0;
+ const finishedFiles=educational.filter(f=>fileProgress(f.path)===100).length;
+ const synced=state.meta?.syncedAt?new Date(state.meta.syncedAt).toLocaleString("ru-RU"):"ещё не выполнялась";
+ hv.innerHTML=`<div class="hero"><div class="hero-grid"><div>
+  <div class="eyebrow">PYTHON ROADMAP 2026 · ПОЛНЫЙ РИДЕР</div><h1>Весь учебник — в одном интерфейсе.</h1>
+  <p>Сайт синхронизирует оригинальные главы, отдельные курсы, глоссарий, LLM-промпты и код starter-проектов из <b>${REPO}</b>. Читай, отмечай пройденные разделы, ищи по всему содержимому и сохраняй заметки.</p>
+  <div class="hero-actions"><button class="primary" id="continueHome">Продолжить обучение →</button><button class="ghost" id="openBookHome">Открыть содержание</button><button class="ghost" id="forceSyncHome">Обновить с GitHub</button></div>
+ </div><div><div class="ring" style="--p:${pct}"><strong>${pct}%</strong><small>пройдено</small></div></div></div></div>
+ <div class="stats">
+  <div class="stat"><strong>${educational.length}</strong><span>учебных файлов</span></div>
+  <div class="stat"><strong>${allSections.length}</strong><span>разделов H2/H3</span></div>
+  <div class="stat"><strong>${done}</strong><span>разделов отмечено</span></div>
+  <div class="stat"><strong>${state.files.length}</strong><span>всего файлов в локальном кэше</span></div>
+ </div>
+ <div class="section-title"><div><h2>Основная программа</h2><p>Этапы 0–17 из исходного курса. Дополнительные 14+ и 15+ находятся в полном содержании.</p></div></div>
+ <div class="stage-grid">${stageMeta.map(([n,t,d])=>{const p=stagePath(n),pr=fileProgress(p);return `<div class="stage-card" data-stage-path="${p}"><div class="n">ЭТАП ${n}</div><h3>${t}</h3><p>${d}</p><div class="progress"><i style="width:${pr}%"></i></div><div class="card-foot"><span>${pr?"в процессе":"не начат"}</span><strong>${pr}%</strong></div></div>`}).join("")}</div>
+ <div class="section-title"><div><h2>Дополнительная практика</h2><p>Не заменяет основной учебник — эти репозитории удобно использовать для задач, примеров и проектов.</p></div></div>
+ <div class="resource-grid">${supplemental.map(r=>`<a class="resource-card" href="${r.url}" target="_blank" rel="noreferrer"><div class="tag">${r.tag}</div><h3>${r.name} ↗</h3><p>${r.desc}</p></a>`).join("")}</div>
+ <div class="section-title"><div><h2>Состояние копии</h2><p>Последняя синхронизация: ${synced}. Исходник остаётся источником истины, локальный кэш нужен для удобного чтения.</p></div></div>`;
+ hv.querySelector("#openBookHome").onclick=()=>setView("book");hv.querySelector("#forceSyncHome").onclick=()=>syncRepo(true);
+ hv.querySelector("#continueHome").onclick=()=>{
+   const candidates=state.files.filter(f=>category(f.path)==="Учебник");const next=candidates.find(f=>fileProgress(f.path)<100)||candidates[0];if(next){setView("book");openDoc(next.path)}
+ };
+ hv.querySelectorAll("[data-stage-path]").forEach(x=>x.onclick=()=>{setView("book");openDoc(x.dataset.stagePath)});
+}
+
+function languageForPath(path){
+ const name=path.split("/").pop();
+ if(name==="Dockerfile")return "dockerfile";
+ if(name==="pyproject.toml"||path.endsWith(".toml"))return "toml";
+ if(/\.ya?ml$/i.test(path))return "yaml";
+ if(path.endsWith(".py"))return "python"; if(path.endsWith(".json"))return "json"; if(path.endsWith(".sql"))return "sql"; if(path.endsWith(".sh"))return "bash";
+ return "text";
+}
+function codeFileHtml(text,path){return `<div class="code-wrap"><button class="copy-code">Копировать</button><pre><code data-lang="${languageForPath(path)}">${esc(text)}</code></pre></div>`}
+
+function openDoc(path,switchView=true){
+ const hashIndex=path.indexOf("#"), anchor=hashIndex>=0?path.slice(hashIndex+1):"";
+ if(hashIndex>=0)path=path.slice(0,hashIndex);
+ const f=state.fileMap.get(path);if(!f)return;
+ state.currentPath=path;
+ if(switchView){const c=category(path);setView(c==="Промпты"?"prompts":c==="Starter-проекты"?"templates":c==="Дополнительно"?"extras":"book",false)}
+ document.querySelector("#readerView").classList.remove("hidden");
+ const title=extractTitle(f.text,path), p=fileProgress(path), sections=extractSections(f.text,path);
+ document.querySelector("#readerHead").innerHTML=`<div class="crumb">${esc(category(path))} / ${esc(path)}</div><h1>${esc(title)}</h1><div class="meta"><span class="badge">${Math.round(f.size/1024)} KB</span><span class="badge">${sections.length} разделов</span><span class="badge">${p}% пройдено</span></div><div class="reader-actions"><button id="markFile" class="primary">${p===100?"✓ Глава пройдена":"Отметить всю главу пройденной"}</button><button id="prevDoc" class="ghost">← Предыдущая</button><button id="nextDoc" class="ghost">Следующая →</button></div>`;
+ const art=document.querySelector("#article");art.innerHTML=path.toLowerCase().endsWith(".md")?markdownToHtml(f.text,path):codeFileHtml(f.text,path);sanitize(art);
+ art.querySelectorAll("[data-doc]").forEach(a=>a.onclick=e=>{e.preventDefault();let raw=a.dataset.doc;const hi=raw.indexOf("#"), anch=hi>=0?raw.slice(hi+1):"";let p=hi>=0?raw.slice(0,hi):raw;const target=state.fileMap.has(p)?p:state.fileMap.has(p.replace(/\$/,"")+"/README.md")?p.replace(/\$/,"")+"/README.md":null;if(target){openDoc(target);if(anch)setTimeout(()=>document.getElementById(anch)?.scrollIntoView(),80)}else window.open("https://github.com/"+REPO+"/blob/"+BRANCH+"/"+p+(anch?"#"+anch:""),"_blank")});
+ art.querySelectorAll(".copy-code").forEach(b=>b.onclick=()=>{navigator.clipboard?.writeText(b.nextElementSibling.innerText);const old=b.textContent;b.textContent="Скопировано";setTimeout(()=>b.textContent=old,900)});
+ art.querySelectorAll(".section-check").forEach(b=>{const k=b.dataset.section;b.classList.toggle("done",!!state.progress[k]);b.onclick=()=>{state.progress[k]=!state.progress[k];if(!state.progress[k])delete state.progress[k];saveProgress();b.classList.toggle("done",!!state.progress[k]);updateReaderMeta()}});
+ document.querySelector("#toc").innerHTML=sections.map(s=>`<a class="toc-item ${s.level===3?"l3":""}" href="#${esc(s.id)}">${state.progress[s.key]?"✓ ":""}${esc(s.title)}</a>`).join("")||`<div style="color:var(--muted);font-size:12px;padding:7px">В этой главе нет подзаголовков.</div>`;
+ document.querySelector("#noteBox").value=state.notes[path]||"";
+ const bm=state.bookmarks.includes(path);document.querySelector("#bookmarkBtn").textContent=bm?"★ В закладках":"☆ Добавить в закладки";
+ document.querySelector("#sourceLink").href="https://github.com/"+REPO+"/blob/"+BRANCH+"/"+path;
+ document.querySelector("#markFile").onclick=()=>{const ss=extractSections(f.text,path);if(ss.length){const makeDone=fileProgress(path)<100;ss.forEach(s=>makeDone?state.progress[s.key]=true:delete state.progress[s.key]);}else state.progress[path]=!state.progress[path];saveProgress();openDoc(path,false)};
+ const same=state.files.filter(x=>category(x.path)===category(path));const idx=same.findIndex(x=>x.path===path);
+ document.querySelector("#prevDoc").disabled=idx<=0;document.querySelector("#prevDoc").onclick=()=>idx>0&&openDoc(same[idx-1].path);
+ document.querySelector("#nextDoc").disabled=idx<0||idx>=same.length-1;document.querySelector("#nextDoc").onclick=()=>idx>=0&&idx<same.length-1&&openDoc(same[idx+1].path);
+ renderLeft();if(anchor)setTimeout(()=>document.getElementById(anchor)?.scrollIntoView(),80);else window.scrollTo({top:0,behavior:"instant"});
+}
+function updateReaderMeta(){if(state.currentPath)openDoc(state.currentPath,false)}
+document.querySelector("#noteBox").addEventListener("input",e=>{if(state.currentPath){state.notes[state.currentPath]=e.target.value;saveNotes()}});
+document.querySelector("#bookmarkBtn").onclick=()=>{if(!state.currentPath)return;const i=state.bookmarks.indexOf(state.currentPath);if(i>=0)state.bookmarks.splice(i,1);else state.bookmarks.push(state.currentPath);saveBookmarks();openDoc(state.currentPath,false)};
+
+function runSearch(q){
+ const box=document.querySelector("#searchResults");q=q.trim().toLowerCase();if(q.length<2){box.innerHTML=`<div style="color:var(--muted);padding:15px">Введите минимум 2 символа.</div>`;return}
+ const terms=q.split(/\s+/);let res=[];
+ for(const f of state.files){
+  const hay=(f.path+"\n"+f.text).toLowerCase();if(terms.every(t=>hay.includes(t))){
+   const plain=f.text.replace(/[#>*_`\[\]()|]/g," ").replace(/\s+/g," ");const posText=f.text.toLowerCase().indexOf(terms[0]);const pp=posText>=0?Math.max(0,Math.min(plain.length-1,posText)):0;let snip=plain.slice(Math.max(0,pp-100),pp+230);
+   res.push({f,title:extractTitle(f.text,f.path),snip});if(res.length>=60)break;
+  }
+ }
+ box.innerHTML=res.map((r,i)=>`<div class="search-result" data-i="${i}"><h3>${esc(r.title)}</h3><p>${esc(r.f.path)} · ${esc(r.snip)}</p></div>`).join("")||`<div style="color:var(--muted);padding:15px">Ничего не найдено.</div>`;
+ box.querySelectorAll("[data-i]").forEach(el=>el.onclick=()=>openDoc(res[Number(el.dataset.i)].f.path));
+}
+document.querySelector("#bigSearch").addEventListener("input",e=>runSearch(e.target.value));
+
+function renderProgressPage(){
+ const ed=state.files.filter(f=>category(f.path)==="Учебник");
+ const rows=ed.map(f=>({f,p:fileProgress(f.path),t:extractTitle(f.text,f.path)})).sort((a,b)=>b.p-a.p);
+ const all=ed.flatMap(f=>extractSections(f.text,f.path)),done=all.filter(s=>state.progress[s.key]).length,pct=all.length?Math.round(done/all.length*100):0;
+ document.querySelector("#progressView").innerHTML=`<div class="eyebrow">ПРОГРЕСС</div><h1>Пройдено ${pct}%</h1><p style="color:var(--muted)">${done} из ${all.length} разделов. Прогресс хранится только в этом браузере.</p><div class="progress" style="height:10px;margin:18px 0 28px"><i style="width:${pct}%"></i></div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><button id="exportData" class="ghost">Экспорт прогресса и заметок</button><label class="ghost" style="cursor:pointer">Импорт<input id="importData" type="file" accept="application/json" hidden></label></div>
+ ${rows.map((x,i)=>`<div class="prog-row" data-pi="${i}"><header><h3>${esc(x.t)}</h3><strong>${x.p}%</strong></header><div class="progress" style="margin-top:9px"><i style="width:${x.p}%"></i></div><small>${esc(x.f.path)}</small></div>`).join("")}`;
+ document.querySelectorAll("[data-pi]").forEach(el=>el.onclick=()=>openDoc(rows[Number(el.dataset.pi)].f.path));
+ document.querySelector("#exportData").onclick=()=>{
+   const blob=new Blob([JSON.stringify({version:3,progress:state.progress,notes:state.notes,bookmarks:state.bookmarks,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
+   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="python-academy-progress.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+ };
+ document.querySelector("#importData").onchange=async e=>{try{const x=JSON.parse(await e.target.files[0].text());state.progress=x.progress||{};state.notes=x.notes||{};state.bookmarks=x.bookmarks||[];saveProgress();saveNotes();saveBookmarks();renderProgressPage();alert("Импортировано.")}catch{alert("Не удалось импортировать файл.")}};
+}
+
+document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>setView(b.dataset.view));
+document.querySelector("#sideSearch").addEventListener("input",()=>renderLeft());
+document.querySelector("#syncBtn").onclick=()=>syncRepo(true);
+document.querySelector("#themeBtn").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("pa-theme",document.body.classList.contains("light")?"light":"dark")};
+document.querySelector("#mobileMenu").onclick=()=>document.querySelector("#leftSide").classList.toggle("open");
+
+async function boot(){
+ if(localStorage.getItem("pa-theme")==="light")document.body.classList.add("light");
+ await loadCache();
+ if(!state.files.length)await syncRepo(true);
+ renderHome();setView("home");
+}
+boot();
+</script>
+</body>
+</html>
