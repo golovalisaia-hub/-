@@ -81,12 +81,22 @@ a{color:var(--accent)}
 .mobile-side{display:none}
 @media(max-width:1180px){.shell{grid-template-columns:255px minmax(0,1fr)}.right{display:none}.main{padding:28px}.stage-grid,.resource-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:820px){.brand{min-width:auto}.brand div:last-child{display:none}.topbar{padding:0 10px}.topnav{display:none}.mobile-side{display:inline-flex}.shell{display:block}.left{position:fixed;left:0;top:66px;bottom:0;width:285px;height:auto;z-index:45;transform:translateX(-102%);transition:.2s;box-shadow:var(--shadow)}.left.open{transform:translateX(0)}.main{padding:22px 15px 70px}.hero-grid{grid-template-columns:1fr}.ring{display:none}.stats{grid-template-columns:repeat(2,1fr)}.stage-grid,.resource-grid{grid-template-columns:1fr}.hero h1{font-size:34px}.article{max-width:100%}.reader-head h1{font-size:28px}}
+.reader-foot{max-width:900px;margin:48px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.reader-foot button{text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px;padding:14px 16px}
+.reader-foot button:hover{border-color:var(--accent)}.reader-foot small{display:block;color:var(--muted);font-size:11px}
+.reader-foot .next{text-align:right;grid-column:2}
+.article>h1:first-child{display:none}
+.task{margin-right:6px}.doc-item small{font-size:11px}
+button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:1180px){body[data-mode=reader] .right{display:block;grid-column:2;position:static;height:auto;border-left:0;border-top:1px solid var(--line);padding:22px 28px}}
+@media(max-width:820px){body[data-mode=reader] .right{padding:22px 15px}.reader-foot{grid-template-columns:1fr}.reader-foot .next{grid-column:1}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
-    <button id="mobileMenu" class="iconbtn mobile-side">☰</button>
+    <button id="mobileMenu" class="iconbtn mobile-side" aria-label="Содержание">☰</button>
     <div class="brand"><div class="logo">Py</div><div><strong>Python Academy</strong><small>полный учебник · GitHub sync</small></div></div>
     <nav class="topnav">
       <button class="navbtn active" data-view="home">Главная</button>
@@ -97,8 +107,8 @@ a{color:var(--accent)}
       <button class="navbtn" data-view="search">Поиск</button>
       <button class="navbtn" data-view="progress">Прогресс</button>
     </nav>
-    <button id="syncBtn" class="ghost"><span id="syncDot" class="status-dot"></span><span id="syncLabel">Синхронизация</span></button>
-    <button id="themeBtn" class="iconbtn" title="Тема">◐</button>
+    <button id="syncBtn" class="ghost" title="Скачать только изменённые файлы"><span id="syncDot" class="status-dot"></span><span id="syncLabel">Синхронизация</span></button>
+    <button id="themeBtn" class="iconbtn" title="Тема" aria-label="Сменить тему">◐</button>
   </header>
 
   <div class="shell">
@@ -112,11 +122,12 @@ a{color:var(--accent)}
       <section id="readerView" class="hidden">
         <div id="readerHead" class="reader-head"></div>
         <article id="article" class="article"></article>
+        <nav id="readerFoot" class="reader-foot"></nav>
       </section>
       <section id="searchView" class="search-panel hidden">
         <div class="eyebrow">ПОЛНОТЕКСТОВЫЙ ПОИСК</div>
         <h1>Поиск по всему учебнику</h1>
-        <input id="bigSearch" class="big-search" placeholder="Например: asyncio, FastAPI, pytest, Docker…">
+        <input id="bigSearch" class="big-search" placeholder="Например: asyncio, FastAPI, pytest, Docker…  (клавиша / — открыть поиск)">
         <div id="searchResults" class="search-results"></div>
       </section>
       <section id="progressView" class="progress-page hidden"></section>
@@ -130,7 +141,7 @@ a{color:var(--accent)}
       <div class="note-help">Сохраняются автоматически в этом браузере.</div>
       <button id="bookmarkBtn" class="ghost" style="width:100%">☆ Добавить в закладки</button>
       <div class="side-title" style="margin-top:22px">ИСТОЧНИК</div>
-      <a id="sourceLink" target="_blank" rel="noreferrer" style="font-size:12px">Открыть файл на GitHub ↗</a>
+      <a id="sourceLink" target="_blank" rel="noopener noreferrer" style="font-size:12px">Открыть файл на GitHub ↗</a>
     </aside>
   </div>
 </div>
@@ -139,10 +150,11 @@ a{color:var(--accent)}
   <div class="sync-card">
     <div class="eyebrow">СИНХРОНИЗАЦИЯ УЧЕБНИКА</div>
     <h2>Загружаю материалы с GitHub</h2>
-    <p>Все учебные Markdown-файлы и текстовые файлы starter-проектов будут сохранены локально в браузере. После этого учебник можно читать из кэша.</p>
+    <p>Все учебные Markdown-файлы и текстовые файлы starter-проектов будут сохранены локально в браузере. При следующих обновлениях скачиваются только изменённые файлы.</p>
     <div class="sync-progress"><i id="syncBar"></i></div>
     <div id="syncText">Подготовка…</div>
     <div id="syncLog" class="sync-log"></div>
+    <div id="syncActions" class="hero-actions hidden"><button id="syncRetry" class="primary">Повторить</button><button id="syncClose" class="ghost">Закрыть</button></div>
   </div>
 </div>
 
@@ -153,6 +165,7 @@ const GITHUB=`https://github.com/${REPO}/blob/${BRANCH}/`;
 const TREE_URL=`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`;
 const DB_NAME="python-academy-full-v3", DB_VERSION=1;
 const FILE_STORE="files", META_STORE="meta";
+const $=s=>document.querySelector(s);
 
 const stageMeta=[
  ["00","Окружение 2026","uv, Ruff, Pyright, pytest и современное рабочее окружение."],
@@ -184,17 +197,30 @@ const supplemental=[
  {name:"Learn Python",desc:"Playground/cheatsheet с небольшими проверяемыми примерами кода.",url:"https://github.com/trekhleb/learn-python",tag:"Справочник"}
 ];
 
-const state={files:[],fileMap:new Map(),currentPath:null,currentView:"home",bookmarks:JSON.parse(localStorage.getItem("pa-bookmarks")||"[]"),progress:JSON.parse(localStorage.getItem("pa-progress")||"{}"),notes:JSON.parse(localStorage.getItem("pa-notes")||"{}"),meta:null};
+/* localStorage может быть недоступен или испорчен — приложение не должно из-за этого падать. */
+function load(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v&&typeof v==="object"?v:fallback}catch{return fallback}}
+function store(key,val){try{localStorage.setItem(key,typeof val==="string"?val:JSON.stringify(val))}catch{}}
+function loadRaw(key){try{return localStorage.getItem(key)}catch{return null}}
 
-function esc(s=""){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const state={files:[],fileMap:new Map(),docs:new Map(),currentPath:null,currentView:"home",
+ bookmarks:load("pa-bookmarks",[]),progress:load("pa-progress",{}),notes:load("pa-notes",{}),meta:null};
+if(!Array.isArray(state.bookmarks))state.bookmarks=[];
+
+const VIEW_FOR={"Учебник":"book","Промпты":"prompts","Starter-проекты":"templates","Дополнительно":"extras"};
+const CATEGORY_FOR=Object.fromEntries(Object.entries(VIEW_FOR).map(([c,v])=>[v,c]));
+
+function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function slug(s){return s.toLowerCase().replace(/<[^>]+>/g,"").replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-|-$/g,"").slice(0,80)||"section"}
+/* Якоря как на GitHub — чтобы работали ссылки вида [раздел](#мой-раздел) и file.md#раздел. */
+function githubSlug(s){return s.toLowerCase().trim().replace(/[^\p{L}\p{N}\s_-]/gu,"").replace(/\s/g,"-")}
+function plainHeading(s){return s.replace(/!?\[([^\]]*)\]\([^)]*\)/g,"$1").replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim()}
 function normalizePath(base,href){
   if(!href||href.startsWith("#")||/^(https?:|mailto:|tel:)/i.test(href))return href;
-  const root="https://x.local/";
   const dir=base.includes("/")?base.slice(0,base.lastIndexOf("/")+1):"";
-  const u=new URL(href,root+dir);
-  return u.pathname.slice(1)+(u.hash||"");
+  const u=new URL(href,"https://x.local/"+dir);
+  return decodeURIComponent(u.pathname.slice(1))+(u.hash||"");
 }
+function splitAnchor(s){const i=s.indexOf("#");return i<0?[s,""]:[s.slice(0,i),s.slice(i+1)]}
 function isTextPath(p){
   const name=p.split("/").pop();
   if(["Dockerfile","Makefile",".cursorrules",".env.example","requirements.txt","pyproject.toml","docker-compose.yml"].includes(name))return true;
@@ -218,208 +244,268 @@ function stagePath(n){
     "15":"stage-15-parsing.md","16":"stage-16-ml.md","17":"stage-17-llm-apps.md"
   }; return "course/"+m[n];
 }
+/* Один порядок везде: этапы по номеру, затем остальное по пути. Раньше «Далее» и «Продолжить» шли по алфавиту. */
+function docOrder(a,b){
+  const ax=a.path.match(/stage-(\d+)/),bx=b.path.match(/stage-(\d+)/);
+  if(ax&&bx)return Number(ax[1])-Number(bx[1])||a.path.localeCompare(b.path);
+  if(ax)return -1;if(bx)return 1;return a.path.localeCompare(b.path);
+}
+function ordered(cat){return state.files.filter(f=>category(f.path)===cat).sort(docOrder)}
 
+/* ---------- IndexedDB: одно соединение на всё приложение ---------- */
+let dbPromise=null;
 function openDB(){
- return new Promise((res,rej)=>{
+ return dbPromise??=new Promise((res,rej)=>{
   const req=indexedDB.open(DB_NAME,DB_VERSION);
   req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(FILE_STORE))db.createObjectStore(FILE_STORE,{keyPath:"path"});if(!db.objectStoreNames.contains(META_STORE))db.createObjectStore(META_STORE,{keyPath:"key"})};
-  req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);
+  req.onsuccess=()=>res(req.result);req.onerror=()=>{dbPromise=null;rej(req.error)};
  });
 }
-async function dbAll(store){
- const db=await openDB();return new Promise((res,rej)=>{const r=db.transaction(store).objectStore(store).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+async function tx(store,mode,fn){
+ const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,mode);const r=fn(t.objectStore(store));t.oncomplete=()=>res(r?.result);t.onerror=()=>rej(t.error)});
 }
-async function dbPut(store,obj){
- const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");t.objectStore(store).put(obj);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});
-}
-async function dbClear(store){
- const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");t.objectStore(store).clear();t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});
-}
-async function dbDelete(store,key){
- const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");t.objectStore(store).delete(key);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)});
-}
+const dbAll=store=>tx(store,"readonly",s=>s.getAll());
+const dbPut=(store,obj)=>tx(store,"readwrite",s=>{s.put(obj)});
+const dbDelete=(store,key)=>tx(store,"readwrite",s=>{s.delete(key)});
 
 async function loadCache(){
- const files=await dbAll(FILE_STORE); state.files=files.sort((a,b)=>a.path.localeCompare(b.path)); state.fileMap=new Map(files.map(f=>[f.path,f]));
- const metas=await dbAll(META_STORE); state.meta=metas.find(x=>x.key==="repo")||null; updateSyncUI(); renderLeft();
+ const files=await dbAll(FILE_STORE);
+ state.files=files.sort((a,b)=>a.path.localeCompare(b.path));state.fileMap=new Map(files.map(f=>[f.path,f]));state.docs.clear();
+ const metas=await dbAll(META_STORE);state.meta=metas.find(x=>x.key==="repo")||null;updateSyncUI();renderLeft();
 }
 function updateSyncUI(){
- const dot=document.querySelector("#syncDot"), lab=document.querySelector("#syncLabel");
+ const dot=$("#syncDot"),lab=$("#syncLabel");
  if(state.files.length){dot.className="status-dot ok";lab.textContent=`${state.files.length} файлов`;}
  else{dot.className="status-dot";lab.textContent="Синхронизировать";}
 }
 
-async function syncRepo(force=false){
- const overlay=document.querySelector("#syncOverlay"), bar=document.querySelector("#syncBar"), txt=document.querySelector("#syncText"), log=document.querySelector("#syncLog");
- overlay.classList.remove("hidden");bar.style.width="2%";txt.textContent="Получаю дерево репозитория…";log.textContent="";
+async function syncRepo(){
+ const overlay=$("#syncOverlay"),bar=$("#syncBar"),txt=$("#syncText"),log=$("#syncLog"),actions=$("#syncActions");
+ overlay.classList.remove("hidden");actions.classList.add("hidden");bar.style.width="2%";txt.textContent="Получаю дерево репозитория…";log.textContent="";
  try{
   const tr=await fetch(TREE_URL,{headers:{"Accept":"application/vnd.github+json"}});
+  if(tr.status===403||tr.status===429)throw new Error("GitHub временно ограничил запросы (лимит 60 в час без входа). Попробуй позже.");
   if(!tr.ok)throw new Error(`GitHub API: ${tr.status}`);
   const tree=await tr.json();
   const blobs=tree.tree.filter(x=>x.type==="blob"&&isTextPath(x.path)&&x.size<400000);
-  if(!force && state.meta && state.meta.sha===tree.sha && state.files.length>=blobs.length){
-    txt.textContent="Учебник уже актуален.";bar.style.width="100%";setTimeout(()=>overlay.classList.add("hidden"),700);return;
+  const wanted=new Set(blobs.map(x=>x.path));
+  // Скачиваем только новые и изменённые файлы: sha блоба на GitHub меняется вместе с содержимым.
+  const changed=blobs.filter(x=>state.fileMap.get(x.path)?.sha!==x.sha);
+  const stale=state.files.filter(f=>!wanted.has(f.path));
+  if(!changed.length&&!stale.length){
+    txt.textContent="Учебник уже актуален.";bar.style.width="100%";
+    await dbPut(META_STORE,{...state.meta,key:"repo",sha:tree.sha,syncedAt:Date.now(),count:blobs.length,failed:0});await loadCache();
+    setTimeout(()=>overlay.classList.add("hidden"),700);refreshCurrent();return;
   }
   // Не очищаем рабочий кэш заранее: при обрыве сети старая полная копия должна остаться доступной.
-  let done=0, failed=0;
-  const queue=[...blobs];
+  let done=0,failed=0;const queue=[...changed];
   async function worker(){
     while(queue.length){
       const it=queue.shift();
       try{
-        const r=await fetch(RAW+it.path);
+        const r=await fetch(RAW+it.path.split("/").map(encodeURIComponent).join("/"));
         if(!r.ok)throw new Error(String(r.status));
         const text=await r.text();
         await dbPut(FILE_STORE,{path:it.path,text,sha:it.sha,size:it.size,syncedAt:Date.now(),category:category(it.path)});
       }catch(e){failed++;log.textContent+=`\nОшибка: ${it.path}`;}
-      done++;bar.style.width=`${Math.max(3,Math.round(done/blobs.length*100))}%`;txt.textContent=`Загружено ${done} из ${blobs.length} файлов`;
+      done++;bar.style.width=`${Math.max(3,Math.round(done/changed.length*100))}%`;txt.textContent=`Загружено ${done} из ${changed.length} изменённых файлов`;
     }
   }
   await Promise.all(Array.from({length:6},worker));
   // Удаляем устаревшие файлы только после полностью успешной загрузки новой версии.
-  if(failed===0){
-    const wanted=new Set(blobs.map(x=>x.path));
-    for(const old of state.files) if(!wanted.has(old.path)) await dbDelete(FILE_STORE,old.path);
-  }
+  if(failed===0)for(const old of stale)await dbDelete(FILE_STORE,old.path);
   await dbPut(META_STORE,{key:"repo",sha:tree.sha,syncedAt:Date.now(),count:blobs.length,failed});
   await loadCache();
-  txt.textContent=failed?`Готово. ${failed} файлов не удалось загрузить.`:"Готово. Весь текстовый учебный репозиторий сохранён локально.";
+  txt.textContent=failed?`Готово. ${failed} файлов не удалось загрузить — они скачаются при следующем обновлении.`:`Готово. Обновлено файлов: ${changed.length}.`;
   bar.style.width="100%";
-  setTimeout(()=>overlay.classList.add("hidden"),1100);
-  renderHome();
+  setTimeout(()=>overlay.classList.add("hidden"),failed?3000:1100);
+  refreshCurrent();
  }catch(e){
   txt.textContent="Синхронизация не удалась";
-  log.textContent=`${e.message}\nПроверь подключение к интернету. Если кэш уже был создан раньше, учебник продолжит работать из него.`;
+  log.textContent=`${e.message}\n${state.files.length?"Учебник продолжит работать из локальной копии.":"Проверь подключение к интернету. Если браузер блокирует запросы из file://, запусти: python -m http.server 8000"}`;
   bar.style.width="100%";
-  setTimeout(()=>overlay.classList.add("hidden"),2500);
+  if(state.files.length)setTimeout(()=>overlay.classList.add("hidden"),3500);
+  else actions.classList.remove("hidden");
  }
 }
+function refreshCurrent(){
+ if(state.currentPath&&state.fileMap.has(state.currentPath)&&!$("#readerView").classList.contains("hidden"))openDoc(state.currentPath,{push:false,force:true});
+ else if(state.currentView==="home")renderHome();
+ else if(state.currentView==="progress")renderProgressPage();
+}
 
-function extractTitle(text,path){
- const m=text.match(/^#\s+(.+)$/m); return m?m[1].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim():titleFromPath(path);
-}
-function extractSections(text,path){
- const arr=[];let idx=0;
- for(const line of text.split(/\r?\n/)){
-   const m=line.match(/^(#{2,3})\s+(.+)$/); if(!m)continue;
-   const clean=m[2].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim();
-   const id=slug(clean)+"-"+(++idx);arr.push({level:m[1].length,title:clean,id,key:path+"#"+id});
- }
- return arr;
-}
-function fileProgress(path){
- const f=state.fileMap.get(path); if(!f)return 0;
- const ss=extractSections(f.text,path); if(!ss.length)return state.progress[path]?100:0;
- const done=ss.filter(s=>state.progress[s.key]).length;return Math.round(done/ss.length*100);
-}
-function saveProgress(){localStorage.setItem("pa-progress",JSON.stringify(state.progress));renderLeft();}
-function saveNotes(){localStorage.setItem("pa-notes",JSON.stringify(state.notes))}
-function saveBookmarks(){localStorage.setItem("pa-bookmarks",JSON.stringify(state.bookmarks))}
-
-function inlineMd(s,base){
- let x=esc(s);
- x=x.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,(m,a,u)=>`<img alt="${esc(a)}" src="${esc(u)}">`);
- x=x.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(m,a,u)=>{
-   const href=u.trim();
-   if(/^(https?:|mailto:|tel:|#)/i.test(href))return `<a href="${esc(href)}" ${href.startsWith("http")?'target="_blank" rel="noreferrer"':""}>${a}</a>`;
-   const p=normalizePath(base,href); return `<a href="#" data-doc="${esc(p)}">${a}</a>`;
+/* ---------- Разбор документа (кэшируется до следующей синхронизации) ---------- */
+const FENCE=/^\s{0,3}(`{3,}|~{3,})\s*([\w+#.-]*)/;
+function doc(path){
+ let d=state.docs.get(path);if(d)return d;
+ const f=state.fileMap.get(path);if(!f)return null;
+ const lines=f.text.replace(/\r/g,"").split("\n"),headings=[],seen=new Map();let fence=null,sec=0;
+ lines.forEach((line,n)=>{
+   const fm=line.match(FENCE);
+   if(fence){if(fm&&fm[1][0]===fence[0]&&fm[1].length>=fence.length&&!line.trim().slice(fm[1].length).trim())fence=null;return}
+   if(fm){fence=fm[1];return}
+   const m=line.match(/^(#{1,6})\s+(.+)$/);if(!m)return;
+   const level=m[1].length,title=plainHeading(m[2]),base=githubSlug(title),k=seen.get(base)||0;seen.set(base,k+1);
+   const h={level,title,line:n,anchor:k?`${base}-${k}`:base};
+   // Ключ прогресса сохранён в прежнем формате, чтобы старые отметки не потерялись.
+   if(level===2||level===3)h.key=path+"#"+slug(m[2].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim())+"-"+(++sec);
+   headings.push(h);
  });
- x=x.replace(/`([^`]+)`/g,"<code>$1</code>");
+ const m=f.text.match(/^#\s+(.+)$/m);
+ d={title:m?plainHeading(m[1]):titleFromPath(path),headings,sections:headings.filter(h=>h.key),lower:(path+"\n"+f.text).toLowerCase()};
+ state.docs.set(path,d);return d;
+}
+const extractTitle=path=>doc(path)?.title||titleFromPath(path);
+function fileProgress(path){
+ const d=doc(path);if(!d)return 0;
+ if(!d.sections.length)return state.progress[path]?100:0;
+ return Math.round(d.sections.filter(s=>state.progress[s.key]).length/d.sections.length*100);
+}
+function saveProgress(){store("pa-progress",state.progress);renderLeft();}
+function saveNotes(){store("pa-notes",state.notes)}
+function saveBookmarks(){store("pa-bookmarks",state.bookmarks)}
+
+/* ---------- Markdown ---------- */
+function inlineMd(s){
+ // Код вырезается до разметки, иначе __init__ и **kwargs внутри `кода` превращались в жирный текст.
+ const codes=[];
+ let x=esc(s.replace(/(`+)([^`]|[^`].*?[^`])\1(?!`)/g,(m,t,c)=>{codes.push(c.trim());return `\u0000${codes.length-1}\u0000`}));
+ x=x.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;[^)]*&quot;)?\)/g,'<img alt="$1" src="$2">');
+ x=x.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+&quot;[^)]*&quot;)?\)/g,'<a href="$2">$1</a>');
+ x=x.replace(/(^|[\s(])(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g,'$1<a href="$2">$2</a>');
  x=x.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
- x=x.replace(/__([^_]+)__/g,"<strong>$1</strong>");
+ x=x.replace(/(^|\W)__([^_]+)__(?!\w)/g,"$1<strong>$2</strong>");
  x=x.replace(/(^|[\s(])\*([^*\n]+)\*/g,"$1<em>$2</em>");
  x=x.replace(/~~([^~]+)~~/g,"<del>$1</del>");
- return x;
+ return x.replace(/\u0000(\d+)\u0000/g,(m,i)=>`<code>${esc(codes[i])}</code>`);
 }
-function markdownToHtml(md,base){
- const lines=md.replace(/\r/g,"").split("\n");let out=[],i=0,sec=0;
- const special=l=>/^(#{1,6})\s|^```|^>\s?|^[-*+]\s|^\d+\.\s|^---+$|^\|/.test(l);
+const LIST=/^(\s*)([-*+]|\d+[.)])\s+(.*)$/;
+function renderList(items){
+ let html="";const stack=[];
+ for(const it of items){
+   while(stack.length&&it.indent<stack.at(-1).indent)html+=`</li></${stack.pop().tag}>`;
+   const top=stack.at(-1);
+   if(!top||it.indent>top.indent){const tag=it.ordered?"ol":"ul";stack.push({indent:it.indent,tag});html+=`<${tag}>`}
+   else html+="</li>";
+   const task=it.text.match(/^\[([ xX])\]\s*(.*)$/);
+   html+=`<li>${task?`<span class="task">${task[1]===" "?"☐":"☑"}</span>${inlineMd(task[2])}`:inlineMd(it.text)}`;
+ }
+ while(stack.length)html+=`</li></${stack.pop().tag}>`;
+ return html;
+}
+const cells=r=>r.trim().replace(/^\|/,"").replace(/(?<!\\)\|$/,"").split(/(?<!\\)\|/).map(x=>x.trim().replace(/\\\|/g,"|"));
+function markdownToHtml(md,path){
+ const lines=md.replace(/\r/g,"").split("\n"),out=[],hmap=new Map(doc(path).headings.map(h=>[h.line,h]));let i=0;
+ const special=l=>/^(#{1,6})\s|^>|^\s*\|/.test(l)||FENCE.test(l)||LIST.test(l)||/^\s*(---+|\*\*\*+|___+)\s*$/.test(l);
  while(i<lines.length){
-  let l=lines[i];
-  if(l.startsWith("```")){
-    const lang=l.slice(3).trim();let buf=[];i++;
-    while(i<lines.length&&!lines[i].startsWith("```"))buf.push(lines[i++]);i++;
-    out.push(`<div class="code-wrap"><button class="copy-code">Копировать</button><pre><code data-lang="${esc(lang)}">${esc(buf.join("\n"))}</code></pre></div>`);continue;
+  const l=lines[i],fm=l.match(FENCE);
+  if(fm){
+    const buf=[];i++;
+    while(i<lines.length){const cm=lines[i].match(FENCE);if(cm&&cm[1][0]===fm[1][0]&&cm[1].length>=fm[1].length&&!lines[i].trim().slice(cm[1].length).trim())break;buf.push(lines[i++])}
+    i++;out.push(`<div class="code-wrap"><button class="copy-code">Копировать</button><pre><code data-lang="${esc(fm[2])}">${esc(buf.join("\n"))}</code></pre></div>`);continue;
   }
-  let h=l.match(/^(#{1,6})\s+(.+)$/);
-  if(h){const lv=h[1].length,clean=h[2].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim();const id=(lv>=2&&lv<=3)?slug(clean)+"-"+(++sec):slug(clean);const chk=(lv>=2&&lv<=3)?` <button class="section-check" data-section="${esc(base+"#"+id)}" title="Отметить раздел пройденным">✓</button>`:"";out.push(`<h${lv} id="${esc(id)}">${inlineMd(h[2],base)}${chk}</h${lv}>`);i++;continue}
-  if(/^---+$/.test(l.trim())){out.push("<hr>");i++;continue}
-  if(l.startsWith(">")){let b=[];while(i<lines.length&&lines[i].startsWith(">"))b.push(lines[i++].replace(/^>\s?/,""));out.push(`<blockquote>${b.map(x=>inlineMd(x,base)).join("<br>")}</blockquote>`);continue}
-  if(/^[-*+]\s/.test(l)){let a=[];while(i<lines.length&&/^[-*+]\s/.test(lines[i])){let z=lines[i++].replace(/^[-*+]\s/,"");const cm=z.match(/^\[([ xX])\]\s*(.*)$/);if(cm)a.push(`<li>☐ ${inlineMd(cm[2],base)}</li>`);else a.push(`<li>${inlineMd(z,base)}</li>`)}out.push(`<ul>${a.join("")}</ul>`);continue}
-  if(/^\d+\.\s/.test(l)){let a=[];while(i<lines.length&&/^\d+\.\s/.test(lines[i]))a.push(`<li>${inlineMd(lines[i++].replace(/^\d+\.\s/,""),base)}</li>`);out.push(`<ol>${a.join("")}</ol>`);continue}
-  if(l.includes("|")&&i+1<lines.length&&/^\s*\|?[\s:|-]+\|/.test(lines[i+1])){
-    const hdr=l.split("|").map(x=>x.trim()).filter(Boolean);i+=2;let rows=[];
-    while(i<lines.length&&lines[i].includes("|")&&lines[i].trim()){rows.push(lines[i].split("|").map(x=>x.trim()).filter(Boolean));i++}
-    out.push(`<table><thead><tr>${hdr.map(x=>`<th>${inlineMd(x,base)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${inlineMd(x,base)}</td>`).join("")}</tr>`).join("")}</tbody></table>`);continue;
+  const h=l.match(/^(#{1,6})\s+(.+)$/);
+  if(h){const info=hmap.get(i)||{},lv=h[1].length;const chk=info.key?` <button class="section-check" data-section="${esc(info.key)}" title="Отметить раздел пройденным">✓</button>`:"";out.push(`<h${lv} id="${esc(info.anchor||githubSlug(plainHeading(h[2])))}">${inlineMd(h[2])}${chk}</h${lv}>`);i++;continue}
+  if(/^\s*(---+|\*\*\*+|___+)\s*$/.test(l)){out.push("<hr>");i++;continue}
+  if(l.startsWith(">")){const b=[];while(i<lines.length&&lines[i].startsWith(">"))b.push(lines[i++].replace(/^>\s?/,""));out.push(`<blockquote>${b.map(inlineMd).join("<br>")}</blockquote>`);continue}
+  if(LIST.test(l)){
+    const items=[];
+    while(i<lines.length){
+      const m=lines[i].match(LIST);
+      if(m){items.push({indent:m[1].replace(/\t/g,"    ").length,ordered:/\d/.test(m[2]),text:m[3]});i++;continue}
+      if(lines[i].trim()&&/^\s+/.test(lines[i])&&!FENCE.test(lines[i])){items.at(-1).text+=" "+lines[i].trim();i++;continue}
+      break;
+    }
+    out.push(renderList(items));continue;
+  }
+  if(l.includes("|")&&i+1<lines.length&&lines[i+1].includes("|")&&/^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(lines[i+1])){
+    const hdr=cells(l);i+=2;const rows=[];
+    while(i<lines.length&&lines[i].includes("|")&&lines[i].trim())rows.push(cells(lines[i++]));
+    out.push(`<table><thead><tr>${hdr.map(x=>`<th>${inlineMd(x)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${hdr.map((_,k)=>`<td>${inlineMd(r[k]??"")}</td>`).join("")}</tr>`).join("")}</tbody></table>`);continue;
   }
   if(!l.trim()){i++;continue}
   if(l.trim().startsWith("<")&&l.trim().endsWith(">")){out.push(l);i++;continue}
-  let p=[l];i++;while(i<lines.length&&lines[i].trim()&&!special(lines[i]))p.push(lines[i++]);
-  out.push(`<p>${inlineMd(p.join(" "),base)}</p>`);
+  const p=[l];i++;while(i<lines.length&&lines[i].trim()&&!special(lines[i]))p.push(lines[i++]);
+  out.push(`<p>${inlineMd(p.join(" "))}</p>`);
  }
  return out.join("\n");
 }
-function sanitize(root){
- root.querySelectorAll("script,style,iframe,object,embed,meta,link,form").forEach(x=>x.remove());
- root.querySelectorAll("*").forEach(el=>[...el.attributes].forEach(a=>{if(/^on/i.test(a.name)||a.name.toLowerCase()==="style"||(/^(href|src)$/i.test(a.name)&&/^javascript:/i.test(a.value)))el.removeAttribute(a.name)}));
+/* HTML собирается в инертном <template>: onerror и прочее не успевают выполниться до очистки. */
+function setSafeHtml(el,html,path){
+ const t=document.createElement("template");t.innerHTML=html;const root=t.content;
+ root.querySelectorAll("script,style,iframe,object,embed,meta,link,form,base").forEach(x=>x.remove());
+ root.querySelectorAll("*").forEach(n=>[...n.attributes].forEach(a=>{const name=a.name.toLowerCase();
+   if(name.startsWith("on")||name==="style"||name==="srcdoc"||(/(href|src|action)$/.test(name)&&/^\s*(javascript|vbscript|data):/i.test(a.value)&&!(n.tagName==="IMG"&&/^\s*data:image\//i.test(a.value))))n.removeAttribute(a.name)}));
+ root.querySelectorAll("img[src]").forEach(img=>{const s=img.getAttribute("src");if(!/^(https?:|data:)/i.test(s))img.src=RAW+splitAnchor(normalizePath(path,s))[0];img.loading="lazy"});
+ root.querySelectorAll("a[href]").forEach(a=>{
+   const h=a.getAttribute("href");
+   if(/^https?:/i.test(h)){a.target="_blank";a.rel="noopener noreferrer"}
+   else if(!/^(mailto:|tel:)/i.test(h)){const target=h.startsWith("#")?path+h:normalizePath(path,h);a.dataset.doc=target;a.href="#/"+encodeURI(target)}
+ });
+ el.replaceChildren(root);
 }
+
+/* ---------- Навигация и маршруты (#/путь#якорь, #search, #progress…) ---------- */
+function setRoute(h){try{if(location.hash!==h)history.pushState(null,"",h)}catch{}}
+function routeFromHash(){
+ let h="";try{h=decodeURIComponent(location.hash.slice(1))}catch{}
+ if(h.startsWith("/")&&openDoc(h.slice(1),{push:false}))return true;
+ if(["home","book","prompts","templates","extras","search","progress"].includes(h)){setView(h,{push:false});return true}
+ return false;
+}
+window.addEventListener("popstate",()=>{if(!routeFromHash())setView("home",{push:false})});
+
+function closeMenu(){$("#leftSide").classList.remove("open")}
 
 function renderLeft(mode=state.currentView){
- const q=(document.querySelector("#sideSearch")?.value||"").toLowerCase();
- const el=document.querySelector("#leftNav");if(!el)return;
- let groups={};
- for(const f of state.files){
-   const c=category(f.path);
-   if(mode==="prompts"&&c!=="Промпты")continue;
-   if(mode==="templates"&&c!=="Starter-проекты")continue;
-   if(mode==="extras"&&c!=="Дополнительно")continue;
-   if(mode==="book"&&c!=="Учебник")continue;
-   const title=extractTitle(f.text,f.path);
-   if(q&&!(`${title} ${f.path}`).toLowerCase().includes(q))continue;
-   (groups[c]??=[]).push({...f,title});
- }
- const order=["Учебник","Промпты","Starter-проекты","Дополнительно"];
- const bookmarkFiles=state.bookmarks.map(p=>state.fileMap.get(p)).filter(Boolean).filter(f=>{
-   const c=category(f.path);
-   if(mode==="prompts")return c==="Промпты"; if(mode==="templates")return c==="Starter-проекты"; if(mode==="extras")return c==="Дополнительно"; if(mode==="book")return c==="Учебник"; return true;
- }).filter(f=>!q||(extractTitle(f.text,f.path)+" "+f.path).toLowerCase().includes(q));
- const bookmarkHtml=bookmarkFiles.length?`<div class="doc-group"><button>★ Закладки · ${bookmarkFiles.length}</button>${bookmarkFiles.map(f=>`<button class="doc-item ${state.currentPath===f.path?"active":""}" data-open="${esc(f.path)}"><span class="doc-icon">★</span><span>${esc(extractTitle(f.text,f.path))}</span><small>${fileProgress(f.path)||""}${fileProgress(f.path)?"%":""}</small></button>`).join("")}</div>`:"";
- el.innerHTML=bookmarkHtml+order.filter(c=>groups[c]?.length).map(c=>{
-   let fs=groups[c];
-   if(c==="Учебник")fs.sort((a,b)=>{
-     const ax=a.path.match(/stage-(\d+)/),bx=b.path.match(/stage-(\d+)/);
-     if(ax&&bx)return Number(ax[1])-Number(bx[1]);if(ax)return -1;if(bx)return 1;return a.path.localeCompare(b.path);
-   });
-   return `<div class="doc-group"><button>${c} · ${fs.length}</button>${fs.map(f=>`<button class="doc-item ${state.currentPath===f.path?"active":""} ${fileProgress(f.path)===100?"done":""}" data-open="${esc(f.path)}"><span class="doc-icon">${c==="Starter-проекты"?"⌘":c==="Промпты"?"✦":"▤"}</span><span>${esc(f.title)}</span><small>${fileProgress(f.path)||""}${fileProgress(f.path)?"%":""}</small></button>`).join("")}</div>`;
- }).join("") || `<div style="color:var(--muted);padding:10px">Нет файлов</div>`;
- el.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openDoc(b.dataset.open));
+ const el=$("#leftNav");if(!el)return;
+ const q=($("#sideSearch").value||"").toLowerCase();
+ const only=CATEGORY_FOR[mode];
+ const visible=f=>(!only||category(f.path)===only)&&(!q||(extractTitle(f.path)+" "+f.path).toLowerCase().includes(q));
+ const item=(f,icon)=>{const p=fileProgress(f.path);return `<button class="doc-item ${state.currentPath===f.path?"active":""} ${p===100?"done":""}" data-open="${esc(f.path)}"><span class="doc-icon">${icon}</span><span>${esc(extractTitle(f.path))}</span><small>${p?p+"%":""}</small></button>`};
+ const marks=state.bookmarks.map(p=>state.fileMap.get(p)).filter(f=>f&&visible(f));
+ const icons={"Учебник":"▤","Промпты":"✦","Starter-проекты":"⌘","Дополнительно":"▤"};
+ const groups=Object.keys(VIEW_FOR).map(c=>[c,ordered(c).filter(visible)]).filter(([,fs])=>fs.length);
+ el.innerHTML=(marks.length?`<div class="doc-group"><button>★ Закладки · ${marks.length}</button>${marks.map(f=>item(f,"★")).join("")}</div>`:"")
+  +groups.map(([c,fs])=>`<div class="doc-group"><button>${c} · ${fs.length}</button>${fs.map(f=>item(f,icons[c])).join("")}</div>`).join("")
+  ||`<div style="color:var(--muted);padding:10px">Нет файлов</div>`;
 }
+$("#leftNav").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openDoc(b.dataset.open)});
 
-function setView(v,autoOpen=true){
+function setView(v,{autoOpen=true,push=true}={}){
  state.currentView=v;document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
- document.querySelector("#homeView").classList.toggle("hidden",v!=="home");
- document.querySelector("#readerView").classList.toggle("hidden",!["book","prompts","templates","extras"].includes(v));
- document.querySelector("#searchView").classList.toggle("hidden",v!=="search");
- document.querySelector("#progressView").classList.toggle("hidden",v!=="progress");
+ const cat=CATEGORY_FOR[v];
+ document.body.dataset.mode=cat?"reader":v;
+ $("#homeView").classList.toggle("hidden",v!=="home");
+ $("#readerView").classList.toggle("hidden",!cat);
+ $("#searchView").classList.toggle("hidden",v!=="search");
+ $("#progressView").classList.toggle("hidden",v!=="progress");
  renderLeft(v);
  if(v==="home")renderHome();
- if(v==="search")document.querySelector("#bigSearch").focus();
+ if(v==="search")$("#bigSearch").focus();
  if(v==="progress")renderProgressPage();
- const expected=v==="book"?"Учебник":v==="prompts"?"Промпты":v==="templates"?"Starter-проекты":v==="extras"?"Дополнительно":null;
- if(autoOpen&&expected&&(!state.currentPath||category(state.currentPath)!==expected)){
-   const first=state.files.find(f=>category(f.path)===expected);
-   if(first)openDoc(first.path,false);
- }
+ if(!autoOpen)return;
+ if(cat){
+   if(state.currentPath&&category(state.currentPath)===cat){if(push)setRoute("#/"+encodeURI(state.currentPath))}
+   else{const first=ordered(cat)[0];if(first)openDoc(first.path,{push})}
+ }else if(push)setRoute("#"+v);
+}
+
+function continuePath(){
+ const book=ordered("Учебник"),last=loadRaw("pa-last");
+ if(last&&state.fileMap.has(last)&&fileProgress(last)<100)return last;
+ return (book.find(f=>fileProgress(f.path)<100)||book[0])?.path;
 }
 function renderHome(){
- const hv=document.querySelector("#homeView");
- const educational=state.files.filter(f=>category(f.path)==="Учебник"), allSections=educational.flatMap(f=>extractSections(f.text,f.path));
- const done=allSections.filter(s=>state.progress[s.key]).length, pct=allSections.length?Math.round(done/allSections.length*100):0;
- const finishedFiles=educational.filter(f=>fileProgress(f.path)===100).length;
+ const hv=$("#homeView");
+ const educational=ordered("Учебник"),allSections=educational.flatMap(f=>doc(f.path).sections);
+ const done=allSections.filter(s=>state.progress[s.key]).length,pct=allSections.length?Math.round(done/allSections.length*100):0;
  const synced=state.meta?.syncedAt?new Date(state.meta.syncedAt).toLocaleString("ru-RU"):"ещё не выполнялась";
+ const cont=continuePath();
  hv.innerHTML=`<div class="hero"><div class="hero-grid"><div>
   <div class="eyebrow">PYTHON ROADMAP 2026 · ПОЛНЫЙ РИДЕР</div><h1>Весь учебник — в одном интерфейсе.</h1>
   <p>Сайт синхронизирует оригинальные главы, отдельные курсы, глоссарий, LLM-промпты и код starter-проектов из <b>${REPO}</b>. Читай, отмечай пройденные разделы, ищи по всему содержимому и сохраняй заметки.</p>
+  ${cont?`<p style="font-size:13px">Дальше: <b>${esc(extractTitle(cont))}</b> · ${fileProgress(cont)}%</p>`:""}
   <div class="hero-actions"><button class="primary" id="continueHome">Продолжить обучение →</button><button class="ghost" id="openBookHome">Открыть содержание</button><button class="ghost" id="forceSyncHome">Обновить с GitHub</button></div>
  </div><div><div class="ring" style="--p:${pct}"><strong>${pct}%</strong><small>пройдено</small></div></div></div></div>
  <div class="stats">
@@ -429,94 +515,155 @@ function renderHome(){
   <div class="stat"><strong>${state.files.length}</strong><span>всего файлов в локальном кэше</span></div>
  </div>
  <div class="section-title"><div><h2>Основная программа</h2><p>Этапы 0–17 из исходного курса. Дополнительные 14+ и 15+ находятся в полном содержании.</p></div></div>
- <div class="stage-grid">${stageMeta.map(([n,t,d])=>{const p=stagePath(n),pr=fileProgress(p);return `<div class="stage-card" data-stage-path="${p}"><div class="n">ЭТАП ${n}</div><h3>${t}</h3><p>${d}</p><div class="progress"><i style="width:${pr}%"></i></div><div class="card-foot"><span>${pr?"в процессе":"не начат"}</span><strong>${pr}%</strong></div></div>`}).join("")}</div>
+ <div class="stage-grid">${stageMeta.map(([n,t,d])=>{const p=stagePath(n),pr=fileProgress(p);return `<div class="stage-card" role="button" tabindex="0" data-stage-path="${p}"><div class="n">ЭТАП ${n}</div><h3>${t}</h3><p>${d}</p><div class="progress"><i style="width:${pr}%"></i></div><div class="card-foot"><span>${pr===100?"пройден":pr?"в процессе":"не начат"}</span><strong>${pr}%</strong></div></div>`}).join("")}</div>
  <div class="section-title"><div><h2>Дополнительная практика</h2><p>Не заменяет основной учебник — эти репозитории удобно использовать для задач, примеров и проектов.</p></div></div>
- <div class="resource-grid">${supplemental.map(r=>`<a class="resource-card" href="${r.url}" target="_blank" rel="noreferrer"><div class="tag">${r.tag}</div><h3>${r.name} ↗</h3><p>${r.desc}</p></a>`).join("")}</div>
+ <div class="resource-grid">${supplemental.map(r=>`<a class="resource-card" href="${r.url}" target="_blank" rel="noopener noreferrer"><div class="tag">${r.tag}</div><h3>${r.name} ↗</h3><p>${r.desc}</p></a>`).join("")}</div>
  <div class="section-title"><div><h2>Состояние копии</h2><p>Последняя синхронизация: ${synced}. Исходник остаётся источником истины, локальный кэш нужен для удобного чтения.</p></div></div>`;
- hv.querySelector("#openBookHome").onclick=()=>setView("book");hv.querySelector("#forceSyncHome").onclick=()=>syncRepo(true);
- hv.querySelector("#continueHome").onclick=()=>{
-   const candidates=state.files.filter(f=>category(f.path)==="Учебник");const next=candidates.find(f=>fileProgress(f.path)<100)||candidates[0];if(next){setView("book");openDoc(next.path)}
- };
- hv.querySelectorAll("[data-stage-path]").forEach(x=>x.onclick=()=>{setView("book");openDoc(x.dataset.stagePath)});
+ hv.querySelector("#openBookHome").onclick=()=>setView("book");hv.querySelector("#forceSyncHome").onclick=()=>syncRepo();
+ hv.querySelector("#continueHome").onclick=()=>{const p=continuePath();if(p)openDoc(p)};
+ hv.querySelectorAll("[data-stage-path]").forEach(x=>{x.onclick=()=>openDoc(x.dataset.stagePath);x.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();x.click()}}});
 }
 
 function languageForPath(path){
  const name=path.split("/").pop();
  if(name==="Dockerfile")return "dockerfile";
- if(name==="pyproject.toml"||path.endsWith(".toml"))return "toml";
+ if(path.endsWith(".toml"))return "toml";
  if(/\.ya?ml$/i.test(path))return "yaml";
- if(path.endsWith(".py"))return "python"; if(path.endsWith(".json"))return "json"; if(path.endsWith(".sql"))return "sql"; if(path.endsWith(".sh"))return "bash";
+ if(path.endsWith(".py"))return "python";if(path.endsWith(".json"))return "json";if(path.endsWith(".sql"))return "sql";if(path.endsWith(".sh"))return "bash";
  return "text";
 }
 function codeFileHtml(text,path){return `<div class="code-wrap"><button class="copy-code">Копировать</button><pre><code data-lang="${languageForPath(path)}">${esc(text)}</code></pre></div>`}
 
-function openDoc(path,switchView=true){
- const hashIndex=path.indexOf("#"), anchor=hashIndex>=0?path.slice(hashIndex+1):"";
- if(hashIndex>=0)path=path.slice(0,hashIndex);
- const f=state.fileMap.get(path);if(!f)return;
- state.currentPath=path;
- if(switchView){const c=category(path);setView(c==="Промпты"?"prompts":c==="Starter-проекты"?"templates":c==="Дополнительно"?"extras":"book",false)}
- document.querySelector("#readerView").classList.remove("hidden");
- const title=extractTitle(f.text,path), p=fileProgress(path), sections=extractSections(f.text,path);
- document.querySelector("#readerHead").innerHTML=`<div class="crumb">${esc(category(path))} / ${esc(path)}</div><h1>${esc(title)}</h1><div class="meta"><span class="badge">${Math.round(f.size/1024)} KB</span><span class="badge">${sections.length} разделов</span><span class="badge">${p}% пройдено</span></div><div class="reader-actions"><button id="markFile" class="primary">${p===100?"✓ Глава пройдена":"Отметить всю главу пройденной"}</button><button id="prevDoc" class="ghost">← Предыдущая</button><button id="nextDoc" class="ghost">Следующая →</button></div>`;
- const art=document.querySelector("#article");art.innerHTML=path.toLowerCase().endsWith(".md")?markdownToHtml(f.text,path):codeFileHtml(f.text,path);sanitize(art);
- art.querySelectorAll("[data-doc]").forEach(a=>a.onclick=e=>{e.preventDefault();let raw=a.dataset.doc;const hi=raw.indexOf("#"), anch=hi>=0?raw.slice(hi+1):"";let p=hi>=0?raw.slice(0,hi):raw;const target=state.fileMap.has(p)?p:state.fileMap.has(p.replace(/\$/,"")+"/README.md")?p.replace(/\$/,"")+"/README.md":null;if(target){openDoc(target);if(anch)setTimeout(()=>document.getElementById(anch)?.scrollIntoView(),80)}else window.open("https://github.com/"+REPO+"/blob/"+BRANCH+"/"+p+(anch?"#"+anch:""),"_blank")});
- art.querySelectorAll(".copy-code").forEach(b=>b.onclick=()=>{navigator.clipboard?.writeText(b.nextElementSibling.innerText);const old=b.textContent;b.textContent="Скопировано";setTimeout(()=>b.textContent=old,900)});
- art.querySelectorAll(".section-check").forEach(b=>{const k=b.dataset.section;b.classList.toggle("done",!!state.progress[k]);b.onclick=()=>{state.progress[k]=!state.progress[k];if(!state.progress[k])delete state.progress[k];saveProgress();b.classList.toggle("done",!!state.progress[k]);updateReaderMeta()}});
- document.querySelector("#toc").innerHTML=sections.map(s=>`<a class="toc-item ${s.level===3?"l3":""}" href="#${esc(s.id)}">${state.progress[s.key]?"✓ ":""}${esc(s.title)}</a>`).join("")||`<div style="color:var(--muted);font-size:12px;padding:7px">В этой главе нет подзаголовков.</div>`;
- document.querySelector("#noteBox").value=state.notes[path]||"";
- const bm=state.bookmarks.includes(path);document.querySelector("#bookmarkBtn").textContent=bm?"★ В закладках":"☆ Добавить в закладки";
- document.querySelector("#sourceLink").href="https://github.com/"+REPO+"/blob/"+BRANCH+"/"+path;
- document.querySelector("#markFile").onclick=()=>{const ss=extractSections(f.text,path);if(ss.length){const makeDone=fileProgress(path)<100;ss.forEach(s=>makeDone?state.progress[s.key]=true:delete state.progress[s.key]);}else state.progress[path]=!state.progress[path];saveProgress();openDoc(path,false)};
- const same=state.files.filter(x=>category(x.path)===category(path));const idx=same.findIndex(x=>x.path===path);
- document.querySelector("#prevDoc").disabled=idx<=0;document.querySelector("#prevDoc").onclick=()=>idx>0&&openDoc(same[idx-1].path);
- document.querySelector("#nextDoc").disabled=idx<0||idx>=same.length-1;document.querySelector("#nextDoc").onclick=()=>idx>=0&&idx<same.length-1&&openDoc(same[idx+1].path);
- renderLeft();if(anchor)setTimeout(()=>document.getElementById(anchor)?.scrollIntoView(),80);else window.scrollTo({top:0,behavior:"instant"});
+function scrollToAnchor(anchor){
+ let a=anchor;try{a=decodeURIComponent(anchor)}catch{}
+ const el=document.getElementById(a)||document.getElementById(githubSlug(a));
+ if(el)requestAnimationFrame(()=>el.scrollIntoView());
 }
-function updateReaderMeta(){if(state.currentPath)openDoc(state.currentPath,false)}
-document.querySelector("#noteBox").addEventListener("input",e=>{if(state.currentPath){state.notes[state.currentPath]=e.target.value;saveNotes()}});
-document.querySelector("#bookmarkBtn").onclick=()=>{if(!state.currentPath)return;const i=state.bookmarks.indexOf(state.currentPath);if(i>=0)state.bookmarks.splice(i,1);else state.bookmarks.push(state.currentPath);saveBookmarks();openDoc(state.currentPath,false)};
-
-function runSearch(q){
- const box=document.querySelector("#searchResults");q=q.trim().toLowerCase();if(q.length<2){box.innerHTML=`<div style="color:var(--muted);padding:15px">Введите минимум 2 символа.</div>`;return}
- const terms=q.split(/\s+/);let res=[];
- for(const f of state.files){
-  const hay=(f.path+"\n"+f.text).toLowerCase();if(terms.every(t=>hay.includes(t))){
-   const plain=f.text.replace(/[#>*_`\[\]()|]/g," ").replace(/\s+/g," ");const posText=f.text.toLowerCase().indexOf(terms[0]);const pp=posText>=0?Math.max(0,Math.min(plain.length-1,posText)):0;let snip=plain.slice(Math.max(0,pp-100),pp+230);
-   res.push({f,title:extractTitle(f.text,f.path),snip});if(res.length>=60)break;
-  }
+function openDoc(target,{push=true,force=false}={}){
+ let [path,anchor]=splitAnchor(target);
+ if(!path)path=state.currentPath||"";
+ if(!state.fileMap.has(path)){
+   const readme=path.replace(/\/$/,"")+"/README.md";
+   if(state.fileMap.has(readme))path=readme;
+   else{if(path&&push)window.open(GITHUB+path+(anchor?"#"+anchor:""),"_blank","noopener");return false}
  }
- box.innerHTML=res.map((r,i)=>`<div class="search-result" data-i="${i}"><h3>${esc(r.title)}</h3><p>${esc(r.f.path)} · ${esc(r.snip)}</p></div>`).join("")||`<div style="color:var(--muted);padding:15px">Ничего не найдено.</div>`;
- box.querySelectorAll("[data-i]").forEach(el=>el.onclick=()=>openDoc(res[Number(el.dataset.i)].f.path));
+ const f=state.fileMap.get(path);
+ const same=!force&&state.currentPath===path&&!$("#readerView").classList.contains("hidden");
+ state.currentPath=path;store("pa-last",path);
+ setView(VIEW_FOR[category(path)],{autoOpen:false});
+ if(!same){
+   setSafeHtml($("#article"),path.toLowerCase().endsWith(".md")?markdownToHtml(f.text,path):codeFileHtml(f.text,path),path);
+   $("#noteBox").value=state.notes[path]||"";
+   $("#sourceLink").href=GITHUB+path;
+ }
+ renderReaderChrome();closeMenu();
+ if(push)setRoute("#/"+encodeURI(path)+(anchor?"#"+anchor:""));
+ if(anchor)scrollToAnchor(anchor);else if(!same)window.scrollTo({top:0,behavior:"instant"});
+ return true;
 }
-document.querySelector("#bigSearch").addEventListener("input",e=>runSearch(e.target.value));
+/* Шапка, оглавление и закладка обновляются без перерисовки статьи — отметка раздела больше не кидает наверх. */
+function renderReaderChrome(){
+ const path=state.currentPath,f=state.fileMap.get(path);if(!f)return;
+ const d=doc(path),p=fileProgress(path),list=ordered(category(path)),idx=list.findIndex(x=>x.path===path);
+ const prev=list[idx-1],next=list[idx+1],bm=state.bookmarks.includes(path);
+ $("#readerHead").innerHTML=`<div class="crumb">${esc(category(path))} / ${esc(path)}</div><h1>${esc(d.title)}</h1><div class="meta"><span class="badge">${Math.max(1,Math.round(f.size/1024))} KB</span><span class="badge">${d.sections.length} разделов</span><span class="badge">${p}% пройдено</span>${idx>=0?`<span class="badge">${idx+1} из ${list.length}</span>`:""}</div><div class="reader-actions"><button id="markFile" class="primary">${p===100?"✓ Глава пройдена":"Отметить всю главу пройденной"}</button><button class="ghost" data-bookmark>${bm?"★ В закладках":"☆ В закладки"}</button><button class="ghost" data-go="${esc(prev?.path||"")}" ${prev?"":"disabled"}>← Предыдущая</button><button class="ghost" data-go="${esc(next?.path||"")}" ${next?"":"disabled"}>Следующая →</button></div>`;
+ $("#readerFoot").innerHTML=(prev?`<button data-go="${esc(prev.path)}"><small>← Предыдущая</small>${esc(extractTitle(prev.path))}</button>`:"")+(next?`<button class="next" data-go="${esc(next.path)}"><small>Следующая →</small>${esc(extractTitle(next.path))}</button>`:"");
+ $("#toc").innerHTML=d.sections.map(s=>`<a class="toc-item ${s.level===3?"l3":""}" href="#/${esc(encodeURI(path))}#${esc(s.anchor)}" data-doc="${esc(path+"#"+s.anchor)}">${state.progress[s.key]?"✓ ":""}${esc(s.title)}</a>`).join("")||`<div style="color:var(--muted);font-size:12px;padding:7px">В этой главе нет подзаголовков.</div>`;
+ $("#bookmarkBtn").textContent=bm?"★ В закладках":"☆ Добавить в закладки";
+ $("#article").querySelectorAll(".section-check").forEach(b=>b.classList.toggle("done",!!state.progress[b.dataset.section]));
+}
+function toggleBookmark(){
+ if(!state.currentPath)return;const i=state.bookmarks.indexOf(state.currentPath);
+ if(i>=0)state.bookmarks.splice(i,1);else state.bookmarks.push(state.currentPath);
+ saveBookmarks();renderLeft();renderReaderChrome();
+}
+function toggleFile(){
+ const path=state.currentPath,ss=doc(path).sections;
+ if(ss.length){const makeDone=fileProgress(path)<100;ss.forEach(s=>makeDone?state.progress[s.key]=true:delete state.progress[s.key])}
+ else if(state.progress[path])delete state.progress[path];else state.progress[path]=true;
+ saveProgress();renderReaderChrome();
+}
+$("#readerView").addEventListener("click",e=>{
+ const link=e.target.closest("a[data-doc]");if(link){e.preventDefault();openDoc(link.dataset.doc);return}
+ const go=e.target.closest("[data-go]");if(go&&go.dataset.go){openDoc(go.dataset.go);return}
+ if(e.target.closest("[data-bookmark]"))return toggleBookmark();
+ if(e.target.closest("#markFile"))return toggleFile();
+ const copy=e.target.closest(".copy-code");
+ if(copy){(navigator.clipboard?navigator.clipboard.writeText(copy.nextElementSibling.textContent):Promise.reject()).then(()=>{copy.textContent="Скопировано";setTimeout(()=>copy.textContent="Копировать",900)},()=>{copy.textContent="Не удалось";setTimeout(()=>copy.textContent="Копировать",900)});return}
+ const chk=e.target.closest(".section-check");
+ if(chk){const k=chk.dataset.section;if(state.progress[k])delete state.progress[k];else state.progress[k]=true;saveProgress();renderReaderChrome()}
+});
+$("#toc").addEventListener("click",e=>{const a=e.target.closest("a[data-doc]");if(a){e.preventDefault();openDoc(a.dataset.doc)}});
+$("#noteBox").addEventListener("input",e=>{if(!state.currentPath)return;if(e.target.value)state.notes[state.currentPath]=e.target.value;else delete state.notes[state.currentPath];saveNotes()});
+$("#bookmarkBtn").onclick=toggleBookmark;
 
+/* ---------- Поиск ---------- */
+function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+function runSearch(raw){
+ const box=$("#searchResults"),q=raw.trim().toLowerCase();
+ if(q.length<2){box.innerHTML=`<div style="color:var(--muted);padding:15px">Введите минимум 2 символа.</div>`;return}
+ const terms=q.split(/\s+/),hl=new RegExp(terms.map(t=>reEsc(esc(t))).join("|"),"gi"),res=[];
+ for(const f of state.files){
+  const d=doc(f.path);if(!terms.every(t=>d.lower.includes(t)))continue;
+  const text=f.text,pos=text.toLowerCase().indexOf(terms[0]),at=Math.max(0,pos);
+  const line=text.slice(0,at).split("\n").length-1,sec=pos<0?null:[...d.headings].reverse().find(h=>h.line<=line);
+  const snip=text.slice(Math.max(0,at-90),at+220).replace(/[#>*_`|]/g," ").replace(/\s+/g," ").trim();
+  const title=d.title,inTitle=terms.some(t=>title.toLowerCase().includes(t));
+  res.push({path:f.path,title,sec,snip,score:(inTitle?2:0)+(category(f.path)==="Учебник"?1:0)});
+ }
+ res.sort((a,b)=>b.score-a.score);
+ box.innerHTML=res.slice(0,60).map((r,i)=>`<div class="search-result" role="button" tabindex="0" data-i="${i}"><h3>${esc(r.title)}${r.sec&&r.sec.title!==r.title?` <small style="color:var(--muted);font-weight:400">› ${esc(r.sec.title)}</small>`:""}</h3><p>${esc(r.path)} · ${esc(r.snip).replace(hl,"<mark>$&</mark>")}</p></div>`).join("")
+  ||`<div style="color:var(--muted);padding:15px">Ничего не найдено.</div>`;
+ box.querySelectorAll("[data-i]").forEach(el=>{const r=res[Number(el.dataset.i)];el.onclick=()=>openDoc(r.path+(r.sec?"#"+r.sec.anchor:""));el.onkeydown=e=>{if(e.key==="Enter")el.click()}});
+}
+let searchTimer;
+$("#bigSearch").addEventListener("input",e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>runSearch(e.target.value),120)});
+
+/* ---------- Прогресс ---------- */
 function renderProgressPage(){
- const ed=state.files.filter(f=>category(f.path)==="Учебник");
- const rows=ed.map(f=>({f,p:fileProgress(f.path),t:extractTitle(f.text,f.path)})).sort((a,b)=>b.p-a.p);
- const all=ed.flatMap(f=>extractSections(f.text,f.path)),done=all.filter(s=>state.progress[s.key]).length,pct=all.length?Math.round(done/all.length*100):0;
- document.querySelector("#progressView").innerHTML=`<div class="eyebrow">ПРОГРЕСС</div><h1>Пройдено ${pct}%</h1><p style="color:var(--muted)">${done} из ${all.length} разделов. Прогресс хранится только в этом браузере.</p><div class="progress" style="height:10px;margin:18px 0 28px"><i style="width:${pct}%"></i></div>
+ const rows=ordered("Учебник").map(f=>({f,p:fileProgress(f.path),t:extractTitle(f.path)}));
+ const all=rows.flatMap(x=>doc(x.f.path).sections),done=all.filter(s=>state.progress[s.key]).length,pct=all.length?Math.round(done/all.length*100):0;
+ $("#progressView").innerHTML=`<div class="eyebrow">ПРОГРЕСС</div><h1>Пройдено ${pct}%</h1><p style="color:var(--muted)">${done} из ${all.length} разделов. Прогресс хранится только в этом браузере — делай экспорт, чтобы перенести его на другое устройство.</p><div class="progress" style="height:10px;margin:18px 0 28px"><i style="width:${pct}%"></i></div>
  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><button id="exportData" class="ghost">Экспорт прогресса и заметок</button><label class="ghost" style="cursor:pointer">Импорт<input id="importData" type="file" accept="application/json" hidden></label></div>
- ${rows.map((x,i)=>`<div class="prog-row" data-pi="${i}"><header><h3>${esc(x.t)}</h3><strong>${x.p}%</strong></header><div class="progress" style="margin-top:9px"><i style="width:${x.p}%"></i></div><small>${esc(x.f.path)}</small></div>`).join("")}`;
- document.querySelectorAll("[data-pi]").forEach(el=>el.onclick=()=>openDoc(rows[Number(el.dataset.pi)].f.path));
- document.querySelector("#exportData").onclick=()=>{
+ ${rows.map((x,i)=>`<div class="prog-row" role="button" tabindex="0" data-pi="${i}"><header><h3>${esc(x.t)}</h3><strong>${x.p}%</strong></header><div class="progress" style="margin-top:9px"><i style="width:${x.p}%"></i></div><small>${esc(x.f.path)}</small></div>`).join("")}`;
+ document.querySelectorAll("[data-pi]").forEach(el=>{el.onclick=()=>openDoc(rows[Number(el.dataset.pi)].f.path);el.onkeydown=e=>{if(e.key==="Enter")el.click()}});
+ $("#exportData").onclick=()=>{
    const blob=new Blob([JSON.stringify({version:3,progress:state.progress,notes:state.notes,bookmarks:state.bookmarks,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
-   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="python-academy-progress.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`python-academy-progress-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
  };
- document.querySelector("#importData").onchange=async e=>{try{const x=JSON.parse(await e.target.files[0].text());state.progress=x.progress||{};state.notes=x.notes||{};state.bookmarks=x.bookmarks||[];saveProgress();saveNotes();saveBookmarks();renderProgressPage();alert("Импортировано.")}catch{alert("Не удалось импортировать файл.")}};
+ $("#importData").onchange=async e=>{
+   try{
+     const x=JSON.parse(await e.target.files[0].text()),obj=v=>v&&typeof v==="object"&&!Array.isArray(v);
+     if(!obj(x)||!obj(x.progress))throw new Error();
+     if(!confirm("Заменить текущий прогресс, заметки и закладки данными из файла?"))return;
+     state.progress=x.progress;state.notes=obj(x.notes)?x.notes:{};state.bookmarks=Array.isArray(x.bookmarks)?x.bookmarks:[];
+     saveProgress();saveNotes();saveBookmarks();renderProgressPage();alert("Импортировано.");
+   }catch{alert("Не удалось импортировать файл: это не экспорт Python Academy.")}
+   e.target.value="";
+ };
 }
 
+/* ---------- Общие обработчики ---------- */
 document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>setView(b.dataset.view));
-document.querySelector("#sideSearch").addEventListener("input",()=>renderLeft());
-document.querySelector("#syncBtn").onclick=()=>syncRepo(true);
-document.querySelector("#themeBtn").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("pa-theme",document.body.classList.contains("light")?"light":"dark")};
-document.querySelector("#mobileMenu").onclick=()=>document.querySelector("#leftSide").classList.toggle("open");
+$("#sideSearch").addEventListener("input",()=>renderLeft());
+$("#syncBtn").onclick=()=>syncRepo();
+$("#syncRetry").onclick=()=>syncRepo();
+$("#syncClose").onclick=()=>$("#syncOverlay").classList.add("hidden");
+$("#themeBtn").onclick=()=>{document.body.classList.toggle("light");store("pa-theme",document.body.classList.contains("light")?"light":"dark")};
+$("#mobileMenu").onclick=()=>$("#leftSide").classList.toggle("open");
+$(".main").addEventListener("click",closeMenu);
+document.addEventListener("keydown",e=>{
+ const typing=/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||e.target.isContentEditable;
+ if(e.key==="/"&&!typing&&!e.ctrlKey&&!e.metaKey){e.preventDefault();setView("search")}
+ if(e.key==="Escape"){closeMenu();if(typing)e.target.blur()}
+});
 
 async function boot(){
- if(localStorage.getItem("pa-theme")==="light")document.body.classList.add("light");
- await loadCache();
- if(!state.files.length)await syncRepo(true);
- renderHome();setView("home");
+ const theme=loadRaw("pa-theme");
+ if(theme==="light"||(!theme&&matchMedia("(prefers-color-scheme: light)").matches))document.body.classList.add("light");
+ try{await loadCache()}catch(e){console.warn("IndexedDB недоступен",e)}
+ if(!state.files.length)await syncRepo();
+ if(!routeFromHash())setView("home",{push:false});
 }
 boot();
 </script>
