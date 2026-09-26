@@ -250,9 +250,10 @@ def configure_bot_profile():
             "setMyDescription",
             {
                 "description": (
-                    "🐍 Python + English — 299 ₽\n"
-                    "🚗 ПДД с видеоразборами билетов — 199 ₽\n\n"
-                    "Выбери нужный материал и напиши продавцу."
+                    "Учебные материалы в одном месте 📚\n\n"
+                    "🐍 Python + English — пошаговое обучение, практика и прогресс.\n"
+                    "🚗 ПДД — видеоразборы экзаменационных билетов с объяснениями.\n\n"
+                    "Выбери нужный раздел и узнай подробности."
                 )
             },
         )
@@ -260,7 +261,7 @@ def configure_bot_profile():
             "setMyShortDescription",
             {
                 "short_description": (
-                    "🐍 Python + English — 299 ₽ | 🚗 ПДД — 199 ₽"
+                    "🐍 Python + English • 🚗 ПДД • Учебные материалы и разборы"
                 )
             },
         )
