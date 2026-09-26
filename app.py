@@ -24,41 +24,70 @@ WEBHOOK_PATH = f"/telegram/{TOKEN_HASH[:32]}"
 WEBHOOK_SECRET = TOKEN_HASH[32:80]
 
 START_TEXT = """
-<b>🐍 Python + 🇬🇧 English</b>
+<b>👋 Привет! Добро пожаловать</b>
 
-Готовый учебный сайт для изучения <b>Python</b> — от самых основ к продвинутым темам.
+Здесь можно выбрать материал для обучения 👇
 
-🎁 <b>Сайт для изучения английского — в подарок</b>
-💳 Стоимость комплекта: <b>299 ₽</b>
+🐍 <b>Python + 🇬🇧 English</b>
+Учебный сайт по Python + сайт по английскому в подарок.
+<b>299 ₽</b>
 
-Посмотри, что входит, или сразу свяжись со мной 👇
+🚗 <b>ПДД — разбор билетов</b>
+Большой доступ к видео с подробным разбором экзаменационных билетов.
+<b>199 ₽</b>
+
+Выбери нужный раздел ниже.
 """.strip()
 
-DETAILS_TEXT = """
-<b>📚 Что входит в комплект</b>
+PYTHON_TEXT = """
+<b>🐍 Python + 🇬🇧 English — 299 ₽</b>
 
-🐍 <b>Python</b>
+Готовый учебный сайт по Python с понятным маршрутом от первых шагов к более сложным темам.
+
+<b>Что входит:</b>
 • обучение по шагам;
-• темы от базовых к более сложным;
-• удобная структура обучения;
-• прогресс и последовательный маршрут.
+• теория и практика;
+• задания для закрепления;
+• отслеживание прогресса;
+• отдельный сайт по английскому — в подарок.
 
-🇬🇧 <b>English — в подарок</b>
-• отдельный сайт для английского;
-• обучение с нуля;
-• последовательные темы и практика.
+💻 Сайт предназначен в первую очередь для компьютера.
 
-💳 Всё вместе — <b>299 ₽</b>.
-
-Если хочешь приобрести комплект, нажми кнопку ниже 👇
+Хочешь приобрести комплект — нажми кнопку ниже 👇
 """.strip()
 
-BUY_TEXT = """
-<b>💎 Купить комплект — 299 ₽</b>
+PYTHON_BUY_TEXT = """
+<b>🐍 Python + 🇬🇧 English — 299 ₽</b>
 
-Нажми <b>«Написать продавцу»</b> ниже — Telegram сразу откроет мой профиль.
+Нажми <b>«Написать продавцу»</b> и напиши:
+<b>«Хочу Python + English»</b>
 
-Напиши, что хочешь приобрести комплект <b>Python + English</b>, и я отвечу тебе лично 👇
+Я отвечу тебе лично 👇
+""".strip()
+
+PDD_TEXT = """
+<b>🚗 ПДД — разбор билетов</b>
+
+Большой доступ к видео с подробным разбором экзаменационных билетов ПДД.
+
+<b>Что получаешь:</b>
+• видео с разбором билетов;
+• объяснение правильных ответов;
+• разбор сложных и спорных вопросов;
+• возможность пересматривать материал в удобное время.
+
+💳 <b>Стоимость доступа — 199 ₽</b>
+
+Хочешь приобрести — нажми кнопку ниже 👇
+""".strip()
+
+PDD_BUY_TEXT = """
+<b>🚗 ПДД — 199 ₽</b>
+
+Нажми <b>«Написать продавцу»</b> и напиши:
+<b>«Хочу ПДД»</b>
+
+Я отвечу тебе лично 👇
 """.strip()
 
 
@@ -69,29 +98,49 @@ def seller_url() -> str:
 def start_keyboard():
     return {
         "inline_keyboard": [
-            [{"text": "📚 Что входит?", "callback_data": "details"}],
-            [{"text": "💎 Купить за 299 ₽", "callback_data": "buy"}],
+            [{"text": "🐍 Python + 🇬🇧 English — 299 ₽", "callback_data": "python"}],
+            [{"text": "🚗 ПДД — 199 ₽", "callback_data": "pdd"}],
             [{"text": "💬 Написать продавцу", "url": seller_url()}],
         ]
     }
 
 
-def details_keyboard():
+def python_keyboard():
     return {
         "inline_keyboard": [
-            [{"text": "💎 Купить за 299 ₽", "callback_data": "buy"}],
+            [{"text": "🐍 Купить за 299 ₽", "callback_data": "buy_python"}],
             [{"text": "💬 Написать продавцу", "url": seller_url()}],
-            [{"text": "⬅️ Назад", "callback_data": "home"}],
+            [{"text": "⬅️ На главную", "callback_data": "home"}],
         ]
     }
 
 
-def buy_keyboard():
+def python_buy_keyboard():
     return {
         "inline_keyboard": [
             [{"text": "💬 Написать продавцу", "url": seller_url()}],
-            [{"text": "📚 Что входит?", "callback_data": "details"}],
-            [{"text": "⬅️ Назад", "callback_data": "home"}],
+            [{"text": "⬅️ Назад к Python + English", "callback_data": "python"}],
+            [{"text": "🏠 На главную", "callback_data": "home"}],
+        ]
+    }
+
+
+def pdd_keyboard():
+    return {
+        "inline_keyboard": [
+            [{"text": "🚗 Купить ПДД — 199 ₽", "callback_data": "buy_pdd"}],
+            [{"text": "💬 Написать продавцу", "url": seller_url()}],
+            [{"text": "⬅️ На главную", "callback_data": "home"}],
+        ]
+    }
+
+
+def pdd_buy_keyboard():
+    return {
+        "inline_keyboard": [
+            [{"text": "💬 Написать продавцу", "url": seller_url()}],
+            [{"text": "⬅️ Назад к ПДД", "callback_data": "pdd"}],
+            [{"text": "🏠 На главную", "callback_data": "home"}],
         ]
     }
 
@@ -187,10 +236,47 @@ def process_update(update: dict):
 
     if data == "home":
         edit_screen(chat_id, message_id, START_TEXT, start_keyboard())
-    elif data == "details":
-        edit_screen(chat_id, message_id, DETAILS_TEXT, details_keyboard())
-    elif data == "buy":
-        edit_screen(chat_id, message_id, BUY_TEXT, buy_keyboard())
+    elif data == "python":
+        edit_screen(chat_id, message_id, PYTHON_TEXT, python_keyboard())
+    elif data == "buy_python":
+        edit_screen(chat_id, message_id, PYTHON_BUY_TEXT, python_buy_keyboard())
+    elif data == "pdd":
+        edit_screen(chat_id, message_id, PDD_TEXT, pdd_keyboard())
+    elif data == "buy_pdd":
+        edit_screen(chat_id, message_id, PDD_BUY_TEXT, pdd_buy_keyboard())
+
+
+def configure_bot_profile():
+    try:
+        telegram(
+            "setMyDescription",
+            {
+                "description": (
+                    "🐍 Python + English — 299 ₽\n"
+                    "🚗 ПДД с видеоразборами билетов — 199 ₽\n\n"
+                    "Выбери нужный материал и напиши продавцу."
+                )
+            },
+        )
+        telegram(
+            "setMyShortDescription",
+            {
+                "short_description": (
+                    "🐍 Python + English — 299 ₽ | 🚗 ПДД — 199 ₽"
+                )
+            },
+        )
+        telegram(
+            "setMyCommands",
+            {
+                "commands": [
+                    {"command": "start", "description": "Открыть главное меню"},
+                ]
+            },
+        )
+        log.info("Telegram bot profile configured")
+    except Exception:
+        log.exception("Failed to configure Telegram bot profile")
 
 
 def configure_webhook() -> bool:
@@ -201,6 +287,7 @@ def configure_webhook() -> bool:
     webhook_url = f"{PUBLIC_URL}{WEBHOOK_PATH}"
 
     try:
+        configure_bot_profile()
         result = telegram(
             "setWebhook",
             {
@@ -223,7 +310,7 @@ def index():
     return jsonify(
         {
             "ok": True,
-            "service": "python-english-sales-bot",
+            "service": "python-english-pdd-sales-bot",
             "configured": bool(BOT_TOKEN and SELLER_USERNAME and PUBLIC_URL),
         }
     )
