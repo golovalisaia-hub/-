@@ -195,12 +195,7 @@ def process_update(update: dict):
 
 def configure_webhook() -> bool:
     if not BOT_TOKEN or not SELLER_USERNAME or not PUBLIC_URL:
-        log.info(
-            "Webhook not configured: BOT_TOKEN=%s SELLER_USERNAME=%s PUBLIC_URL=%s",
-            bool(BOT_TOKEN),
-            bool(SELLER_USERNAME),
-            bool(PUBLIC_URL),
-        )
+        log.info("Webhook configuration is waiting for required environment variables.")
         return False
 
     webhook_url = f"{PUBLIC_URL}{WEBHOOK_PATH}"
