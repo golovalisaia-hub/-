@@ -76,7 +76,7 @@ a{color:var(--accent)}
 .card-foot{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:7px}
 .resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.resource-card{text-decoration:none;color:var(--text)}.resource-card h3{font-size:15px;margin:7px 0}.resource-card p{font-size:12px;color:var(--muted);margin:0}.resource-card .tag{font-size:10px;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 .search-panel{max-width:1000px;margin:0 auto}.big-search{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:15px;padding:15px 17px;font-size:16px;outline:none}.search-results{display:grid;gap:10px;margin-top:16px}.search-result{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:15px;cursor:pointer}.search-result:hover{border-color:var(--accent)}.search-result h3{font-size:15px;margin:0 0 5px}.search-result p{font-size:12px;color:var(--muted);margin:0}.search-result mark{background:color-mix(in srgb,var(--accent) 30%,transparent);color:inherit;border-radius:3px}
-.sync-overlay{position:fixed;inset:0;background:rgba(5,8,13,.82);backdrop-filter:blur(10px);z-index:100;display:grid;place-items:center;padding:20px}.sync-card{width:min(570px,96vw);border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:25px;box-shadow:var(--shadow)}.sync-card h2{margin:0 0 8px}.sync-card p{color:var(--muted)}.sync-progress{height:9px;background:var(--line);border-radius:99px;overflow:hidden;margin:16px 0}.sync-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.2s}.sync-log{font:12px ui-monospace,monospace;color:var(--muted);max-height:90px;overflow:auto}
+.sync-overlay{position:fixed;inset:0;background:rgba(5,8,13,.82);backdrop-filter:blur(10px);z-index:100;display:grid;place-items:center;padding:20px}.sync-card{width:min(570px,100%);border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:25px;box-shadow:var(--shadow)}.sync-card h2{margin:0 0 8px}.sync-card p{color:var(--muted)}.sync-progress{height:9px;background:var(--line);border-radius:99px;overflow:hidden;margin:16px 0}.sync-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.2s}.sync-log{font:12px ui-monospace,monospace;color:var(--muted);max-height:90px;overflow:auto}
 .progress-page{max-width:1000px;margin:0 auto}.prog-row{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:15px;margin:9px 0;cursor:pointer}.prog-row header{display:flex;justify-content:space-between;gap:12px}.prog-row h3{font-size:14px;margin:0}.prog-row small{color:var(--muted)}
 .mobile-side{display:none}
 @media(max-width:1180px){.shell{grid-template-columns:255px minmax(0,1fr)}.right{display:none}.main{padding:28px}.stage-grid,.resource-grid{grid-template-columns:repeat(2,1fr)}}
@@ -85,87 +85,119 @@ a{color:var(--accent)}
 .reader-foot button{text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px;padding:14px 16px}
 .reader-foot button:hover{border-color:var(--accent)}.reader-foot small{display:block;color:var(--muted);font-size:11px}
 .reader-foot .next{text-align:right;grid-column:2}
+.reader-foot .done-next{grid-column:1/-1;text-align:center;background:linear-gradient(135deg,var(--accent),#5f7cff);border-color:transparent;color:#fff;font-weight:800}
 .article>h1:first-child{display:none}
-.task{margin-right:6px}.doc-item small{font-size:11px}
+.article,.reader-head h1,.toc-item,.search-result{overflow-wrap:break-word}.article :not(pre)>code{overflow-wrap:anywhere}
+.article ul:not(.loose)>li>p,.article ol:not(.loose)>li>p{margin:0}
+.article li>.code-wrap,.article li>blockquote{margin:10px 0}
+.article li.task-item{list-style:none;margin-left:-20px}.task{margin-right:6px}
+.table-wrap{overflow-x:auto;margin:18px 0;border-radius:12px}.article .table-wrap table{margin:0}
+.article .al-center{text-align:center}.article .al-right{text-align:right}.article .al-left{text-align:left}
+.doc-item small{font-size:11px}
+.doc-group>.group-toggle{display:flex;justify-content:space-between;align-items:center}
+.doc-group>.group-toggle i{font-style:normal;opacity:.7}
+.nav-empty{color:var(--muted);padding:10px;font-size:13px}
+.toc-item.current{color:var(--text);background:var(--panel3);box-shadow:inset 2px 0 var(--accent)}
+.tk-kw{color:#c792ea}.tk-str{color:#c3e88d}.tk-com{color:#7f8ea3;font-style:italic}.tk-num{color:#f78c6c}.tk-fn{color:#82aaff}.tk-bi{color:#ffcb6b}.tk-key{color:#89ddff}.tk-var{color:#f07178}
+a.brand{color:inherit;text-decoration:none}
+.drawer-nav{display:none}
+.search-count{color:var(--muted);font-size:13px;margin-top:14px}
+.notes-list{display:grid;gap:9px;margin-bottom:26px}.notes-list .prog-row p{margin:6px 0 0;color:var(--muted);font-size:12px;white-space:pre-line;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.progress-page h2{font-size:18px;margin:28px 0 10px}
 button:disabled{opacity:.45;cursor:default}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(min-width:1181px){body:not([data-mode=reader]) .shell{grid-template-columns:285px minmax(0,1fr)}}
+body:not([data-mode=reader]) .right{display:none}
 @media(max-width:1180px){body[data-mode=reader] .right{display:block;grid-column:2;position:static;height:auto;border-left:0;border-top:1px solid var(--line);padding:22px 28px}}
-@media(max-width:820px){body[data-mode=reader] .right{padding:22px 15px}.reader-foot{grid-template-columns:1fr}.reader-foot .next{grid-column:1}}
+@media(max-width:820px){body[data-mode=reader] .right{padding:22px 15px}.reader-foot{grid-template-columns:1fr}.reader-foot .next{grid-column:1}.drawer-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.drawer-nav .navbtn{border-color:var(--line)}.left{overflow:auto}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
-    <button id="mobileMenu" class="iconbtn mobile-side" aria-label="Содержание">☰</button>
-    <div class="brand"><div class="logo">Py</div><div><strong>Python Academy</strong><small>полный учебник · GitHub sync</small></div></div>
-    <nav class="topnav">
-      <button class="navbtn active" data-view="home">Главная</button>
-      <button class="navbtn" data-view="book">Учебник</button>
-      <button class="navbtn" data-view="prompts">Промпты</button>
-      <button class="navbtn" data-view="templates">Starter-проекты</button>
-      <button class="navbtn" data-view="extras">Доп. файлы</button>
-      <button class="navbtn" data-view="search">Поиск</button>
-      <button class="navbtn" data-view="progress">Прогресс</button>
+    <button id="mobileMenu" class="iconbtn mobile-side" type="button" aria-label="Меню" aria-controls="leftSide" aria-expanded="false">☰</button>
+    <a id="brandLink" class="brand" href="#home"><div class="logo">Py</div><div><strong>Python Academy</strong><small>полный учебник · GitHub sync</small></div></a>
+    <nav class="topnav" aria-label="Разделы">
+      <button class="navbtn active" type="button" data-view="home">Главная</button>
+      <button class="navbtn" type="button" data-view="book">Учебник</button>
+      <button class="navbtn" type="button" data-view="prompts">Промпты</button>
+      <button class="navbtn" type="button" data-view="templates">Starter-проекты</button>
+      <button class="navbtn" type="button" data-view="extras">Доп. файлы</button>
+      <button class="navbtn" type="button" data-view="search">Поиск</button>
+      <button class="navbtn" type="button" data-view="progress">Прогресс</button>
     </nav>
-    <button id="syncBtn" class="ghost" title="Скачать только изменённые файлы"><span id="syncDot" class="status-dot"></span><span id="syncLabel">Синхронизация</span></button>
-    <button id="themeBtn" class="iconbtn" title="Тема" aria-label="Сменить тему">◐</button>
+    <button id="syncBtn" class="ghost" type="button" title="Скачать только изменённые файлы"><span id="syncDot" class="status-dot"></span><span id="syncLabel">Синхронизация</span></button>
+    <button id="themeBtn" class="iconbtn" type="button" title="Тема" aria-label="Сменить тему">◐</button>
   </header>
 
   <div class="shell">
     <aside id="leftSide" class="left">
-      <input id="sideSearch" class="side-search" placeholder="Фильтр содержания…">
+      <nav class="drawer-nav" aria-label="Разделы">
+        <button class="navbtn" type="button" data-view="home">Главная</button>
+        <button class="navbtn" type="button" data-view="book">Учебник</button>
+        <button class="navbtn" type="button" data-view="prompts">Промпты</button>
+        <button class="navbtn" type="button" data-view="templates">Starter</button>
+        <button class="navbtn" type="button" data-view="extras">Доп. файлы</button>
+        <button class="navbtn" type="button" data-view="search">Поиск</button>
+        <button class="navbtn" type="button" data-view="progress">Прогресс</button>
+      </nav>
+      <input id="sideSearch" class="side-search" type="search" placeholder="Фильтр содержания…" aria-label="Фильтр содержания">
       <div id="leftNav"></div>
     </aside>
 
-    <main class="main">
+    <main id="main" class="main">
       <section id="homeView" class="home"></section>
       <section id="readerView" class="hidden">
         <div id="readerHead" class="reader-head"></div>
         <article id="article" class="article"></article>
-        <nav id="readerFoot" class="reader-foot"></nav>
+        <nav id="readerFoot" class="reader-foot" aria-label="Соседние главы"></nav>
       </section>
       <section id="searchView" class="search-panel hidden">
         <div class="eyebrow">ПОЛНОТЕКСТОВЫЙ ПОИСК</div>
         <h1>Поиск по всему учебнику</h1>
-        <input id="bigSearch" class="big-search" placeholder="Например: asyncio, FastAPI, pytest, Docker…  (клавиша / — открыть поиск)">
+        <input id="bigSearch" class="big-search" type="search" placeholder="Например: asyncio, FastAPI, pytest, Docker…  (/ — поиск, Enter — первый результат)" aria-label="Поиск по учебнику">
+        <div id="searchCount" class="search-count"></div>
         <div id="searchResults" class="search-results"></div>
       </section>
       <section id="progressView" class="progress-page hidden"></section>
     </main>
 
-    <aside class="right">
+    <aside id="rightSide" class="right">
       <div class="side-title">ОГЛАВЛЕНИЕ ГЛАВЫ</div>
       <div id="toc"></div>
       <div class="side-title" style="margin-top:22px">МОИ ЗАМЕТКИ</div>
-      <textarea id="noteBox" class="note-box" placeholder="Заметки по текущей главе…"></textarea>
+      <textarea id="noteBox" class="note-box" placeholder="Заметки по текущей главе…" aria-label="Заметки по текущей главе"></textarea>
       <div class="note-help">Сохраняются автоматически в этом браузере.</div>
-      <button id="bookmarkBtn" class="ghost" style="width:100%">☆ Добавить в закладки</button>
+      <button id="bookmarkBtn" class="ghost" type="button" style="width:100%">☆ Добавить в закладки</button>
       <div class="side-title" style="margin-top:22px">ИСТОЧНИК</div>
       <a id="sourceLink" target="_blank" rel="noopener noreferrer" style="font-size:12px">Открыть файл на GitHub ↗</a>
     </aside>
   </div>
 </div>
 
-<div id="syncOverlay" class="sync-overlay hidden">
+<div id="syncOverlay" class="sync-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="syncTitle">
   <div class="sync-card">
     <div class="eyebrow">СИНХРОНИЗАЦИЯ УЧЕБНИКА</div>
-    <h2>Загружаю материалы с GitHub</h2>
+    <h2 id="syncTitle">Загружаю материалы с GitHub</h2>
     <p>Все учебные Markdown-файлы и текстовые файлы starter-проектов будут сохранены локально в браузере. При следующих обновлениях скачиваются только изменённые файлы.</p>
     <div class="sync-progress"><i id="syncBar"></i></div>
     <div id="syncText">Подготовка…</div>
     <div id="syncLog" class="sync-log"></div>
-    <div id="syncActions" class="hero-actions hidden"><button id="syncRetry" class="primary">Повторить</button><button id="syncClose" class="ghost">Закрыть</button></div>
+    <div id="syncActions" class="hero-actions hidden"><button id="syncRetry" class="primary" type="button">Повторить</button><button id="syncClose" class="ghost" type="button">Закрыть</button></div>
   </div>
 </div>
 
 <script>
-const REPO="justxor/pythonroamap2026", BRANCH="main";
-const RAW=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
+"use strict";
+const REPO="justxor/pythonroamap2026",BRANCH="main";
+const API=`https://api.github.com/repos/${REPO}`;
 const GITHUB=`https://github.com/${REPO}/blob/${BRANCH}/`;
-const TREE_URL=`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`;
-const DB_NAME="python-academy-full-v3", DB_VERSION=1;
-const FILE_STORE="files", META_STORE="meta";
-const $=s=>document.querySelector(s);
+const encPath=p=>p.split("/").map(encodeURIComponent).join("/");
+const rawUrl=(ref,path)=>`https://raw.githubusercontent.com/${REPO}/${ref}/${encPath(path)}`;
+const DB_NAME="python-academy-full-v3",DB_VERSION=1,FILE_STORE="files",META_STORE="meta";
+const CHECK_EVERY=6*3600e3,KEYS_VERSION="2",EXPORT_VERSION=4;
+/* Ссылки на элементы берутся один раз, до вставки учебника: id из текста (например, заголовок «Toc») не перехватит интерфейс. */
+const E=Object.fromEntries([...document.querySelectorAll("[id]")].map(el=>[el.id,el]));
 
 const stageMeta=[
  ["00","Окружение 2026","uv, Ruff, Pyright, pytest и современное рабочее окружение."],
@@ -187,6 +219,7 @@ const stageMeta=[
  ["16","Machine Learning","sklearn, boosting, PyTorch, HF и MLOps."],
  ["17","LLM-приложения","RAG, агенты, LangGraph, MCP, eval и guardrails."]
 ];
+const STAGE_FILES={"00":"environment","01":"basics","02":"idiomatic","03":"oop","04":"typing","05":"stdlib","06":"async","07":"testing","08":"cpython","09":"web","10":"databases","11":"data-ml","12":"devops","13":"architecture","14":"vibecoding","15":"parsing","16":"ml","17":"llm-apps"};
 
 const supplemental=[
  {name:"Exercism Python",desc:"Concept + practice exercises и тесты для закрепления Python.",url:"https://github.com/exercism/python",tag:"Практика"},
@@ -197,28 +230,35 @@ const supplemental=[
  {name:"Learn Python",desc:"Playground/cheatsheet с небольшими проверяемыми примерами кода.",url:"https://github.com/trekhleb/learn-python",tag:"Справочник"}
 ];
 
-/* localStorage может быть недоступен или испорчен — приложение не должно из-за этого падать. */
-function load(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v&&typeof v==="object"?v:fallback}catch{return fallback}}
-function store(key,val){try{localStorage.setItem(key,typeof val==="string"?val:JSON.stringify(val))}catch{}}
+/* ---------- Хранение: localStorage может быть недоступен или испорчен — приложение не должно падать ---------- */
+const isObj=v=>v!==null&&typeof v==="object"&&!Array.isArray(v);
+function loadJson(key){try{return JSON.parse(localStorage.getItem(key))}catch{return null}}
+const loadObj=key=>{const v=loadJson(key);return isObj(v)?v:{}};
+const loadList=key=>{const v=loadJson(key);return Array.isArray(v)?v.filter(x=>typeof x==="string"):[]};
 function loadRaw(key){try{return localStorage.getItem(key)}catch{return null}}
+function store(key,val){try{localStorage.setItem(key,typeof val==="string"?val:JSON.stringify(val))}catch{}}
 
-const state={files:[],fileMap:new Map(),docs:new Map(),currentPath:null,currentView:"home",
- bookmarks:load("pa-bookmarks",[]),progress:load("pa-progress",{}),notes:load("pa-notes",{}),meta:null};
-if(!Array.isArray(state.bookmarks))state.bookmarks=[];
+const state={files:[],fileMap:new Map(),docs:new Map(),currentPath:null,rendered:null,currentView:"home",meta:null,persistent:true,syncing:null,spyId:null,
+ bookmarks:loadList("pa-bookmarks"),progress:loadObj("pa-progress"),notes:loadObj("pa-notes"),positions:loadObj("pa-pos"),collapsed:new Set(loadList("pa-collapsed"))};
 
 const VIEW_FOR={"Учебник":"book","Промпты":"prompts","Starter-проекты":"templates","Дополнительно":"extras"};
 const CATEGORY_FOR=Object.fromEntries(Object.entries(VIEW_FOR).map(([c,v])=>[v,c]));
+const VIEWS=["home","book","prompts","templates","extras","search","progress"];
 
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function unesc(s){return s.replace(/&(amp|lt|gt|quot|#39);/g,(m,c)=>({amp:"&",lt:"<",gt:">",quot:'"',"#39":"'"}[c]))}
+function safeDecode(s=""){try{return decodeURIComponent(s)}catch{return s}}
+function plural(n,one,few,many){const a=Math.abs(n)%100,b=a%10;return `${n} ${a>10&&a<20?many:b===1?one:b>1&&b<5?few:many}`}
+/* Прежняя схема ключей прогресса — нужна только для переноса старых отметок. */
 function slug(s){return s.toLowerCase().replace(/<[^>]+>/g,"").replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-|-$/g,"").slice(0,80)||"section"}
-/* Якоря как на GitHub — чтобы работали ссылки вида [раздел](#мой-раздел) и file.md#раздел. */
-function githubSlug(s){return s.toLowerCase().trim().replace(/[^\p{L}\p{N}\s_-]/gu,"").replace(/\s/g,"-")}
-function plainHeading(s){return s.replace(/!?\[([^\]]*)\]\([^)]*\)/g,"$1").replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim()}
+/* Якоря ровно как на GitHub (github-slugger): работают ссылки [раздел](#мой-раздел) и file.md#раздел. */
+const githubSlug=s=>s.toLowerCase().trim().replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu,"").replace(/ /g,"-");
+function slugger(){const seen=new Map();return text=>{const base=githubSlug(text)||"section";let r=base;if(seen.has(r)){let n=seen.get(base);do{n++;r=`${base}-${n}`}while(seen.has(r));seen.set(base,n)}seen.set(r,0);return r}}
+const isMd=p=>/\.md$/i.test(p);
 function normalizePath(base,href){
-  if(!href||href.startsWith("#")||/^(https?:|mailto:|tel:)/i.test(href))return href;
   const dir=base.includes("/")?base.slice(0,base.lastIndexOf("/")+1):"";
   const u=new URL(href,"https://x.local/"+dir);
-  return decodeURIComponent(u.pathname.slice(1))+(u.hash||"");
+  return safeDecode(u.pathname.slice(1))+(u.hash?"#"+safeDecode(u.hash.slice(1)):"");
 }
 function splitAnchor(s){const i=s.indexOf("#");return i<0?[s,""]:[s.slice(0,i),s.slice(i+1)]}
 function isTextPath(p){
@@ -230,6 +270,8 @@ function titleFromPath(p){
   const f=p.split("/").pop().replace(/\.(md|py|toml|ya?ml|json|txt|ini|cfg|sh|sql)$/i,"");
   return f.replace(/^stage-(\d+)-/,"Этап $1 · ").replace(/[-_]/g," ").replace(/\b\w/g,m=>m.toUpperCase());
 }
+/* Код показываем путём внутри проекта: у всех шаблонов есть свои main.py и config.py. */
+function fileTitle(p){if(isMd(p))return titleFromPath(p);const t=p.match(/^templates\/[^/]+\/(.+)$/);return t?t[1]:p}
 function category(p){
   if(/^course\/stage-/.test(p)||["course/README.md","course/MAP.md","course/glossary.md","course/async-course.md","course/containers-course.md"].includes(p))return "Учебник";
   if(/^course\/prompts\//.test(p))return "Промпты";
@@ -237,22 +279,30 @@ function category(p){
   return "Дополнительно";
 }
 function stagePath(n){
-  const m={
-    "00":"stage-00-environment.md","01":"stage-01-basics.md","02":"stage-02-idiomatic.md","03":"stage-03-oop.md","04":"stage-04-typing.md",
-    "05":"stage-05-stdlib.md","06":"stage-06-async.md","07":"stage-07-testing.md","08":"stage-08-cpython.md","09":"stage-09-web.md",
-    "10":"stage-10-databases.md","11":"stage-11-data-ml.md","12":"stage-12-devops.md","13":"stage-13-architecture.md","14":"stage-14-vibecoding.md",
-    "15":"stage-15-parsing.md","16":"stage-16-ml.md","17":"stage-17-llm-apps.md"
-  }; return "course/"+m[n];
+  const exact=`course/stage-${n}-${STAGE_FILES[n]}.md`;
+  if(state.fileMap.has(exact)||!state.files.length)return exact;
+  return state.files.find(f=>f.path.startsWith(`course/stage-${n}-`))?.path||exact;
 }
-/* Один порядок везде: этапы по номеру, затем остальное по пути. Раньше «Далее» и «Продолжить» шли по алфавиту. */
+/* Один порядок везде: введение и карта, этапы по номеру, остальное по пути; README — первым в своей папке. */
+function rank(p){return p==="course/README.md"?0:p==="course/MAP.md"?1:/^course\/stage-\d+/.test(p)?2:3}
+function cmpPath(a,b){
+  const A=a.split("/"),B=b.split("/");
+  for(let i=0;i<Math.min(A.length,B.length);i++){
+    if(A[i]===B[i])continue;
+    const ra=i===A.length-1&&/^readme\.md$/i.test(A[i]),rb=i===B.length-1&&/^readme\.md$/i.test(B[i]);
+    if(ra!==rb)return ra?-1:1;
+    return A[i].localeCompare(B[i]);
+  }
+  return A.length-B.length;
+}
 function docOrder(a,b){
-  const ax=a.path.match(/stage-(\d+)/),bx=b.path.match(/stage-(\d+)/);
-  if(ax&&bx)return Number(ax[1])-Number(bx[1])||a.path.localeCompare(b.path);
-  if(ax)return -1;if(bx)return 1;return a.path.localeCompare(b.path);
+  const ra=rank(a.path),rb=rank(b.path);if(ra!==rb)return ra-rb;
+  if(ra===2){const d=Number(a.path.match(/stage-(\d+)/)[1])-Number(b.path.match(/stage-(\d+)/)[1]);if(d)return d}
+  return cmpPath(a.path,b.path);
 }
 function ordered(cat){return state.files.filter(f=>category(f.path)===cat).sort(docOrder)}
 
-/* ---------- IndexedDB: одно соединение на всё приложение ---------- */
+/* ---------- IndexedDB: одно соединение; если хранилище недоступно, учебник работает из памяти ---------- */
 let dbPromise=null;
 function openDB(){
  return dbPromise??=new Promise((res,rej)=>{
@@ -261,252 +311,460 @@ function openDB(){
   req.onsuccess=()=>res(req.result);req.onerror=()=>{dbPromise=null;rej(req.error)};
  });
 }
-async function tx(store,mode,fn){
- const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(store,mode);const r=fn(t.objectStore(store));t.oncomplete=()=>res(r?.result);t.onerror=()=>rej(t.error)});
+async function tx(storeName,mode,fn){
+ const db=await openDB();return new Promise((res,rej)=>{const t=db.transaction(storeName,mode);const r=fn(t.objectStore(storeName));t.oncomplete=()=>res(r?.result);t.onerror=t.onabort=()=>rej(t.error)});
 }
-const dbAll=store=>tx(store,"readonly",s=>s.getAll());
-const dbPut=(store,obj)=>tx(store,"readwrite",s=>{s.put(obj)});
-const dbDelete=(store,key)=>tx(store,"readwrite",s=>{s.delete(key)});
+const dbAll=s=>tx(s,"readonly",o=>o.getAll());
+const dbPut=(s,obj)=>tx(s,"readwrite",o=>{o.put(obj)});
+const dbDelete=(s,key)=>tx(s,"readwrite",o=>{o.delete(key)});
+async function persist(op){if(!state.persistent)return;try{await op()}catch(e){state.persistent=false;console.warn("IndexedDB недоступен",e)}}
+function saveMeta(m){state.meta=m;return persist(()=>dbPut(META_STORE,m))}
 
+function applyFiles(list){
+ state.files=[...list].sort((a,b)=>a.path.localeCompare(b.path));
+ state.fileMap=new Map(state.files.map(f=>[f.path,f]));state.docs.clear();
+ updateSyncUI();renderLeft();
+}
 async function loadCache(){
- const files=await dbAll(FILE_STORE);
- state.files=files.sort((a,b)=>a.path.localeCompare(b.path));state.fileMap=new Map(files.map(f=>[f.path,f]));state.docs.clear();
- const metas=await dbAll(META_STORE);state.meta=metas.find(x=>x.key==="repo")||null;updateSyncUI();renderLeft();
+ try{const [files,metas]=await Promise.all([dbAll(FILE_STORE),dbAll(META_STORE)]);state.meta=metas.find(x=>x.key==="repo")||null;applyFiles(files)}
+ catch(e){state.persistent=false;console.warn("IndexedDB недоступен",e);updateSyncUI()}
 }
 function updateSyncUI(){
- const dot=$("#syncDot"),lab=$("#syncLabel");
- if(state.files.length){dot.className="status-dot ok";lab.textContent=`${state.files.length} файлов`;}
- else{dot.className="status-dot";lab.textContent="Синхронизировать";}
+ const n=state.files.length,latest=loadRaw("pa-latest"),upd=n&&latest&&state.meta?.commit!==latest;
+ E.syncDot.className="status-dot"+(n&&!upd?" ok":"");
+ E.syncLabel.textContent=!n?"Синхронизировать":upd?"Есть обновление":plural(n,"файл","файла","файлов");
+ E.syncBtn.title=upd?"В репозитории курса появились изменения — нажми, чтобы скачать их":"Скачать только изменённые файлы";
 }
 
-async function syncRepo(){
- const overlay=$("#syncOverlay"),bar=$("#syncBar"),txt=$("#syncText"),log=$("#syncLog"),actions=$("#syncActions");
- overlay.classList.remove("hidden");actions.classList.add("hidden");bar.style.width="2%";txt.textContent="Получаю дерево репозитория…";log.textContent="";
+/* ---------- Синхронизация с GitHub ---------- */
+async function gh(url,accept){
+ const r=await fetch(url,{headers:{Accept:accept}});
+ if(r.status===403||r.status===429){
+   const reset=Number(r.headers.get("x-ratelimit-reset"));
+   throw new Error("GitHub временно ограничил запросы (60 в час без входа)."+(reset?` Лимит сбросится в ${new Date(reset*1000).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})}.`:" Попробуй позже."));
+ }
+ if(!r.ok)throw new Error(`GitHub API: ${r.status}`);
+ return r;
+}
+async function latestCommit(){
+ const sha=(await (await gh(`${API}/commits/${BRANCH}`,"application/vnd.github.sha")).text()).trim();
+ if(!/^[0-9a-f]{40}$/.test(sha))throw new Error("GitHub вернул неожиданный ответ.");
+ store("pa-latest",sha);store("pa-checked",String(Date.now()));return sha;
+}
+function syncRepo(){return state.syncing??=runSync().finally(()=>{state.syncing=null})}
+async function runSync(){
+ const {syncOverlay:overlay,syncBar:bar,syncText:txt,syncLog:log,syncActions:actions}=E;
+ const hide=ms=>setTimeout(()=>overlay.classList.add("hidden"),ms);
+ overlay.classList.remove("hidden");actions.classList.add("hidden");bar.style.width="2%";txt.textContent="Проверяю последнюю версию курса…";log.textContent="";
  try{
-  const tr=await fetch(TREE_URL,{headers:{"Accept":"application/vnd.github+json"}});
-  if(tr.status===403||tr.status===429)throw new Error("GitHub временно ограничил запросы (лимит 60 в час без входа). Попробуй позже.");
-  if(!tr.ok)throw new Error(`GitHub API: ${tr.status}`);
-  const tree=await tr.json();
+  const commit=await latestCommit();
+  if(state.files.length&&state.meta?.commit===commit&&!state.meta.failed){
+    await saveMeta({...state.meta,checkedAt:Date.now()});updateSyncUI();
+    txt.textContent="Учебник уже актуален.";bar.style.width="100%";hide(700);return;
+  }
+  txt.textContent="Получаю список файлов…";
+  const tree=await (await gh(`${API}/git/trees/${commit}?recursive=1`,"application/vnd.github+json")).json();
+  if(!Array.isArray(tree.tree))throw new Error("GitHub вернул неожиданный ответ.");
   const blobs=tree.tree.filter(x=>x.type==="blob"&&isTextPath(x.path)&&x.size<400000);
   const wanted=new Set(blobs.map(x=>x.path));
-  // Скачиваем только новые и изменённые файлы: sha блоба на GitHub меняется вместе с содержимым.
+  // Скачиваем только новые и изменённые файлы: sha блоба меняется вместе с содержимым.
   const changed=blobs.filter(x=>state.fileMap.get(x.path)?.sha!==x.sha);
-  const stale=state.files.filter(f=>!wanted.has(f.path));
-  if(!changed.length&&!stale.length){
-    txt.textContent="Учебник уже актуален.";bar.style.width="100%";
-    await dbPut(META_STORE,{...state.meta,key:"repo",sha:tree.sha,syncedAt:Date.now(),count:blobs.length,failed:0});await loadCache();
-    setTimeout(()=>overlay.classList.add("hidden"),700);refreshCurrent();return;
-  }
-  // Не очищаем рабочий кэш заранее: при обрыве сети старая полная копия должна остаться доступной.
-  let done=0,failed=0;const queue=[...changed];
+  // Если GitHub обрезал дерево (truncated), список неполный — «лишние» файлы удалять нельзя.
+  const stale=tree.truncated?[]:state.files.filter(f=>!wanted.has(f.path));
+  const next=new Map(state.fileMap),queue=[...changed];let done=0,failed=0;
   async function worker(){
     while(queue.length){
       const it=queue.shift();
       try{
-        const r=await fetch(RAW+it.path.split("/").map(encodeURIComponent).join("/"));
-        if(!r.ok)throw new Error(String(r.status));
-        const text=await r.text();
-        await dbPut(FILE_STORE,{path:it.path,text,sha:it.sha,size:it.size,syncedAt:Date.now(),category:category(it.path)});
-      }catch(e){failed++;log.textContent+=`\nОшибка: ${it.path}`;}
-      done++;bar.style.width=`${Math.max(3,Math.round(done/changed.length*100))}%`;txt.textContent=`Загружено ${done} из ${changed.length} изменённых файлов`;
+        // Файлы берутся по конкретному коммиту: кэш CDN не подсунет старый текст под новым sha.
+        const r=await fetch(rawUrl(commit,it.path));if(!r.ok)throw new Error(String(r.status));
+        const rec={path:it.path,text:await r.text(),sha:it.sha,size:it.size,syncedAt:Date.now()};
+        next.set(it.path,rec);await persist(()=>dbPut(FILE_STORE,rec));
+      }catch{failed++;log.textContent+=`\nНе загрузился: ${it.path}`}
+      done++;bar.style.width=`${Math.max(3,Math.round(done/changed.length*100))}%`;
+      txt.textContent=`Загружено ${done} из ${plural(changed.length,"изменённого файла","изменённых файлов","изменённых файлов")}`;
     }
   }
-  await Promise.all(Array.from({length:6},worker));
-  // Удаляем устаревшие файлы только после полностью успешной загрузки новой версии.
-  if(failed===0)for(const old of stale)await dbDelete(FILE_STORE,old.path);
-  await dbPut(META_STORE,{key:"repo",sha:tree.sha,syncedAt:Date.now(),count:blobs.length,failed});
-  await loadCache();
-  txt.textContent=failed?`Готово. ${failed} файлов не удалось загрузить — они скачаются при следующем обновлении.`:`Готово. Обновлено файлов: ${changed.length}.`;
-  bar.style.width="100%";
-  setTimeout(()=>overlay.classList.add("hidden"),failed?3000:1100);
+  await Promise.all(Array.from({length:Math.min(6,changed.length)},worker));
+  // Старые файлы удаляются только после полностью успешной загрузки: при обрыве сети остаётся рабочая копия.
+  if(!failed)for(const old of stale){next.delete(old.path);await persist(()=>dbDelete(FILE_STORE,old.path))}
+  await saveMeta({key:"repo",commit,tree:tree.sha,syncedAt:Date.now(),checkedAt:Date.now(),count:blobs.length,failed});
+  applyFiles(next.values());ensureMigrated();
+  txt.textContent=failed?`Готово, но ${plural(failed,"файл не загрузился","файла не загрузились","файлов не загрузились")} — они докачаются при следующем обновлении.`
+    :changed.length||stale.length?`Готово. Обновлено: ${changed.length}${stale.length?`, удалено: ${stale.length}`:""}.`:"Учебник уже актуален.";
+  if(!state.persistent)log.textContent+="\nХранилище браузера недоступно: учебник открыт, но после закрытия вкладки его придётся скачать снова.";
+  bar.style.width="100%";hide(failed||!state.persistent?4000:1100);
   refreshCurrent();
  }catch(e){
   txt.textContent="Синхронизация не удалась";
-  log.textContent=`${e.message}\n${state.files.length?"Учебник продолжит работать из локальной копии.":"Проверь подключение к интернету. Если браузер блокирует запросы из file://, запусти: python -m http.server 8000"}`;
+  log.textContent=`${e.message||e}\n${state.files.length?"Учебник продолжит работать из локальной копии.":"Проверь подключение к интернету. Если браузер блокирует запросы из file://, запусти: python -m http.server 8000"}`;
   bar.style.width="100%";
-  if(state.files.length)setTimeout(()=>overlay.classList.add("hidden"),3500);
-  else actions.classList.remove("hidden");
+  if(state.files.length)hide(4000);else actions.classList.remove("hidden");
  }
 }
+/* Тихая проверка раз в 6 часов: одна лёгкая заявка к API, без скачивания. */
+async function checkUpdates(){
+ if(!state.files.length||navigator.onLine===false)return;
+ if(Date.now()-(Number(loadRaw("pa-checked"))||0)<CHECK_EVERY)return;
+ store("pa-checked",String(Date.now())); // даже при ошибке не повторяем чаще, чем раз в 6 часов
+ try{await latestCommit();updateSyncUI()}catch{}
+}
 function refreshCurrent(){
- if(state.currentPath&&state.fileMap.has(state.currentPath)&&!$("#readerView").classList.contains("hidden"))openDoc(state.currentPath,{push:false,force:true});
- else if(state.currentView==="home")renderHome();
- else if(state.currentView==="progress")renderProgressPage();
+ if(state.currentPath&&!state.fileMap.has(state.currentPath)){state.currentPath=null;state.rendered=null}
+ const v=state.currentView;
+ if(CATEGORY_FOR[v]){if(state.currentPath)openDoc(state.currentPath,{push:false,keepScroll:true});else setView(v,{push:false})}
+ else if(v==="home")renderHome();
+ else if(v==="progress")renderProgressPage();
+ else if(v==="search")runSearch(E.bigSearch.value);
 }
 
 /* ---------- Разбор документа (кэшируется до следующей синхронизации) ---------- */
-const FENCE=/^\s{0,3}(`{3,}|~{3,})\s*([\w+#.-]*)/;
+const FENCE=/^ {0,3}(`{3,}|~{3,})\s*([^`\s]*)/;
+const HEADING=/^(#{1,6})\s+(.+)$/;
+const HR=/^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$/;
+const LIST=/^([ \t]*)([-*+]|\d{1,9}[.)])([ \t]+)(.*)$/;
+const SEP=/^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/;
+function closesFence(line,open){const m=line.match(FENCE);return !!m&&m[1][0]===open[0]&&m[1].length>=open.length&&!line.trim().slice(m[1].length).trim()}
+const headingSource=raw=>raw.replace(/\s+#+\s*$/,"");
+/* Текст заголовка ровно таким, каким он виден на странице, — из него строится якорь. */
+const headingPlain=raw=>unesc(inlineMd(headingSource(raw)).replace(/<[^>]+>/g,"")).trim();
 function doc(path){
  let d=state.docs.get(path);if(d)return d;
  const f=state.fileMap.get(path);if(!f)return null;
- const lines=f.text.replace(/\r/g,"").split("\n"),headings=[],seen=new Map();let fence=null,sec=0;
- lines.forEach((line,n)=>{
-   const fm=line.match(FENCE);
-   if(fence){if(fm&&fm[1][0]===fence[0]&&fm[1].length>=fence.length&&!line.trim().slice(fm[1].length).trim())fence=null;return}
-   if(fm){fence=fm[1];return}
-   const m=line.match(/^(#{1,6})\s+(.+)$/);if(!m)return;
-   const level=m[1].length,title=plainHeading(m[2]),base=githubSlug(title),k=seen.get(base)||0;seen.set(base,k+1);
-   const h={level,title,line:n,anchor:k?`${base}-${k}`:base};
-   // Ключ прогресса сохранён в прежнем формате, чтобы старые отметки не потерялись.
-   if(level===2||level===3)h.key=path+"#"+slug(m[2].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim())+"-"+(++sec);
+ const text=f.text.replace(/\r/g,""),headings=[];
+ if(isMd(path)){ // у кода «# комментарий» — не заголовок: раньше у Dockerfile появлялись разделы, которые нельзя отметить
+  const nextSlug=slugger();let fence=null,sec=0,raw=0;
+  text.split("\n").forEach((line,n)=>{
+   const hm=line.match(HEADING),h23=!!hm&&hm[1].length>=2&&hm[1].length<=3;
+   if(h23)raw++; // старая версия считала и строки внутри блоков кода
+   if(fence){if(closesFence(line,fence))fence=null;return}
+   const fm=line.match(FENCE);if(fm){fence=fm[1];return}
+   if(!hm)return;
+   const title=headingPlain(hm[2]),h={level:hm[1].length,title,line:n,anchor:nextSlug(title)};
+   if(h23){
+     const old=slug(hm[2].replace(/[*_`]/g,"").replace(/<[^>]+>/g,"").trim());
+     h.key=`${path}#${h.anchor}`;h.legacy=[`${path}#${old}-${++sec}`,`${path}#${old}-${raw}`];
+   }
    headings.push(h);
- });
- const m=f.text.match(/^#\s+(.+)$/m);
- d={title:m?plainHeading(m[1]):titleFromPath(path),headings,sections:headings.filter(h=>h.key),lower:(path+"\n"+f.text).toLowerCase()};
+  });
+ }
+ const words=text.split(/\s+/).filter(Boolean).length;
+ d={title:headings.find(h=>h.level===1)?.title||fileTitle(path),headings,sections:headings.filter(h=>h.key),
+    lower:(path+"\n"+text).toLowerCase(),minutes:Math.max(1,Math.round(words/170)),lines:text.split("\n").length};
  state.docs.set(path,d);return d;
 }
-const extractTitle=path=>doc(path)?.title||titleFromPath(path);
+const extractTitle=path=>doc(path)?.title||fileTitle(path);
 function fileProgress(path){
  const d=doc(path);if(!d)return 0;
  if(!d.sections.length)return state.progress[path]?100:0;
  return Math.round(d.sections.filter(s=>state.progress[s.key]).length/d.sections.length*100);
 }
-function saveProgress(){store("pa-progress",state.progress);renderLeft();}
+/* Старые ключи «slug-N» съезжали, когда автор добавлял раздел выше. Новые — по якорю; перенос выполняется один раз. */
+function migrateProgress(progress){
+ const add=[],drop=new Set();
+ for(const f of state.files)for(const s of doc(f.path)?.sections||[]){const hit=s.legacy.filter(k=>progress[k]);if(hit.length){add.push(s.key);hit.forEach(k=>drop.add(k))}}
+ drop.forEach(k=>delete progress[k]);add.forEach(k=>{progress[k]=true});
+ return add.length;
+}
+function ensureMigrated(){
+ if(!state.files.length||loadRaw("pa-keys")===KEYS_VERSION)return;
+ if(migrateProgress(state.progress))store("pa-progress",state.progress);
+ store("pa-keys",KEYS_VERSION);
+}
+function saveProgress(){store("pa-progress",state.progress);renderLeft()}
 function saveNotes(){store("pa-notes",state.notes)}
 function saveBookmarks(){store("pa-bookmarks",state.bookmarks)}
 
-/* ---------- Markdown ---------- */
-function inlineMd(s){
- // Код вырезается до разметки, иначе __init__ и **kwargs внутри `кода` превращались в жирный текст.
- const codes=[];
- let x=esc(s.replace(/(`+)([^`]|[^`].*?[^`])\1(?!`)/g,(m,t,c)=>{codes.push(c.trim());return `\u0000${codes.length-1}\u0000`}));
- x=x.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;[^)]*&quot;)?\)/g,'<img alt="$1" src="$2">');
- x=x.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+&quot;[^)]*&quot;)?\)/g,'<a href="$2">$1</a>');
- x=x.replace(/(^|[\s(])(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g,'$1<a href="$2">$2</a>');
- x=x.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
- x=x.replace(/(^|\W)__([^_]+)__(?!\w)/g,"$1<strong>$2</strong>");
- x=x.replace(/(^|[\s(])\*([^*\n]+)\*/g,"$1<em>$2</em>");
- x=x.replace(/~~([^~]+)~~/g,"<del>$1</del>");
- return x.replace(/\u0000(\d+)\u0000/g,(m,i)=>`<code>${esc(codes[i])}</code>`);
+/* ---------- Markdown (GitHub-совместимое подмножество) ---------- */
+const PUNCT=/[!-\/:-@\[-`{-~]/;
+const ENTITY=/^&(?:#\d{1,7}|#x[\da-f]{1,6}|[a-z][a-z\d]{1,31});/i;
+/* Строчный HTML, как на GitHub (например <kbd>, <b><code>…</code></b>); опасное вырежет setSafeHtml. */
+const INLINE_TAG=/^<\/?([a-z][\w-]*)(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*\s*\/?>/i;
+const INLINE_OK=new Set("a abbr b br code del em i img ins kbd mark q s samp small span strong sub sup u var wbr".split(" "));
+const URL_CH="(?:(?!&(?:quot|#39|lt|gt);)[^\\s<\\u0000])",URL_END="(?:(?!&(?:quot|#39|lt|gt);)[^\\s<\\u0000.,;:!?)])";
+const LINK_DEST="((?:[^()\\s]|\\([^()\\s]*\\))+)(?:\\s+&quot;[^&]*&quot;)?";
+const IMG_RE=new RegExp(`!\\[([^\\]]*)\\]\\(${LINK_DEST}\\)`,"g");
+const LINK_RE=new RegExp(`\\[([^\\]]+)\\]\\(${LINK_DEST}\\)`,"g");
+const BARE_URL_RE=new RegExp(`(^|[\\s(])(https?:\\/\\/${URL_CH}*${URL_END})`,"g");
+function emph(x){
+ return x
+  .replace(/\*\*(?=\S)([\s\S]*?\S)\*\*/g,"<strong>$1</strong>")
+  .replace(/(^|[^\w])__(?=\S)([\s\S]*?\S)__(?!\w)/g,"$1<strong>$2</strong>")
+  .replace(/(^|[^\w*])\*(?=[^\s*])([^*]*?[^\s*])\*(?![\w*])/g,"$1<em>$2</em>")
+  .replace(/(^|[^\w])_(?=[^\s_])([^_]*?[^\s_])_(?!\w)/g,"$1<em>$2</em>")
+  .replace(/~~(?=\S)([\s\S]*?\S)~~/g,"<del>$1</del>");
 }
-const LIST=/^(\s*)([-*+]|\d+[.)])\s+(.*)$/;
-function renderList(items){
- let html="";const stack=[];
- for(const it of items){
-   while(stack.length&&it.indent<stack.at(-1).indent)html+=`</li></${stack.pop().tag}>`;
-   const top=stack.at(-1);
-   if(!top||it.indent>top.indent){const tag=it.ordered?"ol":"ul";stack.push({indent:it.indent,tag});html+=`<${tag}>`}
-   else html+="</li>";
-   const task=it.text.match(/^\[([ xX])\]\s*(.*)$/);
-   html+=`<li>${task?`<span class="task">${task[1]===" "?"☐":"☑"}</span>${inlineMd(task[2])}`:inlineMd(it.text)}`;
+function inlineMd(src){
+ const keep=[],put=h=>`\u0000${keep.push(h)-1}\u0000`;let s="";
+ // Код и экранирование разбираются первыми: __init__ и **kwargs внутри `кода` остаются как есть, \` — обычный символ.
+ for(let i=0;i<src.length;){
+  const c=src[i];
+  if(c==="\\"&&PUNCT.test(src[i+1]||"")){s+=put(esc(src[i+1]));i+=2;continue}
+  if(c==="&"){const m=src.slice(i).match(ENTITY);if(m){s+=put(m[0]);i+=m[0].length;continue}}
+  if(c==="<"){const m=src.slice(i).match(INLINE_TAG);if(m&&INLINE_OK.has(m[1].toLowerCase())){s+=put(m[0]);i+=m[0].length;continue}}
+  if(c==="`"){
+    let j=i;while(src[j]==="`")j++;const n=j-i;let k=j,close=-1;
+    while((k=src.indexOf("`",k))>=0){let e=k;while(src[e]==="`")e++;if(e-k===n){close=k;break}k=e}
+    if(close>=0){let code=src.slice(j,close);if(/^ [\s\S]*\S[\s\S]* $/.test(code))code=code.slice(1,-1);s+=put(`<code>${esc(code)}</code>`);i=close+n;continue}
+    s+=src.slice(i,j);i=j;continue;
+  }
+  s+=c;i++;
  }
- while(stack.length)html+=`</li></${stack.pop().tag}>`;
- return html;
+ let x=esc(s);
+ x=x.replace(IMG_RE,(m,alt,u)=>put(`<img alt="${alt}" src="${u}">`));
+ x=x.replace(LINK_RE,(m,t,u)=>put(`<a href="${u}">${emph(t)}</a>`));
+ x=x.replace(/&lt;(https?:\/\/[^\s<>&]+)&gt;/g,(m,u)=>put(`<a href="${u}">${u}</a>`));
+ x=x.replace(BARE_URL_RE,(m,p,u)=>p+put(`<a href="${u}">${u}</a>`));
+ x=emph(x).replace(/\u0001/g,"<br>");
+ for(let guard=0;guard<8&&x.includes("\u0000");guard++)x=x.replace(/\u0000(\d+)\u0000/g,(m,i)=>keep[i]);
+ return x;
 }
-const cells=r=>r.trim().replace(/^\|/,"").replace(/(?<!\\)\|$/,"").split(/(?<!\\)\|/).map(x=>x.trim().replace(/\\\|/g,"|"));
-function markdownToHtml(md,path){
- const lines=md.replace(/\r/g,"").split("\n"),out=[],hmap=new Map(doc(path).headings.map(h=>[h.line,h]));let i=0;
- const special=l=>/^(#{1,6})\s|^>|^\s*\|/.test(l)||FENCE.test(l)||LIST.test(l)||/^\s*(---+|\*\*\*+|___+)\s*$/.test(l);
+const width=ws=>ws.replace(/\t/g,"    ").length;
+const indentOf=l=>width(l.match(/^[ \t]*/)[0]);
+function dedent(line,n){const w=indentOf(line);return " ".repeat(Math.max(0,w-n))+line.replace(/^[ \t]*/,"")}
+function interrupts(l){
+ if(HEADING.test(l)||FENCE.test(l)||/^ {0,3}>/.test(l)||HR.test(l))return true;
+ const m=l.match(LIST);return !!m&&width(m[1])<4&&m[4].trim()!==""&&(!/\d/.test(m[2])||/^1[.)]$/.test(m[2]));
+}
+const isTableStart=(lines,i)=>lines[i].includes("|")&&i+1<lines.length&&lines[i+1].includes("|")&&SEP.test(lines[i+1]);
+const isHtmlLine=l=>/^\s*<\/?[a-z][\w-]*(\s[^>]*)?\/?>/i.test(l)&&l.trim().endsWith(">");
+function cells(r){return r.trim().replace(/^\|/,"").replace(/(?<!\\)\|$/,"").split(/(?<!\\)\|/).map(x=>x.trim().replace(/\\\|/g,"|"))}
+function renderList(lines,i){
+ const first=lines[i].match(LIST),ordered=/\d/.test(first[2]),start=ordered?parseInt(first[2],10):1,items=[];let loose=false;
  while(i<lines.length){
-  const l=lines[i],fm=l.match(FENCE);
-  if(fm){
-    const buf=[];i++;
-    while(i<lines.length){const cm=lines[i].match(FENCE);if(cm&&cm[1][0]===fm[1][0]&&cm[1].length>=fm[1].length&&!lines[i].trim().slice(cm[1].length).trim())break;buf.push(lines[i++])}
-    i++;out.push(`<div class="code-wrap"><button class="copy-code">Копировать</button><pre><code data-lang="${esc(fm[2])}">${esc(buf.join("\n"))}</code></pre></div>`);continue;
+  const m=lines[i].match(LIST);
+  if(!m||/\d/.test(m[2])!==ordered||width(m[1])>=4)break;
+  const pad=width(m[3]),ci=width(m[1])+m[2].length+(pad>4?1:pad);
+  const body=[pad>4?" ".repeat(pad-1)+m[4]:m[4]];i++;
+  let fence=body[0].match(FENCE)?.[1]||null;
+  const track=l=>{if(fence){if(closesFence(l,fence))fence=null}else{const fm=l.match(FENCE);if(fm)fence=fm[1]}};
+  while(i<lines.length){
+   const ln=lines[i];
+   if(fence){const l2=dedent(ln,ci);body.push(l2);track(l2);i++;continue}
+   if(!ln.trim()){
+     let j=i;while(j<lines.length&&!lines[j].trim())j++;
+     if(j<lines.length&&indentOf(lines[j])>=ci){for(;i<j;i++)body.push("");continue}
+     break;
+   }
+   // Вложенные блоки — код, списки, цитаты — остаются внутри пункта: нумерация после блока кода не сбрасывается.
+   if(indentOf(ln)>=ci){const l2=dedent(ln,ci);body.push(l2);track(l2);i++;continue}
+   if(body.at(-1).trim()&&!interrupts(ln)&&!LIST.test(ln)&&!isTableStart(lines,i)){body.push(ln.trim());i++;continue} // ленивое продолжение абзаца
+   break;
   }
-  const h=l.match(/^(#{1,6})\s+(.+)$/);
-  if(h){const info=hmap.get(i)||{},lv=h[1].length;const chk=info.key?` <button class="section-check" data-section="${esc(info.key)}" title="Отметить раздел пройденным">✓</button>`:"";out.push(`<h${lv} id="${esc(info.anchor||githubSlug(plainHeading(h[2])))}">${inlineMd(h[2])}${chk}</h${lv}>`);i++;continue}
-  if(/^\s*(---+|\*\*\*+|___+)\s*$/.test(l)){out.push("<hr>");i++;continue}
-  if(l.startsWith(">")){const b=[];while(i<lines.length&&lines[i].startsWith(">"))b.push(lines[i++].replace(/^>\s?/,""));out.push(`<blockquote>${b.map(inlineMd).join("<br>")}</blockquote>`);continue}
-  if(LIST.test(l)){
-    const items=[];
-    while(i<lines.length){
-      const m=lines[i].match(LIST);
-      if(m){items.push({indent:m[1].replace(/\t/g,"    ").length,ordered:/\d/.test(m[2]),text:m[3]});i++;continue}
-      if(lines[i].trim()&&/^\s+/.test(lines[i])&&!FENCE.test(lines[i])){items.at(-1).text+=" "+lines[i].trim();i++;continue}
-      break;
-    }
-    out.push(renderList(items));continue;
+  const task=body[0].match(/^\[([ xX])\]\s+(.*)$/);if(task)body[0]=task[2];
+  if(body.some(b=>!b.trim()))loose=true;
+  items.push({body,task:task?task[1]!==" ":null});
+  if(i<lines.length&&!lines[i].trim()){
+    let j=i;while(j<lines.length&&!lines[j].trim())j++;
+    const mm=j<lines.length&&lines[j].match(LIST);
+    if(mm&&/\d/.test(mm[2])===ordered&&width(mm[1])<4){loose=true;i=j;continue}
+    break;
   }
-  if(l.includes("|")&&i+1<lines.length&&lines[i+1].includes("|")&&/^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(lines[i+1])){
-    const hdr=cells(l);i+=2;const rows=[];
-    while(i<lines.length&&lines[i].includes("|")&&lines[i].trim())rows.push(cells(lines[i++]));
-    out.push(`<table><thead><tr>${hdr.map(x=>`<th>${inlineMd(x)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${hdr.map((_,k)=>`<td>${inlineMd(r[k]??"")}</td>`).join("")}</tr>`).join("")}</tbody></table>`);continue;
-  }
+ }
+ const tag=ordered?"ol":"ul";
+ const html=`<${tag}${ordered&&start!==1?` start="${start}"`:""}${loose?' class="loose"':""}>${items.map(it=>{
+   let inner=renderBlocks(it.body,null);
+   if(it.task!==null){const box=`<span class="task">${it.task?"☑":"☐"}</span>`;inner=inner.startsWith("<p>")?"<p>"+box+inner.slice(3):box+inner}
+   return `<li${it.task!==null?' class="task-item"':""}>${inner}</li>`;
+ }).join("")}</${tag}>`;
+ return {html,next:i};
+}
+function renderBlocks(lines,hmap){
+ const out=[];let i=0;
+ while(i<lines.length){
+  const l=lines[i];
   if(!l.trim()){i++;continue}
-  if(l.trim().startsWith("<")&&l.trim().endsWith(">")){out.push(l);i++;continue}
-  const p=[l];i++;while(i<lines.length&&lines[i].trim()&&!special(lines[i]))p.push(lines[i++]);
-  out.push(`<p>${inlineMd(p.join(" "))}</p>`);
+  const fm=l.match(FENCE);
+  if(fm){
+    const ind=indentOf(l),buf=[];i++;
+    while(i<lines.length&&!closesFence(lines[i],fm[1]))buf.push(dedent(lines[i++],ind));
+    i++;out.push(codeBlock(buf.join("\n"),fm[2]));continue;
+  }
+  const h=l.match(HEADING);
+  if(h){
+    const lv=h[1].length,info=hmap?.get(i);
+    const chk=info?.key?` <button class="section-check" type="button" data-section="${esc(info.key)}" title="Отметить раздел пройденным" aria-label="Отметить раздел пройденным">✓</button>`:"";
+    out.push(`<h${lv}${info?` id="${esc(info.anchor)}"`:""}>${inlineMd(headingSource(h[2]))}${chk}</h${lv}>`);i++;continue;
+  }
+  if(HR.test(l)){out.push("<hr>");i++;continue}
+  if(/^ {0,3}>/.test(l)){
+    const b=[];while(i<lines.length&&/^ {0,3}>/.test(lines[i]))b.push(lines[i++].replace(/^ {0,3}> ?/,""));
+    out.push(`<blockquote>${renderBlocks(b,null)}</blockquote>`);continue;
+  }
+  const lm=l.match(LIST);
+  if(lm&&width(lm[1])<4){const r=renderList(lines,i);out.push(r.html);i=r.next;continue}
+  if(isTableStart(lines,i)){
+    const hdr=cells(l),al=cells(lines[i+1]).map(c=>/^:-+:$/.test(c)?"center":/-:$/.test(c)?"right":/^:-/.test(c)?"left":"");i+=2;const rows=[];
+    while(i<lines.length&&lines[i].includes("|")&&lines[i].trim()&&!HEADING.test(lines[i])&&!FENCE.test(lines[i]))rows.push(cells(lines[i++]));
+    const td=(tag,v,k)=>`<${tag}${al[k]?` class="al-${al[k]}"`:""}>${inlineMd(v??"")}</${tag}>`;
+    out.push(`<div class="table-wrap"><table><thead><tr>${hdr.map((c,k)=>td("th",c,k)).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${hdr.map((_,k)=>td("td",r[k],k)).join("")}</tr>`).join("")}</tbody></table></div>`);continue;
+  }
+  if(isHtmlLine(l)){out.push(l);i++;continue}
+  const p=[];
+  while(i<lines.length&&lines[i].trim()&&(!p.length||(!interrupts(lines[i])&&!isTableStart(lines,i))))p.push(lines[i++]);
+  // Два пробела или \ в конце строки — перенос строки, как на GitHub.
+  const txt=p.map((x,k)=>{const t=x.trim();if(k===p.length-1)return t;if(/ {2,}$/.test(x))return t+"\u0001";if(/\\$/.test(t))return t.slice(0,-1)+"\u0001";return t}).join(" ").replace(/\u0001 /g,"\u0001");
+  out.push(`<p>${inlineMd(txt)}</p>`);
  }
  return out.join("\n");
 }
-/* HTML собирается в инертном <template>: onerror и прочее не успевают выполниться до очистки. */
+function markdownToHtml(md,path){return renderBlocks(md.replace(/\r/g,"").split("\n"),new Map(doc(path).headings.map(h=>[h.line,h])))}
+
+/* ---------- Подсветка кода (без внешних библиотек, работает офлайн) ---------- */
+const PY_KW=new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield".split(" "));
+const PY_BI=new Set("abs all any bool bytes callable classmethod dict dir divmod enumerate filter float format frozenset getattr hasattr hash id input int isinstance issubclass iter len list map max min next object open print property range repr reversed round set setattr slice sorted staticmethod str sum super tuple type vars zip self cls match case Exception ValueError TypeError KeyError IndexError RuntimeError".split(" "));
+const SQL_KW=new Set("select from where and or not insert into values update set delete create table index view drop alter add primary key foreign references join left right inner outer full on group by order having limit offset as distinct union all exists in is null like between case when then else end returning with begin commit rollback transaction default unique constraint".split(" "));
+const LANGS={
+ python:{re:/(#[^\n]*)|([rRbBuUfF]{0,2}(?:"""[\s\S]*?(?:"""|$(?![\s\S]))|'''[\s\S]*?(?:'''|$(?![\s\S]))|"(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?))|(^[ \t]*@[\w.]+)|(\b(?:0[xob][\da-fA-F_]+|\d[\d_]*(?:\.\d+)?(?:[eE][+-]?\d+)?j?)\b)|([A-Za-z_]\w*)/gm,
+  cls:(m,prev)=>m[1]?"com":m[2]?"str":m[3]?"bi":m[4]?"num":PY_KW.has(m[5])?"kw":prev==="def"||prev==="class"?"fn":PY_BI.has(m[5])?"bi":""},
+ conf:{re:/((?:^|[ \t])#[^\n]*)|("(?:\\.|[^"\\\n])*"|'[^'\n]*')|(\$\{?\w+\}?)|(\b\d+(?:\.\d+)*\b)|(^[ \t]*(?:- )?[\w.-]+(?=[ \t]*[:=]))|(^[ \t]*[A-Z]{2,}\b)/gm,
+  cls:m=>m[1]?"com":m[2]?"str":m[3]?"var":m[4]?"num":m[5]?"key":m[6]?"kw":""},
+ json:{re:/("(?:\\.|[^"\\\n])*")(\s*:)?|(\b-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|\b(true|false|null)\b/g,
+  cls:m=>m[1]?(m[2]?"key":"str"):m[3]?"num":"kw"},
+ sql:{re:/(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g,
+  cls:m=>m[1]?"com":m[2]?"str":m[3]?"num":SQL_KW.has(m[4].toLowerCase())?"kw":""}
+};
+const LANG_ALIAS={python:"python",py:"python",python3:"python",py3:"python",pycon:"python",ipython:"python",
+ bash:"conf",sh:"conf",shell:"conf",console:"conf",zsh:"conf",dockerfile:"conf",docker:"conf",yaml:"conf",yml:"conf",toml:"conf",ini:"conf",env:"conf",dotenv:"conf",conf:"conf",cfg:"conf",makefile:"conf",make:"conf",properties:"conf",gitignore:"conf",dockerignore:"conf",helm:"conf",
+ json:"json",jsonc:"json",sql:"sql",postgresql:"sql",psql:"sql",postgres:"sql"};
+function highlight(code,lang){
+ const L=LANGS[LANG_ALIAS[String(lang).toLowerCase()]];if(!L)return esc(code);
+ const re=new RegExp(L.re.source,L.re.flags);let out="",last=0,prev="",m;
+ while((m=re.exec(code))){
+  if(!m[0]){re.lastIndex++;continue}
+  const cls=L.cls(m,prev);
+  out+=esc(code.slice(last,m.index))+(cls?`<span class="tk-${cls}">${esc(m[0])}</span>`:esc(m[0]));
+  last=m.index+m[0].length;prev=m[0];
+ }
+ return out+esc(code.slice(last));
+}
+function codeBlock(code,lang){return `<div class="code-wrap"><button class="copy-code" type="button">Копировать</button><pre><code data-lang="${esc(lang||"")}">${highlight(code,lang)}</code></pre></div>`}
+function languageForPath(path){
+ const name=path.split("/").pop();
+ if(/\.py$/.test(name))return "python";if(/\.json$/.test(name))return "json";if(/\.sql$/.test(name))return "sql";
+ if(/^(Dockerfile|Makefile|\.env\.example|\.dockerignore|\.gitignore)$/.test(name)||/\.(toml|ya?ml|ini|cfg|sh|env|tpl|txt)$/.test(name))return "conf";
+ return "text";
+}
+
+/* HTML собирается в инертном <template> и очищается до вставки: onerror и прочее не успевают выполниться. */
 function setSafeHtml(el,html,path){
  const t=document.createElement("template");t.innerHTML=html;const root=t.content;
- root.querySelectorAll("script,style,iframe,object,embed,meta,link,form,base").forEach(x=>x.remove());
- root.querySelectorAll("*").forEach(n=>[...n.attributes].forEach(a=>{const name=a.name.toLowerCase();
-   if(name.startsWith("on")||name==="style"||name==="srcdoc"||(/(href|src|action)$/.test(name)&&/^\s*(javascript|vbscript|data):/i.test(a.value)&&!(n.tagName==="IMG"&&/^\s*data:image\//i.test(a.value))))n.removeAttribute(a.name)}));
- root.querySelectorAll("img[src]").forEach(img=>{const s=img.getAttribute("src");if(!/^(https?:|data:)/i.test(s))img.src=RAW+splitAnchor(normalizePath(path,s))[0];img.loading="lazy"});
+ root.querySelectorAll("script,style,iframe,frame,frameset,object,embed,applet,meta,link,form,base,svg,math,noscript,template").forEach(x=>x.remove());
+ root.querySelectorAll("*").forEach(n=>[...n.attributes].forEach(a=>{
+   const name=a.name.toLowerCase(),v=a.value.replace(/[\u0000- ]/g,"");
+   if(name.startsWith("on")||name==="style"||name==="srcdoc"||name==="srcset"||(/(href|src|action)$/.test(name)&&/^(javascript|vbscript|data):/i.test(v)&&!(n.tagName==="IMG"&&/^data:image\//i.test(v))))n.removeAttribute(a.name);
+ }));
+ root.querySelectorAll("img[src]").forEach(img=>{const s=img.getAttribute("src");if(!/^(https?:|data:)/i.test(s))img.src=rawUrl(state.meta?.commit||BRANCH,splitAnchor(normalizePath(path,s))[0]);img.loading="lazy"});
  root.querySelectorAll("a[href]").forEach(a=>{
-   const h=a.getAttribute("href");
-   if(/^https?:/i.test(h)){a.target="_blank";a.rel="noopener noreferrer"}
-   else if(!/^(mailto:|tel:)/i.test(h)){const target=h.startsWith("#")?path+h:normalizePath(path,h);a.dataset.doc=target;a.href="#/"+encodeURI(target)}
+   const h=a.getAttribute("href").trim();
+   if(/^\/\//.test(h))a.setAttribute("href","https:"+h);
+   if(/^(https?:)?\/\//i.test(h)){a.target="_blank";a.rel="noopener noreferrer"}
+   else if(!/^(mailto|tel):/i.test(h)){const target=h.startsWith("#")?path+"#"+safeDecode(h.slice(1)):normalizePath(path,h);a.dataset.doc=target;a.href=routeHash(...splitAnchor(target))}
  });
  el.replaceChildren(root);
 }
 
-/* ---------- Навигация и маршруты (#/путь#якорь, #search, #progress…) ---------- */
-function setRoute(h){try{if(location.hash!==h)history.pushState(null,"",h)}catch{}}
-function routeFromHash(){
- let h="";try{h=decodeURIComponent(location.hash.slice(1))}catch{}
- if(h.startsWith("/")&&openDoc(h.slice(1),{push:false}))return true;
- if(["home","book","prompts","templates","extras","search","progress"].includes(h)){setView(h,{push:false});return true}
+/* ---------- Маршруты (#/путь#якорь, #search, #progress…) и история с возвратом на прежнюю позицию ---------- */
+if("scrollRestoration" in history)history.scrollRestoration="manual";
+const scrollMemory=new Map();let entryId=history.state?.id??0,entrySeq=Date.now();
+const routeHash=(path,anchor="")=>"#/"+encodeURI(path)+(anchor?"#"+encodeURIComponent(anchor):"");
+function setRoute(h,y){
+ if(location.hash===h)return;
+ scrollMemory.set(entryId,y);entryId=++entrySeq;
+ try{history.pushState({id:entryId},"",h)}catch{}
+}
+function routeFromHash(opts={}){
+ const raw=location.hash.slice(1);
+ if(raw.startsWith("/")){const [p,a]=splitAnchor(raw.slice(1));return openDoc(safeDecode(p)+(a?"#"+safeDecode(a):""),{...opts,push:false})}
+ const v=safeDecode(raw);
+ if(VIEWS.includes(v)){setView(v,{push:false});return true}
  return false;
 }
-window.addEventListener("popstate",()=>{if(!routeFromHash())setView("home",{push:false})});
+window.addEventListener("popstate",e=>{
+ scrollMemory.set(entryId,window.scrollY);entryId=e.state?.id??0;
+ const y=scrollMemory.get(entryId);
+ if(!routeFromHash({scroll:y===undefined}))setView("home",{push:false});
+ if(y!==undefined)window.scrollTo({top:y,behavior:"instant"});
+});
 
-function closeMenu(){$("#leftSide").classList.remove("open")}
-
-function renderLeft(mode=state.currentView){
- const el=$("#leftNav");if(!el)return;
- const q=($("#sideSearch").value||"").toLowerCase();
- const only=CATEGORY_FOR[mode];
- const visible=f=>(!only||category(f.path)===only)&&(!q||(extractTitle(f.path)+" "+f.path).toLowerCase().includes(q));
- const item=(f,icon)=>{const p=fileProgress(f.path);return `<button class="doc-item ${state.currentPath===f.path?"active":""} ${p===100?"done":""}" data-open="${esc(f.path)}"><span class="doc-icon">${icon}</span><span>${esc(extractTitle(f.path))}</span><small>${p?p+"%":""}</small></button>`};
- const marks=state.bookmarks.map(p=>state.fileMap.get(p)).filter(f=>f&&visible(f));
- const icons={"Учебник":"▤","Промпты":"✦","Starter-проекты":"⌘","Дополнительно":"▤"};
- const groups=Object.keys(VIEW_FOR).map(c=>[c,ordered(c).filter(visible)]).filter(([,fs])=>fs.length);
- el.innerHTML=(marks.length?`<div class="doc-group"><button>★ Закладки · ${marks.length}</button>${marks.map(f=>item(f,"★")).join("")}</div>`:"")
-  +groups.map(([c,fs])=>`<div class="doc-group"><button>${c} · ${fs.length}</button>${fs.map(f=>item(f,icons[c])).join("")}</div>`).join("")
-  ||`<div style="color:var(--muted);padding:10px">Нет файлов</div>`;
+/* ---------- Боковое меню ---------- */
+function closeMenu(){E.leftSide.classList.remove("open");E.mobileMenu.setAttribute("aria-expanded","false")}
+function scrollIntoBox(box,item){
+ if(!item||box.scrollHeight<=box.clientHeight)return;
+ const r=item.getBoundingClientRect(),b=box.getBoundingClientRect();
+ if(r.top<b.top+30||r.bottom>b.bottom-30)box.scrollTop+=r.top-b.top-b.height/3;
 }
-$("#leftNav").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openDoc(b.dataset.open)});
+function navGroups(only){
+ const groups=[];
+ for(const c of Object.keys(VIEW_FOR)){
+  if(only&&c!==only)continue;
+  const fs=ordered(c);
+  if(c==="Starter-проекты"){const by=new Map();for(const f of fs){const t=f.path.split("/")[1]||"";if(!by.has(t))by.set(t,[]);by.get(t).push(f)}for(const [t,list] of by)groups.push({id:"tpl:"+t,label:"⌘ "+t,files:list})}
+  else groups.push({id:c,label:c,files:fs});
+ }
+ return groups;
+}
+function renderLeft(mode=state.currentView){
+ const q=E.sideSearch.value.trim().toLowerCase(),only=CATEGORY_FOR[mode];
+ const match=f=>!q||(extractTitle(f.path)+" "+f.path).toLowerCase().includes(q);
+ const icon=f=>category(f.path)==="Промпты"?"✦":isMd(f.path)?"▤":"‹›";
+ const item=(f,ic)=>{const p=fileProgress(f.path);return `<button class="doc-item ${state.currentPath===f.path?"active":""} ${p===100?"done":""}" type="button" data-open="${esc(f.path)}" title="${esc(f.path)}"><span class="doc-icon">${ic||icon(f)}</span><span>${esc(extractTitle(f.path))}</span><small>${p?p+"%":""}</small></button>`};
+ const groups=navGroups(only).map(g=>({...g,files:g.files.filter(match)})).filter(g=>g.files.length);
+ const marks=state.bookmarks.map(p=>state.fileMap.get(p)).filter(f=>f&&(!only||category(f.path)===only)&&match(f));
+ if(marks.length)groups.unshift({id:"bookmarks",label:"★ Закладки",files:marks,icon:"★"});
+ E.leftNav.innerHTML=groups.map(g=>{const open=!!q||!state.collapsed.has(g.id);
+   return `<div class="doc-group"><button class="group-toggle" type="button" data-group="${esc(g.id)}" aria-expanded="${open}"><span>${esc(g.label)} · ${g.files.length}</span><i>${open?"▾":"▸"}</i></button>${open?g.files.map(f=>item(f,g.icon)).join(""):""}</div>`}).join("")
+  ||`<div class="nav-empty">${state.files.length?"Ничего не найдено":"Файлов пока нет — нажми «Синхронизировать»."}</div>`;
+}
+E.leftNav.addEventListener("click",e=>{
+ const g=e.target.closest("[data-group]");
+ if(g){const id=g.dataset.group;if(state.collapsed.has(id))state.collapsed.delete(id);else state.collapsed.add(id);store("pa-collapsed",[...state.collapsed]);renderLeft();return}
+ const b=e.target.closest("[data-open]");if(b)openDoc(b.dataset.open);
+});
 
 function setView(v,{autoOpen=true,push=true}={}){
- state.currentView=v;document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
- const cat=CATEGORY_FOR[v];
+ const y0=window.scrollY,cat=CATEGORY_FOR[v];
+ state.currentView=v;
+ document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
  document.body.dataset.mode=cat?"reader":v;
- $("#homeView").classList.toggle("hidden",v!=="home");
- $("#readerView").classList.toggle("hidden",!cat);
- $("#searchView").classList.toggle("hidden",v!=="search");
- $("#progressView").classList.toggle("hidden",v!=="progress");
+ E.homeView.classList.toggle("hidden",v!=="home");
+ E.readerView.classList.toggle("hidden",!cat);
+ E.searchView.classList.toggle("hidden",v!=="search");
+ E.progressView.classList.toggle("hidden",v!=="progress");
  renderLeft(v);
  if(v==="home")renderHome();
- if(v==="search")$("#bigSearch").focus();
  if(v==="progress")renderProgressPage();
+ if(v==="search"){E.bigSearch.focus({preventScroll:true});if(E.bigSearch.value)runSearch(E.bigSearch.value)}
  if(!autoOpen)return;
+ closeMenu();
  if(cat){
-   if(state.currentPath&&category(state.currentPath)===cat){if(push)setRoute("#/"+encodeURI(state.currentPath))}
-   else{const first=ordered(cat)[0];if(first)openDoc(first.path,{push})}
- }else if(push)setRoute("#"+v);
+   const cur=state.currentPath&&category(state.currentPath)===cat?state.currentPath:ordered(cat)[0]?.path;
+   if(cur)openDoc(cur,{push,scroll:cur!==state.currentPath});else{E.readerHead.innerHTML="";E.article.innerHTML=`<p class="nav-empty">Здесь пока нет файлов.</p>`;E.readerFoot.innerHTML="";E.toc.innerHTML="";if(push)setRoute("#"+v,y0)}
+ }else{if(push)setRoute("#"+v,y0);window.scrollTo({top:0,behavior:"instant"})}
 }
 
-function continuePath(){
+/* ---------- Главная ---------- */
+function continueTarget(){
  const book=ordered("Учебник"),last=loadRaw("pa-last");
- if(last&&state.fileMap.has(last)&&fileProgress(last)<100)return last;
- return (book.find(f=>fileProgress(f.path)<100)||book[0])?.path;
+ let p=last&&state.fileMap.has(last)&&category(last)==="Учебник"&&fileProgress(last)<100?last:null;
+ p??=(book.filter(f=>rank(f.path)===2).find(f=>fileProgress(f.path)<100)||book.find(f=>fileProgress(f.path)<100)||book[0])?.path;
+ if(!p)return null;
+ // Возвращаем туда, где читали, иначе — к первому неотмеченному разделу.
+ const pos=state.positions[p]&&doc(p).sections.some(s=>s.anchor===state.positions[p])?state.positions[p]:null;
+ const firstOpen=fileProgress(p)>0?doc(p).sections.find(s=>!state.progress[s.key])?.anchor:null;
+ const anchor=pos||firstOpen;
+ return anchor?`${p}#${anchor}`:p;
 }
 function renderHome(){
- const hv=$("#homeView");
  const educational=ordered("Учебник"),allSections=educational.flatMap(f=>doc(f.path).sections);
  const done=allSections.filter(s=>state.progress[s.key]).length,pct=allSections.length?Math.round(done/allSections.length*100):0;
  const synced=state.meta?.syncedAt?new Date(state.meta.syncedAt).toLocaleString("ru-RU"):"ещё не выполнялась";
- const cont=continuePath();
- hv.innerHTML=`<div class="hero"><div class="hero-grid"><div>
+ const cont=continueTarget(),contPath=cont&&splitAnchor(cont)[0];
+ E.homeView.innerHTML=`<div class="hero"><div class="hero-grid"><div>
   <div class="eyebrow">PYTHON ROADMAP 2026 · ПОЛНЫЙ РИДЕР</div><h1>Весь учебник — в одном интерфейсе.</h1>
   <p>Сайт синхронизирует оригинальные главы, отдельные курсы, глоссарий, LLM-промпты и код starter-проектов из <b>${REPO}</b>. Читай, отмечай пройденные разделы, ищи по всему содержимому и сохраняй заметки.</p>
-  ${cont?`<p style="font-size:13px">Дальше: <b>${esc(extractTitle(cont))}</b> · ${fileProgress(cont)}%</p>`:""}
-  <div class="hero-actions"><button class="primary" id="continueHome">Продолжить обучение →</button><button class="ghost" id="openBookHome">Открыть содержание</button><button class="ghost" id="forceSyncHome">Обновить с GitHub</button></div>
+  ${contPath?`<p style="font-size:13px">Дальше: <b>${esc(extractTitle(contPath))}</b> · ${fileProgress(contPath)}%</p>`:""}
+  <div class="hero-actions"><button class="primary" type="button" id="continueHome" ${cont?"":"disabled"}>${done?"Продолжить обучение →":"Начать обучение →"}</button><button class="ghost" type="button" id="openBookHome">Открыть содержание</button><button class="ghost" type="button" id="forceSyncHome">Обновить с GitHub</button></div>
  </div><div><div class="ring" style="--p:${pct}"><strong>${pct}%</strong><small>пройдено</small></div></div></div></div>
  <div class="stats">
   <div class="stat"><strong>${educational.length}</strong><span>учебных файлов</span></div>
@@ -515,155 +773,221 @@ function renderHome(){
   <div class="stat"><strong>${state.files.length}</strong><span>всего файлов в локальном кэше</span></div>
  </div>
  <div class="section-title"><div><h2>Основная программа</h2><p>Этапы 0–17 из исходного курса. Дополнительные 14+ и 15+ находятся в полном содержании.</p></div></div>
- <div class="stage-grid">${stageMeta.map(([n,t,d])=>{const p=stagePath(n),pr=fileProgress(p);return `<div class="stage-card" role="button" tabindex="0" data-stage-path="${p}"><div class="n">ЭТАП ${n}</div><h3>${t}</h3><p>${d}</p><div class="progress"><i style="width:${pr}%"></i></div><div class="card-foot"><span>${pr===100?"пройден":pr?"в процессе":"не начат"}</span><strong>${pr}%</strong></div></div>`}).join("")}</div>
+ <div class="stage-grid">${stageMeta.map(([n,t,d])=>{const p=stagePath(n),pr=fileProgress(p);return `<div class="stage-card" role="button" tabindex="0" data-stage-path="${esc(p)}"><div class="n">ЭТАП ${n}</div><h3>${t}</h3><p>${d}</p><div class="progress"><i style="width:${pr}%"></i></div><div class="card-foot"><span>${pr===100?"пройден":pr?"в процессе":"не начат"}</span><strong>${pr}%</strong></div></div>`}).join("")}</div>
  <div class="section-title"><div><h2>Дополнительная практика</h2><p>Не заменяет основной учебник — эти репозитории удобно использовать для задач, примеров и проектов.</p></div></div>
  <div class="resource-grid">${supplemental.map(r=>`<a class="resource-card" href="${r.url}" target="_blank" rel="noopener noreferrer"><div class="tag">${r.tag}</div><h3>${r.name} ↗</h3><p>${r.desc}</p></a>`).join("")}</div>
  <div class="section-title"><div><h2>Состояние копии</h2><p>Последняя синхронизация: ${synced}. Исходник остаётся источником истины, локальный кэш нужен для удобного чтения.</p></div></div>`;
- hv.querySelector("#openBookHome").onclick=()=>setView("book");hv.querySelector("#forceSyncHome").onclick=()=>syncRepo();
- hv.querySelector("#continueHome").onclick=()=>{const p=continuePath();if(p)openDoc(p)};
- hv.querySelectorAll("[data-stage-path]").forEach(x=>{x.onclick=()=>openDoc(x.dataset.stagePath);x.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();x.click()}}});
+ E.homeView.querySelector("#openBookHome").onclick=()=>setView("book");
+ E.homeView.querySelector("#forceSyncHome").onclick=()=>syncRepo();
+ E.homeView.querySelector("#continueHome").onclick=()=>{const t=continueTarget();if(t)openDoc(t)};
+ E.homeView.querySelectorAll("[data-stage-path]").forEach(x=>{x.onclick=()=>openDoc(x.dataset.stagePath);x.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();x.click()}}});
 }
 
-function languageForPath(path){
- const name=path.split("/").pop();
- if(name==="Dockerfile")return "dockerfile";
- if(path.endsWith(".toml"))return "toml";
- if(/\.ya?ml$/i.test(path))return "yaml";
- if(path.endsWith(".py"))return "python";if(path.endsWith(".json"))return "json";if(path.endsWith(".sql"))return "sql";if(path.endsWith(".sh"))return "bash";
- return "text";
+/* ---------- Чтение ---------- */
+function findAnchor(a){
+ if(!a)return null;
+ const q=v=>{try{return E.article.querySelector(`[id="${CSS.escape(v)}"],a[name="${CSS.escape(v)}"]`)}catch{return null}};
+ return q(a)||q(githubSlug(a))||q(a.toLowerCase());
 }
-function codeFileHtml(text,path){return `<div class="code-wrap"><button class="copy-code">Копировать</button><pre><code data-lang="${languageForPath(path)}">${esc(text)}</code></pre></div>`}
-
-function scrollToAnchor(anchor){
- let a=anchor;try{a=decodeURIComponent(anchor)}catch{}
- const el=document.getElementById(a)||document.getElementById(githubSlug(a));
- if(el)requestAnimationFrame(()=>el.scrollIntoView());
+function scrollToAnchor(anchor,smooth){
+ const el=findAnchor(anchor);
+ if(!el||!el.getClientRects().length)window.scrollTo({top:0,behavior:"instant"});
+ else el.scrollIntoView({block:"start",behavior:smooth?"smooth":"instant"});
 }
-function openDoc(target,{push=true,force=false}={}){
- let [path,anchor]=splitAnchor(target);
+function openDoc(target,{push=true,force=false,scroll=true,keepScroll=false}={}){
+ const y0=window.scrollY,wasReading=!E.readerView.classList.contains("hidden");
+ let [path,anchor]=splitAnchor(target);anchor=safeDecode(anchor);
  if(!path)path=state.currentPath||"";
  if(!state.fileMap.has(path)){
-   const readme=path.replace(/\/$/,"")+"/README.md";
+   const readme=(path?path.replace(/\/$/,"")+"/":"")+"README.md";
    if(state.fileMap.has(readme))path=readme;
-   else{if(path&&push)window.open(GITHUB+path+(anchor?"#"+anchor:""),"_blank","noopener");return false}
+   else{if(path&&push)window.open(GITHUB+encPath(path)+(anchor?"#"+encodeURIComponent(anchor):""),"_blank","noopener");return false}
  }
- const f=state.fileMap.get(path);
- const same=!force&&state.currentPath===path&&!$("#readerView").classList.contains("hidden");
- state.currentPath=path;store("pa-last",path);
+ const f=state.fileMap.get(path),same=!force&&state.rendered===f&&state.currentPath===path;
+ state.currentPath=path;
+ if(category(path)==="Учебник")store("pa-last",path);
  setView(VIEW_FOR[category(path)],{autoOpen:false});
  if(!same){
-   setSafeHtml($("#article"),path.toLowerCase().endsWith(".md")?markdownToHtml(f.text,path):codeFileHtml(f.text,path),path);
-   $("#noteBox").value=state.notes[path]||"";
-   $("#sourceLink").href=GITHUB+path;
+   setSafeHtml(E.article,isMd(path)?markdownToHtml(f.text,path):codeBlock(f.text,languageForPath(path)),path);
+   state.rendered=f;state.spyId=null;
+   E.noteBox.value=typeof state.notes[path]==="string"?state.notes[path]:"";E.sourceLink.href=GITHUB+encPath(path);
  }
  renderReaderChrome();closeMenu();
- if(push)setRoute("#/"+encodeURI(path)+(anchor?"#"+anchor:""));
- if(anchor)scrollToAnchor(anchor);else if(!same)window.scrollTo({top:0,behavior:"instant"});
+ scrollIntoBox(E.leftSide,E.leftNav.querySelector(".doc-item.active"));
+ if(push)setRoute(routeHash(path,anchor),y0);
+ if(keepScroll)window.scrollTo({top:y0,behavior:"instant"});
+ else if(scroll){if(anchor)scrollToAnchor(anchor,same&&wasReading);else if(!same)window.scrollTo({top:0,behavior:"instant"})}
+ spy();
  return true;
 }
-/* Шапка, оглавление и закладка обновляются без перерисовки статьи — отметка раздела больше не кидает наверх. */
+/* Шапка, оглавление и закладка обновляются без перерисовки статьи — отметка раздела не сбивает прокрутку. */
 function renderReaderChrome(){
  const path=state.currentPath,f=state.fileMap.get(path);if(!f)return;
- const d=doc(path),p=fileProgress(path),list=ordered(category(path)),idx=list.findIndex(x=>x.path===path);
+ const d=doc(path),p=fileProgress(path),md=isMd(path),list=ordered(category(path)),idx=list.findIndex(x=>x.path===path);
  const prev=list[idx-1],next=list[idx+1],bm=state.bookmarks.includes(path);
- $("#readerHead").innerHTML=`<div class="crumb">${esc(category(path))} / ${esc(path)}</div><h1>${esc(d.title)}</h1><div class="meta"><span class="badge">${Math.max(1,Math.round(f.size/1024))} KB</span><span class="badge">${d.sections.length} разделов</span><span class="badge">${p}% пройдено</span>${idx>=0?`<span class="badge">${idx+1} из ${list.length}</span>`:""}</div><div class="reader-actions"><button id="markFile" class="primary">${p===100?"✓ Глава пройдена":"Отметить всю главу пройденной"}</button><button class="ghost" data-bookmark>${bm?"★ В закладках":"☆ В закладки"}</button><button class="ghost" data-go="${esc(prev?.path||"")}" ${prev?"":"disabled"}>← Предыдущая</button><button class="ghost" data-go="${esc(next?.path||"")}" ${next?"":"disabled"}>Следующая →</button></div>`;
- $("#readerFoot").innerHTML=(prev?`<button data-go="${esc(prev.path)}"><small>← Предыдущая</small>${esc(extractTitle(prev.path))}</button>`:"")+(next?`<button class="next" data-go="${esc(next.path)}"><small>Следующая →</small>${esc(extractTitle(next.path))}</button>`:"");
- $("#toc").innerHTML=d.sections.map(s=>`<a class="toc-item ${s.level===3?"l3":""}" href="#/${esc(encodeURI(path))}#${esc(s.anchor)}" data-doc="${esc(path+"#"+s.anchor)}">${state.progress[s.key]?"✓ ":""}${esc(s.title)}</a>`).join("")||`<div style="color:var(--muted);font-size:12px;padding:7px">В этой главе нет подзаголовков.</div>`;
- $("#bookmarkBtn").textContent=bm?"★ В закладках":"☆ Добавить в закладки";
- $("#article").querySelectorAll(".section-check").forEach(b=>b.classList.toggle("done",!!state.progress[b.dataset.section]));
+ const doneLabel=md?(p===100?"✓ Глава пройдена":"Отметить главу пройденной"):(p===100?"✓ Файл изучен":"Отметить файл изученным");
+ E.readerHead.innerHTML=`<div class="crumb">${esc(category(path))} / ${esc(path)}</div><h1>${esc(d.title)}</h1><div class="meta">${md?`<span class="badge">≈ ${d.minutes} мин</span>`:`<span class="badge">${plural(d.lines,"строка","строки","строк")}</span>`}${d.sections.length?`<span class="badge">${plural(d.sections.length,"раздел","раздела","разделов")}</span>`:""}<span class="badge">${p}% пройдено</span>${idx>=0?`<span class="badge">${idx+1} из ${list.length}</span>`:""}</div><div class="reader-actions"><button id="markFile" class="primary" type="button" aria-pressed="${p===100}">${doneLabel}</button><button class="ghost" type="button" data-bookmark aria-pressed="${bm}">${bm?"★ В закладках":"☆ В закладки"}</button><button class="ghost" type="button" data-go="${esc(prev?.path||"")}" ${prev?"":"disabled"}>← Предыдущая</button><button class="ghost" type="button" data-go="${esc(next?.path||"")}" ${next?"":"disabled"}>Следующая →</button></div>`;
+ E.readerFoot.innerHTML=(p<100&&next?`<button class="done-next" type="button" data-done-next>✓ Отметить ${md?"главу":"файл"} и перейти дальше →</button>`:"")
+  +(prev?`<button type="button" data-go="${esc(prev.path)}"><small>← Предыдущая</small>${esc(extractTitle(prev.path))}</button>`:"")
+  +(next?`<button class="next" type="button" data-go="${esc(next.path)}"><small>Следующая →</small>${esc(extractTitle(next.path))}</button>`:"");
+ E.toc.innerHTML=d.sections.map(s=>`<a class="toc-item ${s.level===3?"l3":""} ${s.anchor===state.spyId?"current":""}" href="${esc(routeHash(path,s.anchor))}" data-doc="${esc(path+"#"+s.anchor)}" data-anchor="${esc(s.anchor)}">${state.progress[s.key]?"✓ ":""}${esc(s.title)}</a>`).join("")
+  ||`<div style="color:var(--muted);font-size:12px;padding:7px">${md?"В этой главе нет подзаголовков.":"У файла с кодом нет оглавления."}</div>`;
+ E.bookmarkBtn.textContent=bm?"★ В закладках":"☆ Добавить в закладки";
+ E.article.querySelectorAll(".section-check").forEach(b=>{const on=!!state.progress[b.dataset.section];b.classList.toggle("done",on);b.setAttribute("aria-pressed",on)});
+}
+function setFileDone(path,done){
+ const ss=doc(path).sections;
+ if(ss.length)ss.forEach(s=>{if(done)state.progress[s.key]=true;else delete state.progress[s.key]});
+ else if(done)state.progress[path]=true;else delete state.progress[path];
+ saveProgress();
+}
+function toggleFile(){
+ const path=state.currentPath;
+ if(fileProgress(path)===100){if(!confirm("Снять отметку «пройдено» со всех разделов этой главы?"))return;setFileDone(path,false)}
+ else setFileDone(path,true);
+ renderReaderChrome();
 }
 function toggleBookmark(){
  if(!state.currentPath)return;const i=state.bookmarks.indexOf(state.currentPath);
  if(i>=0)state.bookmarks.splice(i,1);else state.bookmarks.push(state.currentPath);
  saveBookmarks();renderLeft();renderReaderChrome();
 }
-function toggleFile(){
- const path=state.currentPath,ss=doc(path).sections;
- if(ss.length){const makeDone=fileProgress(path)<100;ss.forEach(s=>makeDone?state.progress[s.key]=true:delete state.progress[s.key])}
- else if(state.progress[path])delete state.progress[path];else state.progress[path]=true;
- saveProgress();renderReaderChrome();
-}
-$("#readerView").addEventListener("click",e=>{
- const link=e.target.closest("a[data-doc]");if(link){e.preventDefault();openDoc(link.dataset.doc);return}
- const go=e.target.closest("[data-go]");if(go&&go.dataset.go){openDoc(go.dataset.go);return}
+const plainClick=e=>e.button===0&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey;
+E.readerView.addEventListener("click",e=>{
+ const link=e.target.closest("a[data-doc]");
+ if(link){if(!plainClick(e))return;e.preventDefault();openDoc(link.dataset.doc);return} // Ctrl/⌘+клик открывает ссылку в новой вкладке
+ const go=e.target.closest("[data-go]");if(go){if(go.dataset.go)openDoc(go.dataset.go);return}
+ if(e.target.closest("[data-done-next]")){const list=ordered(category(state.currentPath)),next=list[list.findIndex(x=>x.path===state.currentPath)+1];setFileDone(state.currentPath,true);if(next)openDoc(next.path);return}
  if(e.target.closest("[data-bookmark]"))return toggleBookmark();
  if(e.target.closest("#markFile"))return toggleFile();
  const copy=e.target.closest(".copy-code");
- if(copy){(navigator.clipboard?navigator.clipboard.writeText(copy.nextElementSibling.textContent):Promise.reject()).then(()=>{copy.textContent="Скопировано";setTimeout(()=>copy.textContent="Копировать",900)},()=>{copy.textContent="Не удалось";setTimeout(()=>copy.textContent="Копировать",900)});return}
+ if(copy){
+   const flash=t=>{copy.textContent=t;setTimeout(()=>{copy.textContent="Копировать"},900)};
+   (navigator.clipboard?navigator.clipboard.writeText(copy.nextElementSibling.textContent):Promise.reject()).then(()=>flash("Скопировано"),()=>flash("Не удалось"));return;
+ }
  const chk=e.target.closest(".section-check");
  if(chk){const k=chk.dataset.section;if(state.progress[k])delete state.progress[k];else state.progress[k]=true;saveProgress();renderReaderChrome()}
 });
-$("#toc").addEventListener("click",e=>{const a=e.target.closest("a[data-doc]");if(a){e.preventDefault();openDoc(a.dataset.doc)}});
-$("#noteBox").addEventListener("input",e=>{if(!state.currentPath)return;if(e.target.value)state.notes[state.currentPath]=e.target.value;else delete state.notes[state.currentPath];saveNotes()});
-$("#bookmarkBtn").onclick=toggleBookmark;
+E.toc.addEventListener("click",e=>{const a=e.target.closest("a[data-doc]");if(a&&plainClick(e)){e.preventDefault();openDoc(a.dataset.doc)}});
+E.noteBox.addEventListener("input",e=>{if(!state.currentPath)return;if(e.target.value.trim())state.notes[state.currentPath]=e.target.value;else delete state.notes[state.currentPath];saveNotes()});
+E.bookmarkBtn.onclick=toggleBookmark;
+
+/* Подсветка текущего раздела в оглавлении и запоминание места чтения. */
+let spyFrame=0;
+function spy(){
+ spyFrame=0;
+ if(!state.currentPath||E.readerView.classList.contains("hidden"))return;
+ let cur="";
+ // В самом конце страницы короткие последние разделы не доходят до верха — тогда текущим считается последний видимый.
+ const limit=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4?window.innerHeight*.6:140;
+ for(const h of E.article.querySelectorAll("h2[id],h3[id]")){if(h.getBoundingClientRect().top<limit)cur=h.id;else break}
+ if(cur===state.spyId)return;
+ state.spyId=cur;
+ E.toc.querySelectorAll(".toc-item").forEach(a=>a.classList.toggle("current",a.dataset.anchor===cur));
+ if(getComputedStyle(E.rightSide).position==="sticky")scrollIntoBox(E.rightSide,E.toc.querySelector(".current"));
+ if(cur){state.positions[state.currentPath]=cur;store("pa-pos",state.positions)}
+}
+window.addEventListener("scroll",()=>{spyFrame||=requestAnimationFrame(spy)},{passive:true});
 
 /* ---------- Поиск ---------- */
 function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+let lastResults=[];
 function runSearch(raw){
- const box=$("#searchResults"),q=raw.trim().toLowerCase();
- if(q.length<2){box.innerHTML=`<div style="color:var(--muted);padding:15px">Введите минимум 2 символа.</div>`;return}
- const terms=q.split(/\s+/),hl=new RegExp(terms.map(t=>reEsc(esc(t))).join("|"),"gi"),res=[];
+ const q=raw.trim().toLowerCase();lastResults=[];
+ if(q.length<2){E.searchCount.textContent="";E.searchResults.innerHTML=`<div style="color:var(--muted);padding:15px">Введите минимум 2 символа.</div>`;return}
+ const terms=q.split(/\s+/),marks=terms.filter(t=>t.length>1),hl=new RegExp((marks.length?marks:terms).map(t=>reEsc(esc(t))).join("|"),"gi"),res=[];
  for(const f of state.files){
   const d=doc(f.path);if(!terms.every(t=>d.lower.includes(t)))continue;
-  const text=f.text,pos=text.toLowerCase().indexOf(terms[0]),at=Math.max(0,pos);
-  const line=text.slice(0,at).split("\n").length-1,sec=pos<0?null:[...d.headings].reverse().find(h=>h.line<=line);
+  const text=f.text,low=text.toLowerCase(),pos=low.indexOf(terms[0]),at=Math.max(0,pos);
+  const line=text.slice(0,at).split("\n").length-1,sec=pos<0?null:[...d.headings].reverse().find(h=>h.line<=line)||null;
   const snip=text.slice(Math.max(0,at-90),at+220).replace(/[#>*_`|]/g," ").replace(/\s+/g," ").trim();
-  const title=d.title,inTitle=terms.some(t=>title.toLowerCase().includes(t));
-  res.push({path:f.path,title,sec,snip,score:(inTitle?2:0)+(category(f.path)==="Учебник"?1:0)});
+  let hits=0;for(let k=low.indexOf(terms[0]);k>=0&&hits<10;k=low.indexOf(terms[0],k+terms[0].length))hits++;
+  const inTitle=terms.some(t=>d.title.toLowerCase().includes(t)),inSec=!!sec&&terms.some(t=>sec.title.toLowerCase().includes(t));
+  res.push({path:f.path,title:d.title,sec,snip,score:(inTitle?4:0)+(inSec?2:0)+(category(f.path)==="Учебник"?1:0)+hits/10});
  }
- res.sort((a,b)=>b.score-a.score);
- box.innerHTML=res.slice(0,60).map((r,i)=>`<div class="search-result" role="button" tabindex="0" data-i="${i}"><h3>${esc(r.title)}${r.sec&&r.sec.title!==r.title?` <small style="color:var(--muted);font-weight:400">› ${esc(r.sec.title)}</small>`:""}</h3><p>${esc(r.path)} · ${esc(r.snip).replace(hl,"<mark>$&</mark>")}</p></div>`).join("")
+ res.sort((a,b)=>b.score-a.score);lastResults=res;
+ E.searchCount.textContent=res.length?`Найдено: ${res.length}${res.length>60?" · показаны первые 60":""}`:"";
+ E.searchResults.innerHTML=res.slice(0,60).map((r,i)=>`<div class="search-result" role="button" tabindex="0" data-i="${i}"><h3>${esc(r.title)}${r.sec&&r.sec.title!==r.title?` <small style="color:var(--muted);font-weight:400">› ${esc(r.sec.title)}</small>`:""}</h3><p>${esc(r.path)} · ${esc(r.snip).replace(hl,"<mark>$&</mark>")}</p></div>`).join("")
   ||`<div style="color:var(--muted);padding:15px">Ничего не найдено.</div>`;
- box.querySelectorAll("[data-i]").forEach(el=>{const r=res[Number(el.dataset.i)];el.onclick=()=>openDoc(r.path+(r.sec?"#"+r.sec.anchor:""));el.onkeydown=e=>{if(e.key==="Enter")el.click()}});
 }
+const openResult=r=>r&&openDoc(r.path+(r.sec?"#"+r.sec.anchor:""));
+E.searchResults.addEventListener("click",e=>{const el=e.target.closest("[data-i]");if(el)openResult(lastResults[Number(el.dataset.i)])});
+E.searchResults.addEventListener("keydown",e=>{const el=e.target.closest("[data-i]");if(el&&e.key==="Enter")openResult(lastResults[Number(el.dataset.i)])});
 let searchTimer;
-$("#bigSearch").addEventListener("input",e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>runSearch(e.target.value),120)});
+E.bigSearch.addEventListener("input",e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>runSearch(e.target.value),120)});
+E.bigSearch.addEventListener("keydown",e=>{if(e.key==="Enter"){clearTimeout(searchTimer);runSearch(E.bigSearch.value);openResult(lastResults[0])}});
 
-/* ---------- Прогресс ---------- */
+/* ---------- Прогресс, заметки, перенос ---------- */
 function renderProgressPage(){
  const rows=ordered("Учебник").map(f=>({f,p:fileProgress(f.path),t:extractTitle(f.path)}));
  const all=rows.flatMap(x=>doc(x.f.path).sections),done=all.filter(s=>state.progress[s.key]).length,pct=all.length?Math.round(done/all.length*100):0;
- $("#progressView").innerHTML=`<div class="eyebrow">ПРОГРЕСС</div><h1>Пройдено ${pct}%</h1><p style="color:var(--muted)">${done} из ${all.length} разделов. Прогресс хранится только в этом браузере — делай экспорт, чтобы перенести его на другое устройство.</p><div class="progress" style="height:10px;margin:18px 0 28px"><i style="width:${pct}%"></i></div>
- <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><button id="exportData" class="ghost">Экспорт прогресса и заметок</button><label class="ghost" style="cursor:pointer">Импорт<input id="importData" type="file" accept="application/json" hidden></label></div>
- ${rows.map((x,i)=>`<div class="prog-row" role="button" tabindex="0" data-pi="${i}"><header><h3>${esc(x.t)}</h3><strong>${x.p}%</strong></header><div class="progress" style="margin-top:9px"><i style="width:${x.p}%"></i></div><small>${esc(x.f.path)}</small></div>`).join("")}`;
- document.querySelectorAll("[data-pi]").forEach(el=>{el.onclick=()=>openDoc(rows[Number(el.dataset.pi)].f.path);el.onkeydown=e=>{if(e.key==="Enter")el.click()}});
- $("#exportData").onclick=()=>{
-   const blob=new Blob([JSON.stringify({version:3,progress:state.progress,notes:state.notes,bookmarks:state.bookmarks,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
-   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`python-academy-progress-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
- };
- $("#importData").onchange=async e=>{
-   try{
-     const x=JSON.parse(await e.target.files[0].text()),obj=v=>v&&typeof v==="object"&&!Array.isArray(v);
-     if(!obj(x)||!obj(x.progress))throw new Error();
-     if(!confirm("Заменить текущий прогресс, заметки и закладки данными из файла?"))return;
-     state.progress=x.progress;state.notes=obj(x.notes)?x.notes:{};state.bookmarks=Array.isArray(x.bookmarks)?x.bookmarks:[];
-     saveProgress();saveNotes();saveBookmarks();renderProgressPage();alert("Импортировано.");
-   }catch{alert("Не удалось импортировать файл: это не экспорт Python Academy.")}
-   e.target.value="";
- };
+ const noted=Object.keys(state.notes).filter(p=>state.fileMap.has(p)&&typeof state.notes[p]==="string"&&state.notes[p].trim()).sort((a,b)=>docOrder({path:a},{path:b}));
+ E.progressView.innerHTML=`<div class="eyebrow">ПРОГРЕСС</div><h1>Пройдено ${pct}%</h1><p style="color:var(--muted)">${done} из ${plural(all.length,"раздела","разделов","разделов")}. Прогресс хранится только в этом браузере — сделай экспорт, чтобы перенести его на другое устройство.</p><div class="progress" style="height:10px;margin:18px 0 28px"><i style="width:${pct}%"></i></div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><button id="exportData" class="ghost" type="button">Экспорт прогресса и заметок</button><label class="ghost" style="cursor:pointer">Импорт<input id="importData" type="file" accept="application/json,.json" hidden></label></div>
+ ${noted.length?`<h2>Мои заметки · ${noted.length}</h2><div class="notes-list">${noted.map(p=>`<div class="prog-row" role="button" tabindex="0" data-open-doc="${esc(p)}"><header><h3>${esc(extractTitle(p))}</h3></header><p>${esc(state.notes[p].slice(0,300))}</p></div>`).join("")}</div>`:""}
+ <h2>Главы</h2>${rows.map(x=>`<div class="prog-row" role="button" tabindex="0" data-open-doc="${esc(x.f.path)}"><header><h3>${esc(x.t)}</h3><strong>${x.p}%</strong></header><div class="progress" style="margin-top:9px"><i style="width:${x.p}%"></i></div><small>${esc(x.f.path)}</small></div>`).join("")}`;
+ E.progressView.querySelector("#exportData").onclick=exportData;
+ E.progressView.querySelector("#importData").onchange=importData;
+}
+E.progressView.addEventListener("click",e=>{const el=e.target.closest("[data-open-doc]");if(el)openDoc(el.dataset.openDoc)});
+E.progressView.addEventListener("keydown",e=>{const el=e.target.closest("[data-open-doc]");if(el&&e.key==="Enter")openDoc(el.dataset.openDoc)});
+function exportData(){
+ const blob=new Blob([JSON.stringify({version:EXPORT_VERSION,progress:state.progress,notes:state.notes,bookmarks:state.bookmarks,positions:state.positions,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`python-academy-progress-${new Date().toISOString().slice(0,10)}.json`;
+ document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+async function importData(e){
+ const file=e.target.files?.[0];e.target.value="";if(!file)return;
+ try{
+   const x=JSON.parse(await file.text());
+   if(!isObj(x)||!isObj(x.progress))throw new Error();
+   if(!confirm("Заменить текущий прогресс, заметки и закладки данными из файла?"))return;
+   const progress=Object.fromEntries(Object.entries(x.progress).filter(([,v])=>v));
+   if(!(Number(x.version)>=EXPORT_VERSION))migrateProgress(progress); // экспорт старой версии — ключи в прежнем формате
+   state.progress=progress;
+   state.notes=isObj(x.notes)?Object.fromEntries(Object.entries(x.notes).filter(([,v])=>typeof v==="string"&&v.trim())):{};
+   state.bookmarks=Array.isArray(x.bookmarks)?[...new Set(x.bookmarks.filter(v=>typeof v==="string"))]:[];
+   state.positions=isObj(x.positions)?x.positions:{};
+   saveProgress();saveNotes();saveBookmarks();store("pa-pos",state.positions);
+   E.noteBox.value=state.notes[state.currentPath]||"";renderProgressPage();alert("Импортировано.");
+ }catch{alert("Не удалось импортировать файл: это не экспорт Python Academy.")}
 }
 
+/* ---------- Несколько вкладок: изменения из другой вкладки подхватываются, а не затираются ---------- */
+window.addEventListener("storage",e=>{
+ if(e.key==="pa-progress")state.progress=loadObj("pa-progress");
+ else if(e.key==="pa-bookmarks")state.bookmarks=loadList("pa-bookmarks");
+ else if(e.key==="pa-notes"){state.notes=loadObj("pa-notes");if(document.activeElement!==E.noteBox)E.noteBox.value=state.notes[state.currentPath]||"";return}
+ else if(e.key==="pa-theme"){applyTheme(e.newValue);return}
+ else return;
+ renderLeft();
+ if(CATEGORY_FOR[state.currentView])renderReaderChrome();else if(state.currentView==="home")renderHome();else if(state.currentView==="progress")renderProgressPage();
+});
+
 /* ---------- Общие обработчики ---------- */
-document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>setView(b.dataset.view));
-$("#sideSearch").addEventListener("input",()=>renderLeft());
-$("#syncBtn").onclick=()=>syncRepo();
-$("#syncRetry").onclick=()=>syncRepo();
-$("#syncClose").onclick=()=>$("#syncOverlay").classList.add("hidden");
-$("#themeBtn").onclick=()=>{document.body.classList.toggle("light");store("pa-theme",document.body.classList.contains("light")?"light":"dark")};
-$("#mobileMenu").onclick=()=>$("#leftSide").classList.toggle("open");
-$(".main").addEventListener("click",closeMenu);
+function applyTheme(t){document.body.classList.toggle("light",t==="light"||(!t&&!!window.matchMedia?.("(prefers-color-scheme: light)").matches))}
+document.querySelectorAll(".navbtn").forEach(b=>b.addEventListener("click",()=>setView(b.dataset.view)));
+E.brandLink.addEventListener("click",e=>{if(plainClick(e)){e.preventDefault();setView("home")}});
+E.sideSearch.addEventListener("input",()=>renderLeft());
+E.syncBtn.onclick=()=>syncRepo();
+E.syncRetry.onclick=()=>syncRepo();
+E.syncClose.onclick=()=>E.syncOverlay.classList.add("hidden");
+E.themeBtn.onclick=()=>{const light=!document.body.classList.contains("light");document.body.classList.toggle("light",light);store("pa-theme",light?"light":"dark")};
+E.mobileMenu.onclick=()=>{const open=E.leftSide.classList.toggle("open");E.mobileMenu.setAttribute("aria-expanded",String(open))};
+document.addEventListener("click",e=>{if(E.leftSide.classList.contains("open")&&!E.leftSide.contains(e.target)&&!E.mobileMenu.contains(e.target))closeMenu()});
 document.addEventListener("keydown",e=>{
  const typing=/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||e.target.isContentEditable;
- if(e.key==="/"&&!typing&&!e.ctrlKey&&!e.metaKey){e.preventDefault();setView("search")}
+ if(e.key==="/"&&!typing&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();setView("search")}
  if(e.key==="Escape"){closeMenu();if(typing)e.target.blur()}
 });
 
 async function boot(){
- const theme=loadRaw("pa-theme");
- if(theme==="light"||(!theme&&matchMedia("(prefers-color-scheme: light)").matches))document.body.classList.add("light");
- try{await loadCache()}catch(e){console.warn("IndexedDB недоступен",e)}
+ applyTheme(loadRaw("pa-theme"));
+ await loadCache();
+ ensureMigrated();
  if(!state.files.length)await syncRepo();
  if(!routeFromHash())setView("home",{push:false});
+ checkUpdates();
 }
 boot();
 </script>

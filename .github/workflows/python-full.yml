@@ -1,0 +1,31 @@
+name: Python Full reader
+on:
+  push:
+    paths:
+      - 'python-full/**'
+      - 'tests/python-full-reader.cjs'
+      - 'tests/fixtures/python-full/**'
+      - '.github/workflows/python-full.yml'
+  pull_request:
+    paths:
+      - 'python-full/**'
+      - 'tests/python-full-reader.cjs'
+      - 'tests/fixtures/python-full/**'
+      - '.github/workflows/python-full.yml'
+permissions:
+  contents: read
+jobs:
+  reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned browser test dependency
+        run: npm install --no-save --ignore-scripts playwright@1.63.0
+      - name: Install headless Chromium
+        run: npx playwright install --with-deps --only-shell chromium
+      - name: Test the offline reader against a fake GitHub
+        run: node tests/python-full-reader.cjs
